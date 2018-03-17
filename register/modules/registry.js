@@ -1,23 +1,36 @@
 "use strict";
 
-const tierion = require("./tierionConnector");
-
 //set some dependencies --> better testability
-exports.options = function(fetch, secrets){
+exports.options = function(secrets, cryptoFunctions, tierionConnector){
+    this.tierionConnector = tierionConnector;
     this.secrets = secrets;
-    tierion.options(fetch, secrets);
+    this.cryptoFunctions = cryptoFunctions;
 }
 
-exports.registerBike = async function (frameNumber, publicKey, message) {
+exports.register = async function register(frameNumber) {
     if(!this.secrets) throw "secrets not set";
+    if(!this.cryptoFunctions) throw "cryptoFunctions not set";
+    if(!this.tierionConnector) throw "tierionConnector not set";
 
-    //TODO: check if registration is possible
+    try {
+        //TODO: check public database for already registered bikes
 
-    var registerData = tierion.createRegisterRequestData(this.secrets.dataStoreId, frameNumber, publicKey, message);
-    var registerResult = await tierion.registerBike(registerData);
+        const key = this.cryptoFunctions.generateNewKey();
 
-    //TODO: save data to velochain database -> Name / FrameNumber / EthAddress
+        const signingResult = this.cryptoFunctions.sign("Register bike with frameNumber: " + frameNumber, key.privateKey);
 
-    return registerResult;
+        const registerData = this.tierionConnector.createRegisterRequestData(this.secrets.dataStoreId, frameNumber, key.ethAddress, signingResult);
+        const registerResult = await this.tierionConnector.registerBike(registerData);
+
+        //TODO: save data to public database -> Name / FrameNumber / EthAddress
+        //const publicDatabaseSaveResult = await this.publicDatabaseConnector.Save(frameNumber, ethAddress);
+        
+        //TODO: create new user in User Management (Azure AD B2C)
+        //TODO: save data to private database --> userID, privateKey
+
+        return registerResult;
+
+    } catch (error) {
+        console.error(error);
+    }
 }
-

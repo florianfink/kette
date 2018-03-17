@@ -50,17 +50,29 @@ exports.getPublicKeyString = function(publicKey){
     return "0x" + publicKey.toString('hex');
 }
 
+exports.generateNewKey = function(){
+    const privateKey = this.generatePrivateKey();
+    const publicKey = this.getPublicKey(privateKey);
+    const address = this.getAddressFromPublicKey(publicKey);
+    const addressAsString = this.getAddressString(address);
+
+    return {
+        privateKey : privateKey,
+        ethAddress : addressAsString
+    }
+}
+
 // just a function to test all crypto functions
 exports.callAllFunctions = function () {
     
-    var privateKey = this.generatePrivateKey();
-    var publicKey = this.getPublicKey(privateKey);
-    var address = this.getAddressFromPublicKey(publicKey);
+    const privateKey = this.generatePrivateKey();
+    const publicKey = this.getPublicKey(privateKey);
+    const address = this.getAddressFromPublicKey(publicKey);
 
-    var privateKeyString = this.getPrivateKeyString(privateKey);
-    var addressString = this.getAddressString(address);
+    const privateKeyString = this.getPrivateKeyString(privateKey);
+    const addressString = this.getAddressString(address);
 
-    var signedMessage = this.sign("hihi", privateKey);
+    const signedMessage = this.sign("hihi", privateKey);
 
     console.log(privateKeyString);
     console.log(addressString);
