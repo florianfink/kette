@@ -6,7 +6,17 @@
        run npm install
        func host start
        
-[POST] http://localhost:7071/api/register
+curl --request POST -H "Content-Type:application/json" --data '{"frameNumber":"sample queue data"}' http://localhost:7071/api/register
+
+the code in the repository relies on a couple of secrets that are not commited and need to be recreated locally.
+Add a secrets.js file the register folder with the following contents
+
+exports.email = "tiereion E-Mail";
+
+exports.apikey = "tierion api key";
+
+exports.dataStoreId = tierionDataStoreId;
+
 
 ### Setup of azure cloud:
 - [Create a function app for serverless code execution](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos?view=azure-cli-latest)
