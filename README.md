@@ -17,7 +17,7 @@ Add a secrets.js file the register folder with the following contents
 
 
 ### Setup of azure cloud:
-- [Create a function app for serverless code execution](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos?view=azure-cli-latest)
+- [Create an Azure Function that connects to an Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/azure-functions/scripts/functions-cli-create-function-app-connect-to-cosmos-db)
 - [Install azure CLI for macOS](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos?view=azure-cli-latest)
 
 #### Troubleshooting
