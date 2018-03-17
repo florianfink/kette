@@ -4,6 +4,9 @@
 
 
        run npm install
+       func host start
+       
+[POST] http://localhost:7071/api/register
 
 ### Setup of azure cloud:
 - [Create a function app for serverless code execution](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos?view=azure-cli-latest)
