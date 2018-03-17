@@ -11,7 +11,7 @@
 the code in the repository relies on a couple of secrets that are not commited and need to be recreated locally.
 Add a secrets.js file the register folder with the following contents
 
-- exports.email = "tiereion E-Mail";
+- exports.email = "tierion E-Mail";
 - exports.apikey = "tierion api key";
 - exports.dataStoreId = tierionDataStoreId;
 
