@@ -5,8 +5,8 @@
 
        run npm install
        func host start
-       
-curl --request POST -H "Content-Type:application/json" --data '{"frameNumber":"sample queue data"}' http://localhost:7071/api/register
+
+       curl --request POST -H "Content-Type:application/json" --data '{"frameNumber":"sample queue data"}' http://localhost:7071/api/register
 
 the code in the repository relies on a couple of secrets that are not commited and need to be recreated locally.
 Add a secrets.js file the register folder with the following contents
