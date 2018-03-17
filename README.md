@@ -1,5 +1,5 @@
 ### running locally and deploying the backend
-- [Install node.js version 8.1.x](https://nodejs.org/en/download/){:target="_blank"}
+- [Install node.js version 8.1.x](https://nodejs.org/en/download/)
 - [Install and run the Azure Functions Core Tools (Version 2.x runtime)](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local)
 
 
