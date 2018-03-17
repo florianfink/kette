@@ -1,6 +1,9 @@
-## running locally and deploying the backend
+### running locally and deploying the backend
 - [Install node.js version 8.1.x](https://nodejs.org/en/download/)
 - [Install and run the Azure Functions Core Tools (Version 2.x runtime)](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local)
+
+
+       run npm install
 
 ### Setup of azure cloud:
 - [Create a function app for serverless code execution](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos?view=azure-cli-latest)
