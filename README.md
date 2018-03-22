@@ -24,6 +24,11 @@ Add a secrets.js file the register folder with the following contents
       az functionapp config appsettings set --name <app-name> --resource-group <resource-group-name> --settings FUNCTIONS_EXTENSION_VERSION=beta
       az functionapp config appsettings set --name <app-name> --resource-group <resource-group-name> --settings WEBSITE_NODE_DEFAULT_VERSION=8.9.4
 
+- Install extension for communicating with azure cosmos db
+
+      func extensions install --package Microsoft.Azure.WebJobs.Extensions.CosmosDB --version 3.0.0-beta6
+      reminder: delete local bin folder before publish
+
 #### Troubleshooting
 - [Install azure CLI fails](https://github.com/Homebrew/homebrew-core/issues/19286)
 
