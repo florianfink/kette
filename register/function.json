@@ -11,6 +11,14 @@
       "type": "http",
       "direction": "out",
       "name": "res"
-    }
+    },
+    {
+      "name": "userDocument",
+      "type": "CosmosDB",
+      "databaseName": "testkettedb1",
+      "collectionName": "users",
+      "createIfNotExists": true,
+      "direction": "out"
+  }
   ]
 }

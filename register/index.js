@@ -15,6 +15,17 @@ registry.options(secrets, cryptoFunctions, tierionConnector);
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
 
+    context.bindings.userDocument = JSON.stringify({
+        name : "My Working Prototype"
+    })
+
+    context.res = {
+        status: 200,
+        body: "ok worked"
+    };
+
+    /*
+    context.done();
     if (req.body.frameNumber) {
         
         var result = await registry.register(req.body.frameNumber);
@@ -30,6 +41,6 @@ module.exports = async function (context, req) {
             status: 400,
             body: "Please pass a frameNumber in the request body"
         };
-    }
+    }*/
     context.done();
 };
