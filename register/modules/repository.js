@@ -1,6 +1,6 @@
 const assert = require("assert");
 
-module.exports = function makePublicRepository(context) {
+module.exports = function (context) {
     assert(context, 'context is required.')
     return {
         save: async (entry) => {
