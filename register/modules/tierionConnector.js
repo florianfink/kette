@@ -1,16 +1,11 @@
 "use strict";
 
-exports.options = function(fetch, secrets){
-  this.secrets = secrets;
-  this.fetch = fetch;
-}
-
-exports.registerBike = async function (registerData) {
-  if(!this.secrets || !this.fetch) throw "fetch or secrets not set";
+exports.registerBike = async function (registerData, opts) {
+  if(!opts.secrets || !opts.fetch) throw "fetch or secrets not set";
 
   const header =  {
-    "X-Username": this.secrets.email,
-    "X-Api-Key": this.secrets.apikey,
+    "X-Username": opts.secrets.email,
+    "X-Api-Key": opts.secrets.apikey,
     "Content-Type": "application/json"
   }
 
@@ -22,7 +17,7 @@ exports.registerBike = async function (registerData) {
     headers: header,
   };
 
-  const registerBikeResponse = await this.fetch(url, parameters);
+  const registerBikeResponse = await opts.fetch(url, parameters);
   const registerBikeResult = await registerBikeResponse.json();
   return registerBikeResult;
 }

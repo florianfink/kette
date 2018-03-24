@@ -13,12 +13,13 @@
       "name": "res"
     },
     {
-      "name": "userDocument",
-      "type": "CosmosDB",
+      "type": "cosmosDB",
+      "name": "registrationDocument",
       "databaseName": "testkettedb1",
-      "collectionName": "users",
+      "collectionName": "registrations",
       "createIfNotExists": true,
-      "direction": "out"
+      "direction": "out",
+      "ConnectionStringSetting" : "PublicCosmosDbConnectionString"
   }
   ]
 }
