@@ -4,12 +4,10 @@ module.exports = function (context) {
     assert(context, 'context is required.')
     return {
         save: async (entry) => {
-            try {
                 context.bindings.registrationDocument = JSON.stringify(entry);
-            }
-            catch (err) {
-                console.error(err);
-            }
+        },
+        find: async (frameNumber) => {
+            return context.bindings.registrationDocuments.find(x => x.frameNumber === frameNumber);
         }
     }
 }

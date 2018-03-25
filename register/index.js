@@ -7,15 +7,15 @@ const fetch = require("node-fetch");
 const registry = require("./modules/registry");
 const cryptoFunctions = require("./modules/cryptoFunctions")
 const tierionConnector = require("./modules/tierionConnector");
-const makeRepository = require("./modules/repository");
+const makePublicRepository = require("./modules/publicRepository");
+const makePrivateRepository = require("./modules/privateRepository");
 
 module.exports = async function (context, req) {
 
     const registrationData = checkInput(req.body);
     if (registrationData.isValid) {
 
-        const repository = makeRepository(context);
-        const opts = makeOptions(repository);
+        const opts = makeOptions(context);
 
         const result = await registry.register(registrationData, opts);
 
@@ -34,11 +34,12 @@ module.exports = async function (context, req) {
 };
 
 
-function makeOptions(publicRepository) {
+function makeOptions(context) {
     return {
         cryptoFunctions: cryptoFunctions,
         tierionConnector: tierionConnector,
-        publicRepository: publicRepository,
+        publicRepository: makePublicRepository(context),
+        privateRepository : makePrivateRepository(context),
         secrets: secrets,
         fetch : fetch
     }

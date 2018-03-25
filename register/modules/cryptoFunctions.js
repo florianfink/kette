@@ -56,9 +56,11 @@ exports.generateNewKey = function(){
     const publicKey = this.getPublicKey(privateKey);
     const address = this.getAddressFromPublicKey(publicKey);
     const addressAsString = this.getAddressString(address);
+    const privateKeyString = this.getPrivateKeyString(privateKey);
 
     return {
         privateKey : privateKey,
+        privateKeyString : privateKeyString,
         ethAddress : addressAsString
     }
 }

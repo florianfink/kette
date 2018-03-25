@@ -15,11 +15,29 @@
     {
       "type": "cosmosDB",
       "name": "registrationDocument",
-      "databaseName": "testkettedb1",
+      "databaseName": "testkettepublicdatabase",
       "collectionName": "registrations",
       "createIfNotExists": true,
       "direction": "out",
-      "ConnectionStringSetting" : "PublicCosmosDbConnectionString"
-  }
+      "ConnectionStringSetting": "PublicCosmosDbConnectionString"
+    },
+    {
+      "type": "cosmosDB",
+      "name": "registrationDocuments",
+      "databaseName": "testkettepublicdatabase",
+      "collectionName": "registrations",
+      "sqlQuery": "SELECT * FROM c",
+      "direction": "in",
+      "ConnectionStringSetting": "PublicCosmosDbConnectionString"    
+    },
+    {
+      "type": "cosmosDB",
+      "name": "userDocument",
+      "databaseName": "testketteprivatedatabase",
+      "collectionName": "users",
+      "createIfNotExists": true,
+      "direction": "out",
+      "ConnectionStringSetting": "PrivateCosmosDbConnectionString"
+    }
   ]
 }
