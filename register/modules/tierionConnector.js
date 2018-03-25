@@ -26,8 +26,6 @@ exports.registerBike = async function (registerData, opts) {
 exports.createRegisterRequestData = function (dataStoreId, frameNumber, publicKey, message) {
   const registerRequestData = JSON.stringify({
     datastoreId: dataStoreId,
-    frameId: frameNumber,
-    publicKey: publicKey,
     message: message
   });
 

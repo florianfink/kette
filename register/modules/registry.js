@@ -24,7 +24,12 @@ exports.register = async function register(registationData, opts) {
         //TODO: use userId, not e-mail if possible
         await opts.privateRepository.save({ email: registationData.email, privateKey: key.privateKeyString })
 
-        return "yolo";
+        return {
+            blockchainId : registerResult.id,
+            blochchainMessage : JSON.parse(registerResult.data.message),
+            timestamp : registerResult.timestamp,
+            status : registerResult.status
+        };
 
     } catch (error) {
         return error;
