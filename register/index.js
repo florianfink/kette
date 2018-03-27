@@ -4,11 +4,15 @@
 const secrets = require("./secrets");
 const fetch = require("node-fetch");
 
+
 const registry = require("./modules/registry");
 const cryptoFunctions = require("./modules/cryptoFunctions")
 const tierionConnector = require("./modules/tierionConnector");
+const userManagement = require("./modules/userManagement")
+
 const makePublicRepository = require("./modules/publicRepository");
 const makePrivateRepository = require("./modules/privateRepository");
+const makeAquireToken = require("./modules/activeDirectoryAuthentication");
 
 module.exports = async function (context, req) {
 
@@ -16,7 +20,7 @@ module.exports = async function (context, req) {
     if (registrationData.isValid) {
 
         const opts = makeOptions(context);
-
+        
         const result = await registry.register(registrationData, opts);
 
         context.res = {
@@ -33,15 +37,16 @@ module.exports = async function (context, req) {
     //no context.done() because we return a promise (async). so the system handles calling context.done() for us
 };
 
-
 function makeOptions(context) {
     return {
         cryptoFunctions: cryptoFunctions,
         tierionConnector: tierionConnector,
+        userManagement : userManagement,
         publicRepository: makePublicRepository(context),
-        privateRepository : makePrivateRepository(context),
+        privateRepository: makePrivateRepository(context),
+        acquireToken : makeAquireToken(secrets),
         secrets: secrets,
-        fetch : fetch
+        fetch: fetch
     }
 }
 

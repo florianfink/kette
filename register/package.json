@@ -1,7 +1,7 @@
 {
   "name": "kette",
   "version": "1.0.0",
-  "description": "",
+  "description": "registration API for kette",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,6 +9,7 @@
   "author": "Hannes Rang",
   "license": "ISC",
   "dependencies": {
+    "adal-node": "^0.1.28",
     "ethereumjs-util": "^5.1.3",
     "node-fetch": "^1.7.3"
   }
