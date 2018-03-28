@@ -15,7 +15,7 @@
     {
       "type": "cosmosDB",
       "name": "registrationDocuments",
-      "databaseName": "testkettepublicdatabase",
+      "databaseName": "publicdatabasetestkette1",
       "collectionName": "registrations",
       "sqlQuery": "SELECT * FROM c WHERE c.tierion_record_id = {tierion_record_id}",
       "direction": "in",
@@ -24,7 +24,7 @@
     {
       "type": "cosmosDB",
       "name": "registrationDocument",
-      "databaseName": "testkettepublicdatabase",
+      "databaseName": "publicdatabasetestkette1",
       "collectionName": "registrations",
       "createIfNotExists": true,
       "direction": "out",

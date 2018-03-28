@@ -15,7 +15,7 @@
     {
       "type": "cosmosDB",
       "name": "registrationDocument",
-      "databaseName": "testkettepublicdatabase",
+      "databaseName": "publicdatabasetestkette1",
       "collectionName": "registrations",
       "createIfNotExists": true,
       "direction": "out",
@@ -24,7 +24,7 @@
     {
       "type": "cosmosDB",
       "name": "registrationDocuments",
-      "databaseName": "testkettepublicdatabase",
+      "databaseName": "publicdatabasetestkette1",
       "collectionName": "registrations",
       "sqlQuery": "SELECT * FROM c",
       "direction": "in",
@@ -33,7 +33,7 @@
     {
       "type": "cosmosDB",
       "name": "userDocument",
-      "databaseName": "testketteprivatedatabase",
+      "databaseName": "privatedatabasetestkette1",
       "collectionName": "users",
       "createIfNotExists": true,
       "direction": "out",
