@@ -4,7 +4,6 @@
 const secrets = require("./secrets");
 const fetch = require("node-fetch");
 
-
 const registry = require("./modules/registry");
 const cryptoFunctions = require("./modules/cryptoFunctions")
 const tierionConnector = require("./modules/tierionConnector");
@@ -17,53 +16,42 @@ const makeAquireToken = require("./modules/activeDirectoryAuthentication");
 module.exports = async function (context, req) {
 
     const registrationData = checkInput(req.body);
-    if (registrationData.isValid) {
-
-        const opts = makeOptions(context);
-        
-        const result = await registry.register(registrationData, opts);
+    if (registrationData.hasError) {
+        context.res = {
+            status: 400,
+            body: registrationData.message
+        };
+    }
+    else {
+        const dependencies = makeDependencies(context);
+        const result = await registry.register(registrationData, dependencies);
 
         context.res = {
             status: 200,
             body: result
         };
     }
-    else {
-        context.res = {
-            status: 400,
-            body: registrationData.message
-        };
-    }
     //no context.done() because we return a promise (async). so the system handles calling context.done() for us
 };
 
-function makeOptions(context) {
+function makeDependencies(context) {
     return {
         cryptoFunctions: cryptoFunctions,
         tierionConnector: tierionConnector,
-        userManagement : userManagement,
+        userManagement: userManagement,
         publicRepository: makePublicRepository(context),
         privateRepository: makePrivateRepository(context),
-        acquireToken : makeAquireToken(secrets),
+        acquireToken: makeAquireToken(secrets),
         secrets: secrets,
         fetch: fetch
     }
 }
 
 function checkInput(input) {
-    const frameNumber = input.frameNumber;
-    const email = input.email;
-
-    if (!frameNumber || !email) {
+    if (!input.frameNumber || !input.email) {
         return {
-            isValid: false,
+            hasError: true,
             message: "frameNumber or email is missing"
         }
-    } else {
-        return {
-            frameNumber: frameNumber,
-            email: email,
-            isValid: true
-        };
-    }
+    } else return input;
 }

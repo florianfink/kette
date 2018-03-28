@@ -1,29 +1,32 @@
 "use strict";
 
-exports.registerBike = async function (registerData, opts) {
-  if(!opts.secrets || !opts.fetch) throw "fetch or secrets not set";
+exports.createRecord = async function (record, deps) {
+  if (!deps.secrets || !deps.fetch) throw "fetch or secrets not set";
 
-  const header =  {
-    "X-Username": opts.secrets.email,
-    "X-Api-Key": opts.secrets.apikey,
+  const header = {
+    "X-Username": deps.secrets.email,
+    "X-Api-Key": deps.secrets.apikey,
     "Content-Type": "application/json"
   }
+
+  const recordData = exports.createRecordCreationRequestData(deps.secrets.dataStoreId, record);
 
   const url = "https://api.tierion.com/v1/records"
 
   const parameters = {
     method: 'POST',
-    body: registerData,
+    body: recordData,
     headers: header,
   };
 
-  const registerBikeResponse = await opts.fetch(url, parameters);
+  const registerBikeResponse = await deps.fetch(url, parameters);
   const registerBikeResult = await registerBikeResponse.json();
+
   return registerBikeResult;
 }
 
 
-exports.createRegisterRequestData = function (dataStoreId, frameNumber, publicKey, message) {
+exports.createRecordCreationRequestData = function (dataStoreId, message) {
   const registerRequestData = JSON.stringify({
     datastoreId: dataStoreId,
     message: message
@@ -31,6 +34,7 @@ exports.createRegisterRequestData = function (dataStoreId, frameNumber, publicKe
 
   return registerRequestData;
 }
+
 /*
   var registerRequestData = 
   {
@@ -49,7 +53,5 @@ exports.createRegisterRequestData = function (dataStoreId, frameNumber, publicKe
         sig : "0x80974c4d60f57ffeb1dfc04ec2065436df8cd98f7cf621703ee4b5d70802f1b370f063bb76ebe1eddd4371679b8364c5a309c26c6df5ff3d45004940c01f372e1c",
     }
   }
-
-  
 }
 */

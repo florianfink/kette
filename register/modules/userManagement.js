@@ -1,6 +1,6 @@
-exports.createUser = async function (user, opts) {
+exports.createUser = async function (user, deps) {
 
-    const token = await opts.acquireToken();
+    const token = await deps.acquireToken();
     const bearerToken = token.accessToken;
 
     const userData = {
@@ -34,8 +34,14 @@ exports.createUser = async function (user, opts) {
         headers: header,
     };
 
-    const response = await opts.fetch(url, parameters);
+    const response = await deps.fetch(url, parameters);
     const result = await response.json();
 
-    return result;
+    return exports.createReturnValue(result);
+}
+
+exports.createReturnValue = function (result) {
+    const error = result["odata.error"];
+    if (error) return { hasError: true, message: error.value.message }
+    else return result;
 }
