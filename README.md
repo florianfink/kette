@@ -9,16 +9,11 @@
        curl --request POST -H "Content-Type:application/json" --data '{"frameNumber":"sample queue data"}' http://localhost:7071/api/register
 
 the code in the repository relies on a couple of secrets that are not commited and need to be recreated locally.
-Add a secrets.js file the register folder with the following contents
-
-- exports.email = "tierion E-Mail";
-- exports.apikey = "tierion api key";
-- exports.dataStoreId = tierionDataStoreId;
+Add a secrets.js file to the register folder that contains all needed secrets
 
 
 ### Setup of azure cloud:
 - [Install azure CLI for macOS](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos?view=azure-cli-latest)
-- [Create an Azure Function that connects to an Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/azure-functions/scripts/functions-cli-create-function-app-connect-to-cosmos-db)
 - Set functionApp settings version and node version to properly work with code in this repository
 
       az group create \
@@ -72,3 +67,4 @@ Add a secrets.js file the register folder with the following contents
 - [custom domains for azure functions](https://docs.microsoft.com/en-us/azure/azure-functions/scripts/functions-cli-configure-custom-domain)
 - [enable password reset for Azure AD B2C Users](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-reference-sspr)
 - [getting secrects out of key vaults from inside azure functions](https://medium.com/statuscode/getting-key-vault-secrets-in-azure-functions-37620fd20a0b)
+- [Create an Azure Function that connects to an Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/azure-functions/scripts/functions-cli-create-function-app-connect-to-cosmos-db)
