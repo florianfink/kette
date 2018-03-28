@@ -1,30 +1,33 @@
 "use strict";
 
-exports.createRecord = async function (record, deps) {
-  if (!deps.secrets || !deps.fetch) throw "fetch or secrets not set";
+exports.makeCreateBlockchainRecord = function (secrets, fetch) {
 
-  const header = {
-    "X-Username": deps.secrets.email,
-    "X-Api-Key": deps.secrets.apikey,
-    "Content-Type": "application/json"
+  const createBlockchainRecord = async function (record) {
+
+    const header = {
+      "X-Username": secrets.email,
+      "X-Api-Key": secrets.apikey,
+      "Content-Type": "application/json"
+    }
+
+    const recordData = exports.createRecordCreationRequestData(secrets.dataStoreId, record);
+
+    const url = "https://api.tierion.com/v1/records"
+
+    const parameters = {
+      method: 'POST',
+      body: recordData,
+      headers: header,
+    };
+
+    const registerBikeResponse = await fetch(url, parameters);
+    const registerBikeResult = await registerBikeResponse.json();
+
+    return registerBikeResult;
   }
 
-  const recordData = exports.createRecordCreationRequestData(deps.secrets.dataStoreId, record);
-
-  const url = "https://api.tierion.com/v1/records"
-
-  const parameters = {
-    method: 'POST',
-    body: recordData,
-    headers: header,
-  };
-
-  const registerBikeResponse = await deps.fetch(url, parameters);
-  const registerBikeResult = await registerBikeResponse.json();
-
-  return registerBikeResult;
+  return createBlockchainRecord;
 }
-
 
 exports.createRecordCreationRequestData = function (dataStoreId, message) {
   const registerRequestData = JSON.stringify({
@@ -34,24 +37,3 @@ exports.createRecordCreationRequestData = function (dataStoreId, message) {
 
   return registerRequestData;
 }
-
-/*
-  var registerRequestData = 
-  {
-    frameNumber: "1337",
-    address : "0x04e491ae062d0a4c5e2b5b7cbc33b73f0e3bf3c5",
-    cosigningaddress: "0x6d6db169514a4d8ba644f2039c119fce75000438",
-    action : "register",
-    signedMessage : {
-        address : "0x04e491ae062d0a4c5e2b5b7cbc33b73f0e3bf3c5",
-        message : "I hereby register bike with framenumber 1337",
-        signature : "0xfe6dbc93820721ff3233a58be52c8207edd4f943a49f69d2da1004c9cef67bf052296c05d465c5e9df0b6d6f60ac767ddb0b5e6fe650da296bbc02cd534dfa001b",
-    },
-    cosignedMessage : {
-        address : "0x6d6db169514a4d8ba644f2039c119fce75000438",
-        msg : "I hereby cosign message with signature 0xfe6dbc93820721ff3233a58be52c8207edd4f943a49f69d2da1004c9cef67bf052296c05d465c5e9df0b6d6f60ac767ddb0b5e6fe650da296bbc02cd534dfa001b",
-        sig : "0x80974c4d60f57ffeb1dfc04ec2065436df8cd98f7cf621703ee4b5d70802f1b370f063bb76ebe1eddd4371679b8364c5a309c26c6df5ff3d45004940c01f372e1c",
-    }
-  }
-}
-*/
