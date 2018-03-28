@@ -54,7 +54,8 @@ Add a secrets.js file to the register folder that contains all needed secrets
 - Install extension for communicating with azure cosmos db
 
       func extensions install --package Microsoft.Azure.WebJobs.Extensions.CosmosDB --version 3.0.0-beta6
-
+#### Publish
+    func azure functionapp publish functionAppTestKette1 --publish-local-settings -i --overwrite-settings -y
 #### Troubleshooting
 - [Deploy to azure fails](https://github.com/Azure/azure-functions-core-tools/issues/352)
 - [Install azure CLI fails](https://github.com/Homebrew/homebrew-core/issues/19286)
