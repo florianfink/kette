@@ -21,15 +21,47 @@ Add a secrets.js file the register folder with the following contents
 - [Create an Azure Function that connects to an Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/azure-functions/scripts/functions-cli-create-function-app-connect-to-cosmos-db)
 - Set functionApp settings version and node version to properly work with code in this repository
 
-      az functionapp config appsettings set --name <app-name> --resource-group <resource-group-name> --settings FUNCTIONS_EXTENSION_VERSION=beta
-      az functionapp config appsettings set --name <app-name> --resource-group <resource-group-name> --settings WEBSITE_NODE_DEFAULT_VERSION=8.10.4
+      az group create \
+        --name resourceGroupTestKette1 \
+        --location westeurope
+
+      az storage account create \
+        --name storageaccounttestkette1 \
+        --location westeurope \
+        --resource-group resourceGroupTestKette1 \
+        --sku Standard_LRS
+
+      az functionapp create \
+        --name functionAppTestKette1 \
+        --resource-group resourceGroupTestKette1 \
+        --storage-account storageaccounttestkette1 \
+        --consumption-plan-location westeurope
+
+      az cosmosdb create \
+        --name privatedatabasetestkette1 \
+        --resource-group resourceGroupTestKette1
+
+      az cosmosdb create \
+        --name publicdatabasetestkette1 \
+        --resource-group resourceGroupTestKette1
+
+      az functionapp config appsettings set \
+        --name functionAppTestKette1 \
+        --resource-group resourceGroupTestKette1 \
+        --settings FUNCTIONS_EXTENSION_VERSION=beta
+
+      az functionapp config appsettings set \
+        --name functionAppTestKette1 \
+        --resource-group resourceGroupTestKette1 \
+        --settings WEBSITE_NODE_DEFAULT_VERSION=8.10.0
+
 
 - Install extension for communicating with azure cosmos db
 
       func extensions install --package Microsoft.Azure.WebJobs.Extensions.CosmosDB --version 3.0.0-beta6
 
 #### Troubleshooting
-- [Deploy to aure fails](https://github.com/Azure/azure-functions-core-tools/issues/352)
+- [Deploy to azure fails](https://github.com/Azure/azure-functions-core-tools/issues/352)
 - [Install azure CLI fails](https://github.com/Homebrew/homebrew-core/issues/19286)
 
 
