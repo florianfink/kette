@@ -2,7 +2,6 @@
 
 exports.register = async function register(registrationData, deps) {
     if (!deps.cryptoFunctions) throw "cryptoFunctions not set";
-    if (!deps.tierionConnector) throw "tierionConnector not set";
 
     try {
         const exisitingRegistration = await deps.publicRepository.find(registrationData.frameNumber);
@@ -23,7 +22,7 @@ exports.register = async function register(registrationData, deps) {
 
         const blockchainRecord = await deps.createBlockchainRecord(signedMessage);
 
-        await deps.publicRepository.save({ frameNumber: registrationData.frameNumber, address: key.ethAddress });
+        await deps.publicRepository.save({ tierion_record_id : blockchainRecord.id, frameNumber: registrationData.frameNumber, address: key.ethAddress });
 
         //todo: encrypt private key
         await deps.privateRepository.save({ userId: createUserResult.objectId, privateKey: key.privateKeyString });
