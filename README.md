@@ -14,7 +14,7 @@ Add a secrets.js file to the register folder that contains all needed secrets
 
 ### Setup of azure cloud:
 - [Install azure CLI for macOS](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos?view=azure-cli-latest)
-- Set functionApp settings version and node version to properly work with code in this repository
+- create function app and all needed resources:
 
       az group create \
         --name resourceGroupTestKette1 \
