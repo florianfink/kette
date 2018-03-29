@@ -1,12 +1,16 @@
 ### running locally and deploying the backend
 - [Install node.js version 8.1.x](https://nodejs.org/en/download/)
 - [Install and run the Azure Functions Core Tools (Version 2.x runtime)](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local)
+- Install extension for communicating with azure cosmos db
+ 
+      func extensions install --package Microsoft.Azure.WebJobs.Extensions.CosmosDB --version 3.0.0-beta6
 
+- Run the functions
 
        run npm install
        func host start
 
-       curl --request POST -H "Content-Type:application/json" --data '{"frameNumber":"sample queue data"}' http://localhost:7071/api/register
+       curl --request POST -H "Content-Type:application/json" --data '{"frameNumber":"sample queue data", "email" : "lol@test.de"}' http://localhost:7071/api/register
 
 the code in the repository relies on a couple of secrets that are not commited and need to be recreated locally.
 Add a secrets.js file to the register folder that contains all needed secrets
@@ -51,9 +55,6 @@ Add a secrets.js file to the register folder that contains all needed secrets
         --settings WEBSITE_NODE_DEFAULT_VERSION=8.10.0
 
 
-- Install extension for communicating with azure cosmos db
-
-      func extensions install --package Microsoft.Azure.WebJobs.Extensions.CosmosDB --version 3.0.0-beta6
 #### Publish
     func azure functionapp publish functionAppTestKette1 --publish-local-settings -i --overwrite-settings -y
 #### Troubleshooting
