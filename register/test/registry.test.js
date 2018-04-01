@@ -5,7 +5,7 @@ const makeRegister = require('../modules/registry').makeRegister;
 const expect = require('chai').expect;
 
 
-it('should make register', () => {
+it('makeRegister should not be null', () => {
     const deps = 
     {
         cryptoFunctions : cryptoFunctions,
@@ -14,6 +14,8 @@ it('should make register', () => {
         createUser : () => "user",
         createBlockchainRecord : () => "record"
     }
+
     const register = makeRegister(deps);
     expect(register).to.be.not.null;
+
   })
