@@ -1,35 +1,64 @@
 ### running locally and deploying the backend
 - [Install node.js version 8.1.x](https://nodejs.org/en/download/)
 - [Install and run the Azure Functions Core Tools (Version 2.x runtime)](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local)
+- Install extension for communicating with azure cosmos db
+ 
+      func extensions install --package Microsoft.Azure.WebJobs.Extensions.CosmosDB --version 3.0.0-beta6
 
+- Run the functions
 
        run npm install
        func host start
 
-       curl --request POST -H "Content-Type:application/json" --data '{"frameNumber":"sample queue data"}' http://localhost:7071/api/register
+       curl --request POST -H "Content-Type:application/json" --data '{"frameNumber":"sample queue data", "email" : "lol@test.de"}' http://localhost:7071/api/register
 
 the code in the repository relies on a couple of secrets that are not commited and need to be recreated locally.
-Add a secrets.js file the register folder with the following contents
-
-- exports.email = "tierion E-Mail";
-- exports.apikey = "tierion api key";
-- exports.dataStoreId = tierionDataStoreId;
+Add a secrets.js file to the register folder that contains all needed secrets
 
 
 ### Setup of azure cloud:
 - [Install azure CLI for macOS](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-macos?view=azure-cli-latest)
-- [Create an Azure Function that connects to an Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/azure-functions/scripts/functions-cli-create-function-app-connect-to-cosmos-db)
-- Set functionApp settings version and node version to properly work with code in this repository
+- create function app and all needed resources:
 
-      az functionapp config appsettings set --name <app-name> --resource-group <resource-group-name> --settings FUNCTIONS_EXTENSION_VERSION=beta
-      az functionapp config appsettings set --name <app-name> --resource-group <resource-group-name> --settings WEBSITE_NODE_DEFAULT_VERSION=8.10.4
+      az group create \
+        --name resourceGroupTestKette1 \
+        --location westeurope
 
-- Install extension for communicating with azure cosmos db
+      az storage account create \
+        --name storageaccounttestkette1 \
+        --location westeurope \
+        --resource-group resourceGroupTestKette1 \
+        --sku Standard_LRS
 
-      func extensions install --package Microsoft.Azure.WebJobs.Extensions.CosmosDB --version 3.0.0-beta6
+      az functionapp create \
+        --name functionAppTestKette1 \
+        --resource-group resourceGroupTestKette1 \
+        --storage-account storageaccounttestkette1 \
+        --consumption-plan-location westeurope
 
+      az cosmosdb create \
+        --name privatedatabasetestkette1 \
+        --resource-group resourceGroupTestKette1
+
+      az cosmosdb create \
+        --name publicdatabasetestkette1 \
+        --resource-group resourceGroupTestKette1
+
+      az functionapp config appsettings set \
+        --name functionAppTestKette1 \
+        --resource-group resourceGroupTestKette1 \
+        --settings FUNCTIONS_EXTENSION_VERSION=beta
+
+      az functionapp config appsettings set \
+        --name functionAppTestKette1 \
+        --resource-group resourceGroupTestKette1 \
+        --settings WEBSITE_NODE_DEFAULT_VERSION=8.10.0
+
+
+#### Publish
+    func azure functionapp publish functionAppTestKette1 --publish-local-settings -i --overwrite-settings -y
 #### Troubleshooting
-- [Deploy to aure fails](https://github.com/Azure/azure-functions-core-tools/issues/352)
+- [Deploy to azure fails](https://github.com/Azure/azure-functions-core-tools/issues/352)
 - [Install azure CLI fails](https://github.com/Homebrew/homebrew-core/issues/19286)
 
 
@@ -40,3 +69,4 @@ Add a secrets.js file the register folder with the following contents
 - [custom domains for azure functions](https://docs.microsoft.com/en-us/azure/azure-functions/scripts/functions-cli-configure-custom-domain)
 - [enable password reset for Azure AD B2C Users](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-reference-sspr)
 - [getting secrects out of key vaults from inside azure functions](https://medium.com/statuscode/getting-key-vault-secrets-in-azure-functions-37620fd20a0b)
+- [Create an Azure Function that connects to an Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/azure-functions/scripts/functions-cli-create-function-app-connect-to-cosmos-db)
