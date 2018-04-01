@@ -4,7 +4,7 @@
 const secrets = require("./secrets");
 const fetch = require("node-fetch");
 
-const registry = require("./modules/registry");
+const makeRegister = require("./modules/registry");
 const cryptoFunctions = require("./modules/cryptoFunctions");
 
 const makeCreateBlockchainRecord = require("./modules/tierionConnector").makeCreateBlockchainRecord;
@@ -25,8 +25,10 @@ module.exports = async function (context, req) {
         };
     }
     else {
-        const dependencies = makeDependencies(context);
-        const result = await registry.register(registrationData, dependencies);
+        const dependencies = makeDependencies(context); 
+        const register = makeRegister(dependencies);
+        
+        const result = await register(registrationData);
 
         context.res = {
             status: 200,
@@ -38,7 +40,7 @@ module.exports = async function (context, req) {
 
 function makeDependencies(context) {
     return {
-        cryptoFunctions: cryptoFunctions,
+        cryptoFunctions : cryptoFunctions,
         createBlockchainRecord: makeCreateBlockchainRecord(secrets, fetch),
         createUser: makeCreateUser(makeAquireToken(secrets), fetch),
         publicRepository: makePublicRepository(context),

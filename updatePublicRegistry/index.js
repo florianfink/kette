@@ -1,15 +1,18 @@
 module.exports = function (context, req) {
 
-    var receipt = req.body.blockchain_receipt;
+    console.log(req);
 
-    var registration = context.bindings.registrationDocuments[0];
+    /*
+    const receipt = req.query.blockchain_receipt;
+
+    const registration = context.bindings.registrationDocuments[0];
 
     registration.receipt = receipt;
 
     context.bindings.registrationDocument = registration;
-
+*/
     context.res = {
-        body: registration
+        body: req
     };
 
     context.done();

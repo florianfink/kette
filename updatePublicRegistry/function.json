@@ -19,7 +19,7 @@
       "collectionName": "registrations",
       "sqlQuery": "SELECT * FROM c WHERE c.tierion_record_id = {tierion_record_id}",
       "direction": "in",
-      "ConnectionStringSetting": "PublicCosmosDbConnectionString"    
+      "ConnectionStringSetting": "PublicCosmosDbConnectionString"
     },
     {
       "type": "cosmosDB",
