@@ -4,7 +4,7 @@
 const secrets = require("./secrets");
 const fetch = require("node-fetch");
 
-const makeRegister = require("./modules/registry");
+const makeRegister = require("./modules/registry").makeRegister;
 const cryptoFunctions = require("./modules/cryptoFunctions");
 
 const makeCreateBlockchainRecord = require("./modules/tierionConnector").makeCreateBlockchainRecord;
