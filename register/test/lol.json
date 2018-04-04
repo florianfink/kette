@@ -1,0 +1,12 @@
+{
+    "address": "0x7fbc0f4d94ee5a97d9ee66ace9239146909fdc32",
+    "msg": "{\"action\":\"register\",\"assetType\":\"bike\",\"uniqueId\":\"1337\"}",
+    "sig": "0x7b460b74d3ba86152697f066efcb0c",
+    "version": "2",
+    "cosigning": {
+        "address": "0xd85ed0781191d5948b2589446ea023305bc5a3c2",
+        "msg": "{\"action\":\"cosign\",\"cosigner\":\"Allverta\",\"signature\":\"0x7b460b74d3ba86152697f066efcb0c\"}",
+        "sig": "0xc0783347d463536293429e9bf9",
+        "version": "2"
+    }
+}
