@@ -17,19 +17,19 @@ const makeAquireToken = require("./modules/activeDirectoryAuthentication");
 
 module.exports = async function (context, req) {
 
-    const registrationData = checkInput(req.body);
-    if (registrationData.hasError) {
+    const dependencies = makeDependencies(context);
+    const register = makeRegister(dependencies);
+
+    console.log(req.body);
+
+    const result = await register(req.body);
+
+    if (result.hasError) {
         context.res = {
             status: 400,
-            body: registrationData.message
+            body: result.message
         };
-    }
-    else {
-        const dependencies = makeDependencies(context); 
-        const register = makeRegister(dependencies);
-        
-        const result = await register(registrationData);
-
+    } else {
         context.res = {
             status: 200,
             body: result
@@ -40,19 +40,10 @@ module.exports = async function (context, req) {
 
 function makeDependencies(context) {
     return {
-        cryptoFunctions : cryptoFunctions,
+        cryptoFunctions: cryptoFunctions,
         createBlockchainRecord: makeCreateBlockchainRecord(secrets, fetch),
         createUser: makeCreateUser(makeAquireToken(secrets), fetch),
         publicRepository: makePublicRepository(context),
         privateRepository: makePrivateRepository(context)
     }
-}
-
-function checkInput(input) {
-    if (!input.frameNumber || !input.email) {
-        return {
-            hasError: true,
-            message: "frameNumber or email is missing"
-        }
-    } else return input;
 }

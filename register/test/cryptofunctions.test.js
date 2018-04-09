@@ -1,6 +1,7 @@
 const cryptoFunctions = require('../modules/cryptoFunctions');
 
 
+/*
 it('should sign a message', () => {
     const key = cryptoFunctions.generateNewKey();
 
@@ -28,3 +29,4 @@ it('should sign a message', () => {
 
     console.log(JSON.stringify(signedMessageAsObject));
 })
+*/

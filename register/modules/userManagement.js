@@ -1,6 +1,6 @@
 exports.makeCreateUser = function (acquireToken, fetch) {
 
-    const createUser =  async function (user) {
+    const createUser = async function (user) {
 
         const token = await acquireToken();
         const bearerToken = token.accessToken;
@@ -14,8 +14,9 @@ exports.makeCreateUser = function (acquireToken, fetch) {
                 }
             ],
             "creationType": "LocalAccount",
-            "displayName": "Joe Consumer_",
-            "mailNickname": "joec",
+            "givenName": user.firstName,
+            "surName": user.lastName,
+            "displayName": user.firstName + " " + user.lastName,
             "passwordProfile": {
                 "password": "P@ssword!",
                 "forceChangePasswordNextLogin": false

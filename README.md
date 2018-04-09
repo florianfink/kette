@@ -70,3 +70,65 @@ Add a secrets.js file to the register folder that contains all needed secrets
 - [enable password reset for Azure AD B2C Users](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-reference-sspr)
 - [getting secrects out of key vaults from inside azure functions](https://medium.com/statuscode/getting-key-vault-secrets-in-azure-functions-37620fd20a0b)
 - [Create an Azure Function that connects to an Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/azure-functions/scripts/functions-cli-create-function-app-connect-to-cosmos-db)
+- [Create users via REST API in Azure AD B2C](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-devquickstarts-graph-dotnet)
+
+- example user with all properties
+
+       "value": [
+        {
+            "odata.type": "Microsoft.DirectoryServices.User",
+            "objectType": "User",
+            "objectId": "id",
+            "deletionTimestamp": null,
+            "accountEnabled": true,
+            "ageGroup": null,
+            "assignedLicenses": [],
+            "assignedPlans": [],
+            "city": null,
+            "companyName": null,
+            "consentProvidedForMinor": null,
+            "country": null,
+            "creationType": "LocalAccount",
+            "department": null,
+            "dirSyncEnabled": null,
+            "displayName": "Joe Consumer_",
+            "employeeId": null,
+            "facsimileTelephoneNumber": null,
+            "givenName": null,
+            "immutableId": null,
+            "isCompromised": null,
+            "jobTitle": null,
+            "lastDirSyncTime": null,
+            "legalAgeGroupClassification": null,
+            "mail": null,
+            "mailNickname": "joec",
+            "mobile": null,
+            "onPremisesDistinguishedName": null,
+            "onPremisesSecurityIdentifier": null,
+            "otherMails": [],
+            "passwordPolicies": "DisablePasswordExpiration",
+            "passwordProfile": null,
+            "physicalDeliveryOfficeName": null,
+            "postalCode": null,
+            "preferredLanguage": null,
+            "provisionedPlans": [],
+            "provisioningErrors": [],
+            "proxyAddresses": [],
+            "refreshTokensValidFromDateTime": "2018-03-28T14:20:10Z",
+            "showInAddressList": null,
+            "signInNames": [
+                {
+                    "type": "emailAddress",
+                    "value": "emai4l2@email.de"
+                }
+            ],
+            "sipProxyAddress": null,
+            "state": null,
+            "streetAddress": null,
+            "surname": null,
+            "telephoneNumber": null,
+            "usageLocation": null,
+            "userIdentities": [],
+            "userPrincipalName": "2d4afc09-9ba4-40d3-85ba-64381b792bde@kettentest1234.onmicrosoft.com",
+            "userType": "Member"
+        },
