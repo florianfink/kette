@@ -7,10 +7,7 @@ const IS_OFFLINE = process.env.IS_OFFLINE
 
 let dynamoDb;
 if (IS_OFFLINE === 'true') {
-    dynamoDb = new AWS.DynamoDB.DocumentClient({
-        region: 'localhost',
-        endpoint: 'http://localhost:8000'
-    })
+    dynamoDb = new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })
 }
 else {
     dynamoDb = new AWS.DynamoDB.DocumentClient();
@@ -20,7 +17,6 @@ module.exports = function () {
 
     return {
         save: async (user) => {
-
             const params = {
                 TableName: USERS_TABLE,
                 Item: user

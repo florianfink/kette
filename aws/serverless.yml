@@ -37,6 +37,7 @@ provider:
         - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn" ] }
   environment:
     USERS_TABLE: ${self:custom.usersTableName}
+    ASSETS_TABLE: ${self:custom.asstesTableName}
 
 plugins:
   - serverless-dynamodb-local
@@ -50,12 +51,12 @@ functions:
               method: post
               path: register
 
-  getBike:
-    handler: handlerBikes.getBikes
+  getAssets:
+    handler: handlerAssets.getAssets
     events:
       - http:
               method: get
-              path: bikes
+              path: assets
               cors: true
               authorizer: aws_iam
 
@@ -81,11 +82,11 @@ resources:
       Properties:
         AttributeDefinitions:
           -
-            AttributeName: assetUniqueId
+            AttributeName: uniqueAssetId
             AttributeType: S
         KeySchema:
           -
-            AttributeName: assetUniqueId
+            AttributeName: uniqueAssetId
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1

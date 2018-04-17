@@ -2,6 +2,7 @@
 
 //secrets is not included in source control and needs to be created locally
 const secrets = require("./secrets");
+const config = require("./config");
 const fetch = require("node-fetch");
 
 const makeRegister = require("./modules/registry").makeRegister;
@@ -16,53 +17,46 @@ const makePrivateRepository = require("./modules/privateRepository");
 
 module.exports.register = async (event, context, callback) => {
 
+  const input = JSON.parse(event.body);
   const dependencies = makeDependencies();
-  //const input = JSON.parse(event.body);  
 
-  try {
+  const register = makeRegister(dependencies);
+  const result = await register(input);
 
-    const userToCreate = { firstName: "Fritz", lastName: "Mueller", email: "hannes@rang.de", address: "Klingenstraße 65" };
-    var result = await dependencies.createUser(userToCreate);
-
-    /*
-    const objectToSave = { userId: input.firstName, privateKey: input.lastName };
-    await dependencies.privateRepository.save(objectToSave);
-  
-    const result = { saved: objectToSave };
-  
-    const register = makeRegister(dependencies);
-    const result = await register({frameNumber : "2345123", email : "klo2@that.de", firstName: "peter", lastName : "pan"});
-    */
-
-    if (result.hasError) {
-      const response = {
-        statusCode: 400,
-        body: JSON.stringify(result.message)
-      }
-      callback(null, response);
-    }
-    else {
-      const response = {
-        statusCode: 200,
-        body: JSON.stringify(result)
-      }
-      callback(null, response);
-    };
-  } catch (error) {
+  if (result.hasError) {
     const response = {
-        statusCode: 400,
-        body: JSON.stringify(error)
-      }
+      statusCode: 400,
+      body: JSON.stringify(result.message)
+    }
     callback(null, response);
   }
+  else {
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify(result)
+    }
+    callback(null, response);
+  };
 }
 
 function makeDependencies() {
-  return {
-    cryptoFunctions: cryptoFunctions,
-    createBlockchainRecord: makeCreateBlockchainRecord(secrets, fetch),
-    createUser: makeCreateUser(secrets),
-    publicRepository: makePublicRepository(),
-    privateRepository: makePrivateRepository()
+  const IS_OFFLINE = process.env.IS_OFFLINE
+
+  if (IS_OFFLINE === 'true') {
+    return {
+      cryptoFunctions: cryptoFunctions,
+      createBlockchainRecord: (signedMessage) => { return { id: "blockchainrecordId", data: { message: signedMessage }, status: "pending", timestamp: 1231254235345 } },
+      createUser: (userInfo) => { return { userId: "lölchen" } },
+      publicRepository: makePublicRepository(),
+      privateRepository: makePrivateRepository()
+    }
+  } else {
+    return {
+      cryptoFunctions: cryptoFunctions,
+      createBlockchainRecord: makeCreateBlockchainRecord(secrets, fetch),
+      createUser: (userInfo) => makeCreateUser(secrets, config),
+      publicRepository: makePublicRepository(),
+      privateRepository: makePrivateRepository()
+    }
   }
 }

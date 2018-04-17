@@ -5,12 +5,12 @@ exports.makeCreateBlockchainRecord = function (secrets, fetch) {
   const createBlockchainRecord = async function (record) {
 
     const header = {
-      "X-Username": secrets.email,
-      "X-Api-Key": secrets.apikey,
+      "X-Username": secrets.tierionEmail,
+      "X-Api-Key": secrets.tierionApikey,
       "Content-Type": "application/json"
     }
 
-    const recordData = exports.createRecordCreationRequestData(secrets.dataStoreId, record);
+    const recordData = exports.createRecordCreationRequestData(secrets.tierionDataStoreId, record);
 
     const url = "https://api.tierion.com/v1/records"
 

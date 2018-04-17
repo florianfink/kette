@@ -1,4 +1,3 @@
-
 bin
 obj
 csx
@@ -16,13 +15,11 @@ project.lock.json
 /packages
 /TestResults
 
-/tools/NuGet.exe
-/App_Data
 /secrets
-/data
+/.serverless
 .secrets
 appsettings.json
-local.settings.json
+
 #ApiKeys for developement
 secrets.js
 

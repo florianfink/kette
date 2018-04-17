@@ -14,45 +14,54 @@ exports.makeRegister = function (deps) {
 
         try {
             //start checks 
-            const registrationData = checkInput(input);
+            const registrationData = convert(input);
             if (registrationData.hasError) return { hasError: true, message: "input error: " + registrationData.message }; //EXIT CHECK
-
-            const exisitingRegistration = await deps.publicRepository.find(registrationData.frameNumber);
-            if (exisitingRegistration) return { hasError: true, message: "already registered to: " + exisitingRegistration.address }; //EXIT CHECK
-
+            
+            const exisitingRegistrations = await deps.publicRepository.find(registrationData.uniqueAssetIdentifier);
+            if (exisitingRegistrations.length > 0) return { hasError: true, message: "already registered" }; //EXIT CHECK
+            
             const createUserResult = await deps.createUser(registrationData.userInformation);
             if (createUserResult.hasError) return { hasError: true, message: "create user failed: " + createUserResult.message }; //EXIT CHECK
-            
             // end checks
-
+            
             const key = deps.cryptoFunctions.generateNewKey();
-
+            
             const messageToSign = {
                 action: "register",
-                assetType: "bicycle",
-                uniqueId: registrationData.frameNumber
+                assetType: registrationData.assetType,
+                uniqueId: registrationData.uniqueAssetIdentifier
             }
-
+            
             const signedMessage = deps.cryptoFunctions.sign(JSON.stringify(messageToSign), key.privateKey);
-
+            
             const blockchainRecord = await deps.createBlockchainRecord(signedMessage);
-
-            await deps.publicRepository.save({ blockchainRecordId: blockchainRecord.id, frameNumber: registrationData.frameNumber, address: key.ethAddress });
-
+            
+            const publicRecord =
+            {
+                assetType : registrationData.assetType,
+                uniqueAssetId: registrationData.uniqueAssetIdentifier,
+                history: [
+                    {
+                        action: messageToSign.action,
+                        address: key.ethAddress,
+                        blockchainRecordId: blockchainRecord.id,
+                        status : blockchainRecord.status,
+                        timestamp: blockchainRecord.timestamp,
+                    }
+                ],
+            }
+            
+            await deps.publicRepository.save(publicRecord);
+            
             //todo: encrypt private key
-            await deps.privateRepository.save({ userId: createUserResult.objectId, privateKey: key.privateKeyString });
+            await deps.privateRepository.save({ userId: createUserResult.userId, privateKey: key.privateKeyString });
 
-            return {
-                blockchainId: blockchainRecord.id,
-                blockchainMessage: JSON.parse(blockchainRecord.data.message),
-                timestamp: blockchainRecord.timestamp,
-                status: blockchainRecord.status
-            };
+            return publicRecord
 
         } catch (error) {
             return {
-                hasError : true,
-                message : error.message
+                hasError: true,
+                message: error
             };
         }
     }
@@ -60,8 +69,8 @@ exports.makeRegister = function (deps) {
 }
 
 
-function checkInput(input) {
-    
+function convert(input) {
+
     if (!input) {
         return {
             hasError: true,
@@ -69,17 +78,25 @@ function checkInput(input) {
         }
     }
 
-    if (!input.frameNumber) return { hasError: true, message: "frameNumber missing" }
-    if (!input.email) return { hasError: true, message: "email missing" }
+    if (!input.uniqueAssetIdentifier) return { hasError: true, message: "uniqueAssetIdentifier missing" }
+    if (!input.assetType) return { hasError: true, message: "assetType missing" }
+    if (input.assetType != 'bicycle') return { hasError: true, message: "only bicycle allowed for assetType but was: " + input.assetType }
     if (!input.firstName) return { hasError: true, message: "firstName missing" }
     if (!input.lastName) return { hasError: true, message: "lastName missing" }
+    if (!input.street) return { hasError: true, message: "street missing" }
+    if (!input.zipcode) return { hasError: true, message: "zipcode missing" }
+    if (!input.city) return { hasError: true, message: "city missing" }
+    if (!input.country) return { hasError: true, message: "country missing" }
+    if (!input.email) return { hasError: true, message: "email missing" }
 
     return {
-        frameNumber: input.frameNumber,
+        uniqueAssetIdentifier: input.uniqueAssetIdentifier,
+        assetType: input.assetType,
         userInformation: {
             email: input.email,
             firstName: input.firstName,
-            lastName: input.lastName
+            lastName: input.lastName,
+            address: input.street + " " + input.zipcode + " " + input.city + " " + input.country
         }
     };
 }
