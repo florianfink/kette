@@ -1,7 +1,12 @@
 var AWS = require('aws-sdk');
+const assert = require("assert");
 
 exports.makeCreateUser = function (secrets, config) {
-
+    assert(config.awsUserPoolId, "userPoolId not set");
+    assert(config.awsRegion, "awsRegion not set");
+    assert(secrets.awsAccessKeyId, "awsAccessKeyId not set");
+    assert(secrets.awsSecretAccessKey, "awsSecretAccessKey not set");
+    
     const createUser = async function (user) {
 
         try {
