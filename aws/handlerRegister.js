@@ -5,15 +5,15 @@ const secrets = require("./secrets");
 const config = require("./config");
 const fetch = require("node-fetch");
 
-const makeRegister = require("./modules/registry").makeRegister;
-const cryptoFunctions = require("./modules/cryptoFunctions");
+const makeRegister = require("./register/src/registry").makeRegister;
+const cryptoFunctions = require("./register/src/cryptoFunctions");
 
-const makeCreateBlockchainRecord = require("./modules/tierionConnector").makeCreateBlockchainRecord;
+const makeCreateBlockchainRecord = require("./register/src/tierionConnector").makeCreateBlockchainRecord;
 
-const makeCreateUser = require("./modules/userManagement").makeCreateUser;
+const makeCreateUser = require("./register/src/userManagement").makeCreateUser;
 
-const makePublicRepository = require("./modules/publicRepository");
-const makePrivateRepository = require("./modules/privateRepository");
+const makePublicRepository = require("./register/src/publicRepository");
+const makePrivateRepository = require("./register/src/privateRepository");
 
 module.exports.register = async (event, context, callback) => {
 
