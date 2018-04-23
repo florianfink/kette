@@ -1,3 +1,7 @@
+//add var fetch = require('node-fetch'); after "user strict"
+//in $/node_modules/amazon-cognito-identity-js/lib/Client.js
+//workaround to make aws amplify work on server side (ONLY FOR TESTING!)
+
 const Auth = require('aws-amplify').Auth;
 const API = require('aws-amplify').API;
 
