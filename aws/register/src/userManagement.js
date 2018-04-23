@@ -6,7 +6,7 @@ exports.makeCreateUser = function (secrets, config) {
     assert(config.awsRegion, "awsRegion not set");
     assert(secrets.awsAccessKeyId, "awsAccessKeyId not set");
     assert(secrets.awsSecretAccessKey, "awsSecretAccessKey not set");
-    
+
     const createUser = async function (user) {
 
         try {
@@ -31,8 +31,10 @@ exports.makeCreateUser = function (secrets, config) {
             var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({ region: config.awsRegion });
             const createUserResult = await cognitoIdentityServiceProvider.adminCreateUser(params).promise();
             
+            console.log(JSON.stringify(createUserResult));
+
             return {
-                userId : createUserResult.sub
+                userId: createUserResult.User.Username
             };
 
         } catch (error) {

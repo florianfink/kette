@@ -17,13 +17,14 @@ exports.makeRegister = function (deps) {
             const registrationData = convert(input);
             if (registrationData.hasError) return { hasError: true, message: "input error: " + registrationData.message }; //EXIT CHECK
             
+            
             const exisitingRegistrations = await deps.publicRepository.find(registrationData.uniqueAssetIdentifier);
             if (exisitingRegistrations.length > 0) return { hasError: true, message: "already registered" }; //EXIT CHECK
             
             const createUserResult = await deps.createUser(registrationData.userInformation);
             if (createUserResult.hasError) return { hasError: true, message: "create user failed: " + createUserResult.message }; //EXIT CHECK
             // end checks
-            
+
             const key = deps.cryptoFunctions.generateNewKey();
             
             const messageToSign = {
@@ -32,10 +33,13 @@ exports.makeRegister = function (deps) {
                 uniqueId: registrationData.uniqueAssetIdentifier
             }
             
+            
             const signedMessage = deps.cryptoFunctions.sign(JSON.stringify(messageToSign), key.privateKey);
+
             
             const blockchainRecord = await deps.createBlockchainRecord(signedMessage);
             
+
             const publicRecord =
             {
                 assetType : registrationData.assetType,
@@ -51,12 +55,13 @@ exports.makeRegister = function (deps) {
                 ],
             }
             
+           
             await deps.publicRepository.save(publicRecord);
             
             //todo: encrypt private key
             await deps.privateRepository.save({ userId: createUserResult.userId, privateKey: key.privateKeyString });
-
-            return publicRecord
+            
+            return publicRecord;
 
         } catch (error) {
             return {

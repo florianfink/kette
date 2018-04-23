@@ -1,4 +1,4 @@
-const cryptoFunctions = require('../modules/cryptoFunctions');
+const cryptoFunctions = require('../src/cryptoFunctions');
 
 
 

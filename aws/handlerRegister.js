@@ -18,6 +18,7 @@ const makePrivateRepository = require("./register/src/privateRepository");
 module.exports.register = async (event, context, callback) => {
 
   const input = JSON.parse(event.body);
+
   const dependencies = makeDependencies();
 
   const register = makeRegister(dependencies);
@@ -40,23 +41,27 @@ module.exports.register = async (event, context, callback) => {
 }
 
 function makeDependencies() {
-  const IS_OFFLINE = process.env.IS_OFFLINE
+  return {
+    cryptoFunctions: cryptoFunctions,
+    createBlockchainRecord: makeCreateBlockchainRecord(secrets, fetch),
+    createUser: makeCreateUser(secrets, config),
+    publicRepository: makePublicRepository(),
+    privateRepository: makePrivateRepository()
+  }
+}
 
-  if (IS_OFFLINE === 'true') {
-    return {
-      cryptoFunctions: cryptoFunctions,
-      createBlockchainRecord: (signedMessage) => { return { id: "blockchainrecordId", data: { message: signedMessage }, status: "pending", timestamp: 1231254235345 } },
-      createUser: (userInfo) => { return { userId: "lölchen" } },
-      publicRepository: makePublicRepository(),
-      privateRepository: makePrivateRepository()
-    }
-  } else {
-    return {
-      cryptoFunctions: cryptoFunctions,
-      createBlockchainRecord: makeCreateBlockchainRecord(secrets, fetch),
-      createUser: (userInfo) => makeCreateUser(secrets, config),
-      publicRepository: makePublicRepository(),
-      privateRepository: makePrivateRepository()
-    }
+function makeMockDependencies() {
+  return {
+    cryptoFunctions: cryptoFunctions,
+    createBlockchainRecord: (signedMessage) => {
+      console.log("createBlockchainRecord called");
+      return { id: "blockchainrecordId", data: { message: signedMessage }, status: "pending", timestamp: 1231254235345 }
+    },
+    createUser: (userInfo) => {
+      console.log("create User called");
+      return { userId: "lölchen" }
+    },
+    publicRepository: makePublicRepository(),
+    privateRepository: makePrivateRepository()
   }
 }

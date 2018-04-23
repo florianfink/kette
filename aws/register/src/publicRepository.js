@@ -17,7 +17,7 @@ else {
 module.exports = function () {
     return {
         save: async (entry) => {
-            console.log(entry);
+            
             var params = {
                 TableName: ASSETS_TABLE,
                 Item: entry
