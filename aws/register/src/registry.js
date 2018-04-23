@@ -16,51 +16,56 @@ exports.makeRegister = function (deps) {
             //start checks 
             const registrationData = convert(input);
             if (registrationData.hasError) return { hasError: true, message: "input error: " + registrationData.message }; //EXIT CHECK
-            
-            
+
             const exisitingRegistrations = await deps.publicRepository.find(registrationData.uniqueAssetIdentifier);
             if (exisitingRegistrations.length > 0) return { hasError: true, message: "already registered" }; //EXIT CHECK
-            
+
             const createUserResult = await deps.createUser(registrationData.userInformation);
             if (createUserResult.hasError) return { hasError: true, message: "create user failed: " + createUserResult.message }; //EXIT CHECK
             // end checks
 
             const key = deps.cryptoFunctions.generateNewKey();
-            
+
             const messageToSign = {
                 action: "register",
                 assetType: registrationData.assetType,
                 uniqueId: registrationData.uniqueAssetIdentifier
             }
-            
-            
+
             const signedMessage = deps.cryptoFunctions.sign(JSON.stringify(messageToSign), key.privateKey);
 
-            
             const blockchainRecord = await deps.createBlockchainRecord(signedMessage);
-            
 
-            const publicRecord =
-            {
-                assetType : registrationData.assetType,
+            const publicRecord = {
+                assetType: registrationData.assetType,
                 uniqueAssetId: registrationData.uniqueAssetIdentifier,
                 history: [
                     {
                         action: messageToSign.action,
                         address: key.ethAddress,
                         blockchainRecordId: blockchainRecord.id,
-                        status : blockchainRecord.status,
+                        status: blockchainRecord.status,
                         timestamp: blockchainRecord.timestamp,
                     }
                 ],
             }
-            
-           
+
             await deps.publicRepository.save(publicRecord);
-            
+
             //todo: encrypt private key
-            await deps.privateRepository.save({ userId: createUserResult.userId, privateKey: key.privateKeyString });
-            
+            const userRecord = {
+                userId: createUserResult.userId,
+                privateKey: key.privateKeyString,
+                assets: [
+                    {
+                        uniqueAssetId: registrationData.uniqueAssetIdentifier
+                    }
+                ]
+            };
+
+            await deps.privateRepository.save(userRecord);
+
+            //TODO: return other value yo.
             return publicRecord;
 
         } catch (error) {

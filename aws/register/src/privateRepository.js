@@ -22,6 +22,17 @@ module.exports = function () {
                 Item: user
             };
             await dynamoDb.put(params).promise();
+        },
+        find: async (userId) => {
+            var params = {
+                TableName: USERS_TABLE,
+                KeyConditionExpression: 'userId = :userId',
+                ExpressionAttributeValues: {
+                    ':userId': userId
+                },
+            };
+            const result = await dynamoDb.query(params).promise();
+            return result.Items;
         }
     }
 }

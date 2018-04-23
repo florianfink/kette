@@ -3,7 +3,7 @@ const cryptoFunctions = require("../src/cryptoFunctions");
 const makeRegister = require('../src/registry').makeRegister;
 
 const expect = require('chai').expect;
-
+const assert = require('chai').assert;
 
 
 it('makeRegister should not be null', () => {
@@ -41,6 +41,8 @@ it('should save with created user and private key', async () => {
     var saveCalled = false;
     const expectedUserId = "my expected user id";
     const expectedPrivateKey = "my expected private key";
+    const expectedAssets = [{ id: "my watch id" }];
+    const input = createInput();
 
     const cryptoFunctionsLocal = require("../src/cryptoFunctions");
 
@@ -50,22 +52,24 @@ it('should save with created user and private key', async () => {
     const deps =
         {
             cryptoFunctions: cryptoFunctionsLocal,
-            publicRepository: { 
+            publicRepository: {
                 save: () => "not needed",
-                find: () => {return []} },
+                find: () => { return [] }
+            },
             privateRepository: {
-                save: (input) => {
-                    expect(input.userId).to.equal(expectedUserId);
-                    expect(input.privateKey).to.equal(expectedPrivateKey);
+                save: (recordToSave) => {
+                    expect(recordToSave.userId).to.equal(expectedUserId);
+                    expect(recordToSave.privateKey).to.equal(expectedPrivateKey);
+                    expect(recordToSave.assets[0].uniqueAssetId).to.equal(input.uniqueAssetIdentifier);
                     saveCalled = true;
                 }
             },
-            createUser: () => { return { userId: expectedUserId, privateKey: expectedPrivateKey } },
+            createUser: () => { return { userId: expectedUserId, privateKey: expectedPrivateKey, assets : expectedAssets } },
             createBlockchainRecord: () => "not needed"
         }
 
     const register = makeRegister(deps);
-    const input = createInput();
+    
     var result = await register(input);
     expect(result.hasError, result.message).to.be.undefined;
     expect(saveCalled, "privateRepository.save() was not called").to.be.true;
@@ -77,11 +81,13 @@ function createMockedRegister() {
     const deps =
         {
             cryptoFunctions: cryptoFunctions,
-            publicRepository: { 
+            publicRepository: {
                 save: () => "not needed",
-                find: () => {return []} },
-            privateRepository: { 
-                save: (user) => "not needed"},
+                find: () => { return [] }
+            },
+            privateRepository: {
+                save: (user) => "not needed"
+            },
             createUser: () => "user",
             createBlockchainRecord: () => "record"
         }
@@ -91,5 +97,5 @@ function createMockedRegister() {
 }
 
 function createInput() {
-    return { uniqueAssetIdentifier: "uniqueAssetIdentifier", assetType: "bicycle", email: "email", country: "germany", lastName: "lastName", city: "lol", zipcode : "asdas", street : "lol", firstName: "firstName" };
+    return { uniqueAssetIdentifier: "uniqueAssetIdentifier", assetType: "bicycle", email: "email", country: "germany", lastName: "lastName", city: "lol", zipcode: "asdas", street: "lol", firstName: "firstName" };
 }
