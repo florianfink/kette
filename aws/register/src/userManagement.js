@@ -30,8 +30,6 @@ exports.makeCreateUser = function (secrets, config) {
 
             var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({ region: config.awsRegion });
             const createUserResult = await cognitoIdentityServiceProvider.adminCreateUser(params).promise();
-            
-            console.log(JSON.stringify(createUserResult));
 
             return {
                 userId: createUserResult.User.Username
