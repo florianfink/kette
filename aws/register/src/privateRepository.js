@@ -33,6 +33,17 @@ module.exports = function () {
             };
             const result = await dynamoDb.query(params).promise();
             return result.Items;
+        },
+        findByCreatorId: async (creatorId) => {
+            var params = {
+                TableName: USERS_TABLE, // maps back to the serverless config variable above
+                IndexName: process.env.USERS_TABLE_CREATORID_INDEX, // maps back to the serverless config variable above
+                KeyConditionExpression: "creatorId=:creatorId",
+                ExpressionAttributeValues: { ":creatorId": creatorId }
+            };
+
+            const result = await dynamoDb.query(params).promise();
+            return result.Items;
         }
     }
 }

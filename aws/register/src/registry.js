@@ -10,7 +10,7 @@ exports.makeRegister = function (deps) {
     assert(deps.createUser, "createUser not set");
     assert(deps.createBlockchainRecord, "createBlockchainRecord not set");
 
-    const register = async function (input) {
+    const register = async function (input, creatorId) {
 
         try {
             //start checks 
@@ -39,15 +39,13 @@ exports.makeRegister = function (deps) {
             const publicRecord = {
                 assetType: registrationData.assetType,
                 uniqueAssetId: registrationData.uniqueAssetIdentifier,
-                history: [
-                    {
-                        action: messageToSign.action,
-                        address: key.ethAddress,
-                        blockchainRecordId: blockchainRecord.id,
-                        status: blockchainRecord.status,
-                        timestamp: blockchainRecord.timestamp,
-                    }
-                ],
+                history: [{
+                    action: messageToSign.action,
+                    address: key.ethAddress,
+                    blockchainRecordId: blockchainRecord.id,
+                    status: blockchainRecord.status,
+                    timestamp: blockchainRecord.timestamp,
+                }],
             }
 
             await deps.publicRepository.save(publicRecord);
@@ -56,11 +54,10 @@ exports.makeRegister = function (deps) {
             const userRecord = {
                 userId: createUserResult.userId,
                 privateKey: key.privateKeyString,
-                assets: [
-                    {
-                        uniqueAssetId: registrationData.uniqueAssetIdentifier
-                    }
-                ]
+                creatorId : creatorId,
+                assets: [{
+                    uniqueAssetId: registrationData.uniqueAssetIdentifier
+                }]
             };
 
             await deps.privateRepository.save(userRecord);

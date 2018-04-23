@@ -6,10 +6,19 @@ const makePrivateRepository = require("./register/src/privateRepository");
 
 module.exports.getAssets = async (event, context, callback) => {
 
-    //const username = "c606c29e-8257-44da-b6fa-ce2f4f0e12c6"
+    const privateRepository = makePrivateRepository();
+    
+    const users = await privateRepository.findByCreatorId("offlineContext_apiKey");
+    
+    const response = {
+        statusCode: 200,
+        body: JSON.stringify(users)
+    }
+
+    /*
     const username = "myUserIdHere";
 
-    const privateRepository = makePrivateRepository();
+    
     const publicRepository = makePublicRepository();
     
     const users = await privateRepository.find(username);
@@ -28,7 +37,7 @@ module.exports.getAssets = async (event, context, callback) => {
     const response = {
         statusCode: 200,
         body: JSON.stringify(result)
-    }
+    }*/
 
     callback(null, response);
 }
