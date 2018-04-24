@@ -1,3 +1,7 @@
+/*
+*    B2C endpoint for users to their registered assets
+*/
+
 "use strict";
 const AWS = require('aws-sdk');
 const assert = require("assert");
@@ -8,16 +12,7 @@ module.exports.getAssets = async (event, context, callback) => {
 
     const privateRepository = makePrivateRepository();
     
-    const users = await privateRepository.findByCreatorId("offlineContext_apiKey");
-    
-    const response = {
-        statusCode: 200,
-        body: JSON.stringify(users)
-    }
-
-    /*
     const username = "myUserIdHere";
-
     
     const publicRepository = makePublicRepository();
     
@@ -37,7 +32,7 @@ module.exports.getAssets = async (event, context, callback) => {
     const response = {
         statusCode: 200,
         body: JSON.stringify(result)
-    }*/
+    }
 
     callback(null, response);
 }

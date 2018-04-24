@@ -61,7 +61,7 @@ functions:
       - http:
               method: post
               path: register
-
+              cors: true
   getAssets:
     handler: handlerAssets.getAssets
     events:
@@ -70,7 +70,13 @@ functions:
               path: assets
               cors: true
               authorizer: aws_iam
-
+  getUsers:
+    handler: handlerUsers.getUsers
+    events:
+      - http:
+              method: get
+              path: users
+              cors: true
 resources:
   Resources:
     UsersDynamoDBTable:

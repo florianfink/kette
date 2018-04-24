@@ -1,3 +1,7 @@
+/*
+*  B2B endpoint for registerd registrators to register an asset on behalf of one of their clients
+*/
+
 "use strict";
 
 //secrets is not included in source control and needs to be created locally
@@ -56,11 +60,11 @@ function makeMockDependencies() {
     cryptoFunctions: cryptoFunctions,
     createBlockchainRecord: (signedMessage) => {
       console.log("createBlockchainRecord called");
-      return { id: "blockchainrecordId", data: { message: signedMessage }, status: "pending", timestamp: 1231254235345 }
+      return { id: "blockchainrecordId " + Math.random(), data: { message: signedMessage }, status: "pending", timestamp: 1231254235345 }
     },
     createUser: (userInfo) => {
       console.log("create User called");
-      return { userId: "lölchen" }
+      return { userId: "user " + Math.random() }
     },
     publicRepository: makePublicRepository(),
     privateRepository: makePrivateRepository()
