@@ -10,10 +10,8 @@ const makePrivateRepository = require("./register/src/privateRepository");
 
 module.exports.getAssets = async (event, context, callback) => {
 
+    const username = "user 0.6600103940207491";
     const privateRepository = makePrivateRepository();
-    
-    const username = "myUserIdHere";
-    
     const publicRepository = makePublicRepository();
     
     const users = await privateRepository.find(username);

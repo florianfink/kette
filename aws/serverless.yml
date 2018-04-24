@@ -23,6 +23,8 @@ custom:
 
 provider:
   name: aws
+  apiKeys:
+    - ${self:provider.stage}-allverta
   runtime: nodejs8.10
   region: us-east-1
   iamRoleStatements:
@@ -62,6 +64,7 @@ functions:
               method: post
               path: register
               cors: true
+              private : true
   getAssets:
     handler: handlerAssets.getAssets
     events:
@@ -77,6 +80,7 @@ functions:
               method: get
               path: users
               cors: true
+              private : true
 resources:
   Resources:
     UsersDynamoDBTable:

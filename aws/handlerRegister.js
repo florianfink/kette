@@ -23,7 +23,7 @@ module.exports.register = async (event, context, callback) => {
 
   const input = JSON.parse(event.body);
   const creatorId = event.requestContext.identity.apiKey;
-
+  
   const dependencies = makeMockDependencies();
 
   const register = makeRegister(dependencies);
@@ -63,8 +63,9 @@ function makeMockDependencies() {
       return { id: "blockchainrecordId " + Math.random(), data: { message: signedMessage }, status: "pending", timestamp: 1231254235345 }
     },
     createUser: (userInfo) => {
-      console.log("create User called");
-      return { userId: "user " + Math.random() }
+      const userId = "user " + Math.random();
+      console.log("create user called: "+ userId);
+      return { userId: userId }
     },
     publicRepository: makePublicRepository(),
     privateRepository: makePrivateRepository()
