@@ -19,40 +19,33 @@ API.configure({
         endpoints: [
             {
                 name: "assets",
-                endpoint: "https://y5iq5p7j6e.execute-api.us-east-1.amazonaws.com/dev",
+                endpoint: "https://uxd0ifjso8.execute-api.us-east-1.amazonaws.com/dev",
                 region: "us-east-1"
             },
         ]
     }
 })
 
-/*
-Auth.signOut()
-    .then(result => {
-        console.log(result);
-        API.get("assets", "/assets")
-        .then(result => console.log(result))
-        .catch(err => console.log(err))
-    });
-*/
 
-/*
-Auth.signIn("test@thaxyxyxt.de", "yyy")
+Auth.signIn("yyy", "xxx")
     .then(user => {
         console.log(user);
         API.get("assets", "/assets")
-            .then(result => console.log(result))
+            .then(result => console.log(JSON.stringify(result)))
             .catch(err => console.log(err))
     })
     .catch(err => {
         console.log("lol error");
         console.log(err);
     });
-*/
 
-Auth.signIn("test@thaxyxyxt.de", "xxx")
+
+
+
+/*
+Auth.signIn("yyy", "xxx")
     .then(user => {
-        Auth.completeNewPassword(user, 'yyy')
+        Auth.completeNewPassword(user, 'zzz')
             .then(result => console.log(result))
             .catch(err => {
                 console.log("changePassword error")
@@ -63,3 +56,13 @@ Auth.signIn("test@thaxyxyxt.de", "xxx")
         console.log("lol error");
         console.log(err);
     });
+    
+
+Auth.signOut()
+    .then(result => {
+        console.log(result);
+        API.get("assets", "/assets")
+        .then(result => console.log(result))
+        .catch(err => console.log(err))
+    });
+*/

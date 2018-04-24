@@ -37,17 +37,7 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn" ] }
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource:
-        - { "Fn::GetAtt": ["AssetsDynamoDBTable", "Arn" ] }
+        - "arn:aws:dynamodb:us-east-1:*:*"
   environment:
     USERS_TABLE: ${self:custom.usersTableName}
     ASSETS_TABLE: ${self:custom.asstesTableName}

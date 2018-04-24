@@ -10,11 +10,14 @@ const makePrivateRepository = require("./register/src/privateRepository");
 
 module.exports.getAssets = async (event, context, callback) => {
 
-    const username = "user 0.6600103940207491";
+    const cognitoAuthenticationProvider = event.requestContext.identity.cognitoAuthenticationProvider;
+    const splitted = cognitoAuthenticationProvider.split(":");
+    const userId = splitted[2];
+
     const privateRepository = makePrivateRepository();
     const publicRepository = makePublicRepository();
-    
-    const users = await privateRepository.find(username);
+
+    const users = await privateRepository.find(userId);
     const user = users[0];
     const assets = user.assets;
 
@@ -24,9 +27,8 @@ module.exports.getAssets = async (event, context, callback) => {
         return publicRecord;
     })
 
-    console.log(promises);
     const result = await Promise.all(promises);
-    
+
     const response = {
         statusCode: 200,
         body: JSON.stringify(result)

@@ -24,7 +24,7 @@ module.exports.register = async (event, context, callback) => {
   const input = JSON.parse(event.body);
   const creatorId = event.requestContext.identity.apiKey;
   
-  const dependencies = makeMockDependencies();
+  const dependencies = makeDependencies();
 
   const register = makeRegister(dependencies);
   const result = await register(input, creatorId);
