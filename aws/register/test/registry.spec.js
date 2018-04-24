@@ -14,25 +14,25 @@ it('makeRegister should not be null', () => {
 it('happy path. all working', async () => {
     const register = createMockedRegister();
     const input = createInput();
-    var result = await register(input);
+    var result = await register(input, "creator");
     expect(result.hasError, result.message).to.be.undefined;
 })
 
 it('no input should return an error', async () => {
     const register = createMockedRegister();
-    var result = await register();
+    var result = await register(null, "creator");
     expect(result.hasError).to.be.true;
 })
 
 it('no firstName should return an error', async () => {
     const register = createMockedRegister();
-    var result = await register({ frameNumber: "frameNumber", email: "email", lastName: "lastName" });
+    var result = await register({ frameNumber: "frameNumber", email: "email", lastName: "lastName" }, "creator");
     expect(result.hasError).to.be.true;
 })
 
 it('no lastName should return an error', async () => {
     const register = createMockedRegister();
-    var result = await register({ frameNumber: "frameNumber", email: "email", firstName: "firstName" });
+    var result = await register({ frameNumber: "frameNumber", email: "email", firstName: "firstName" }, "creator");
     expect(result.hasError).to.be.true;
 })
 
@@ -43,6 +43,7 @@ it('should save with created user and private key', async () => {
     const expectedPrivateKey = "my expected private key";
     const expectedAssets = [{ id: "my watch id" }];
     const input = createInput();
+    const expectedCreatorId = "looney toones";
 
     const cryptoFunctionsLocal = require("../src/cryptoFunctions");
 
@@ -60,6 +61,7 @@ it('should save with created user and private key', async () => {
                 save: (recordToSave) => {
                     expect(recordToSave.userId).to.equal(expectedUserId);
                     expect(recordToSave.privateKey).to.equal(expectedPrivateKey);
+                    expect(recordToSave.creatorId).to.equal(expectedCreatorId);
                     expect(recordToSave.assets[0].uniqueAssetId).to.equal(input.uniqueAssetIdentifier);
                     saveCalled = true;
                 }
@@ -70,7 +72,7 @@ it('should save with created user and private key', async () => {
 
     const register = makeRegister(deps);
     
-    var result = await register(input);
+    var result = await register(input, expectedCreatorId);
     expect(result.hasError, result.message).to.be.undefined;
     expect(saveCalled, "privateRepository.save() was not called").to.be.true;
 })

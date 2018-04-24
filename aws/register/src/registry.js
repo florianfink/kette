@@ -11,6 +11,7 @@ exports.makeRegister = function (deps) {
     assert(deps.createBlockchainRecord, "createBlockchainRecord not set");
 
     const register = async function (input, creatorId) {
+        assert(creatorId, "no creatorId");
 
         try {
             //start checks 
@@ -54,7 +55,7 @@ exports.makeRegister = function (deps) {
             const userRecord = {
                 userId: createUserResult.userId,
                 privateKey: key.privateKeyString,
-                creatorId : creatorId,
+                creatorId: creatorId,
                 assets: [{
                     uniqueAssetId: registrationData.uniqueAssetIdentifier
                 }]
