@@ -1,2 +1,6 @@
 - npm install
 - sls dynamodb install
+- create user pool
+- create idenity pool
+- create IAM admin user for backend APIs
+- create AWS central master key and enable backend - admin
