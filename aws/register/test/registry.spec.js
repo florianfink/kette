@@ -1,4 +1,4 @@
-const cryptoFunctions = require("../src/cryptoFunctions");
+const cryptoFunctions = require("../../modules/src/cryptoFunctions");
 
 const makeRegister = require('../src/registry').makeRegister;
 
@@ -45,7 +45,7 @@ it('should save with created user and private key', async () => {
     const input = createInput();
     const expectedCreatorId = "looney toones";
 
-    const cryptoFunctionsLocal = require("../src/cryptoFunctions");
+    const cryptoFunctionsLocal = require("../../modules/src/cryptoFunctions");
 
     cryptoFunctionsLocal.generateNewKey = () => { return { privateKeyString: expectedPrivateKey } }
     cryptoFunctionsLocal.sign = () => "not needed";

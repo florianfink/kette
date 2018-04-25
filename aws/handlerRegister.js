@@ -10,14 +10,12 @@ const config = require("./config");
 const fetch = require("node-fetch");
 
 const makeRegister = require("./register/src/registry").makeRegister;
-const cryptoFunctions = require("./register/src/cryptoFunctions");
-
 const makeCreateBlockchainRecord = require("./register/src/tierionConnector").makeCreateBlockchainRecord;
-
 const makeCreateUser = require("./register/src/userManagement").makeCreateUser;
 
-const makePublicRepository = require("./register/src/publicRepository");
-const makePrivateRepository = require("./register/src/privateRepository");
+const makePublicRepository = require("./modules/src/publicRepository");
+const makePrivateRepository = require("./modules/src/privateRepository");
+const cryptoFunctions = require("./modules/src/cryptoFunctions");
 
 module.exports.register = async (event, context, callback) => {
 

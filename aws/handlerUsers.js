@@ -3,10 +3,10 @@
 */
 
 "use strict";
-const AWS = require('aws-sdk');
+
 const assert = require("assert");
-const makePublicRepository = require("./register/src/publicRepository");
-const makePrivateRepository = require("./register/src/privateRepository");
+const makePublicRepository = require("./modules/src/publicRepository");
+const makePrivateRepository = require("./modules/src/privateRepository");
 
 module.exports.getUsers = async (event, context, callback) => {
 
