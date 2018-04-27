@@ -12,22 +12,10 @@ it('should sign a message', () => {
     }
 
     const signedMessage = cryptoFunctions.sign(JSON.stringify(messageToSign), key.privateKey);
-    
 
-    const cosignKey = cryptoFunctions.generateNewKey();
-
-    const messageToCosign = {
-        action : "cosign",
-        cosigner : "Allverta",
-        signature : JSON.parse(signedMessage).sig
-    }
-    const cosignedMessage = cryptoFunctions.sign(JSON.stringify(messageToCosign), cosignKey.privateKey);
-
-    var signedMessageAsObject = JSON.parse(signedMessage);
-
-    signedMessageAsObject.cosigning = JSON.parse(cosignedMessage);
-
-    //console.log(JSON.stringify(signedMessageAsObject));
+    console.log(signedMessage);
+    console.log(key.privateKeyString);
+    console.log(JSON.stringify(signedMessage))
 })
 
 it('recreate private key buffer from string', () => {

@@ -6,6 +6,16 @@ const expect = require('chai').expect;
 const assert = require('chai').assert;
 
 
+it('conversion test', () => {
+
+    const input = "My Unique Asset Id ä😃ää ???";
+
+    const asBuffer = Buffer.from(input).toString('base64');
+    const output = Buffer.from(asBuffer, 'base64').toString('utf8');
+
+    expect(input, "not equal").to.be.equal(output);
+})
+
 it('makeRegister should not be null', () => {
     const register = createMockedRegister();
     expect(register).to.be.not.null;

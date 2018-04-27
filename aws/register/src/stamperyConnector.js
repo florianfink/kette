@@ -13,7 +13,6 @@ exports.makeCreateBlockchainRecord = function (secrets, config) {
 
         const stampery = new Stampery(secrets.stamperySecret);
 
-        //check the Stringification
         const hash = stampery.hash(JSON.stringify(record));
         const hook = config.webHookUrl + "/" + assetId + "?ketteSecret=" + secrets.ketteSecret;
         const result = await stampery.stamp(hash, hook);

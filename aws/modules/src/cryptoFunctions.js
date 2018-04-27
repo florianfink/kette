@@ -12,15 +12,16 @@ exports.sign = function (message, privateKey) {
     var publicKey = this.getPublicKey(privateKey);
     var address = this.getAddressFromPublicKey(publicKey);
     var addressString = this.getAddressString(address);
-    
+
     var combined = Buffer.concat([Buffer.from(signed.r), Buffer.from(signed.s), Buffer.from([signed.v])])
+    
     var combinedHex = combined.toString('hex')
-    var result = JSON.stringify({
+    var result = {
         address: addressString,
         msg: message,
         sig: '0x' + combinedHex,
         version: '2'
-    }, null, 2)
+    }
 
     return result;
 }
@@ -43,19 +44,19 @@ exports.getPublicKey = function (privateKey) {
     return ethUtil.privateToPublic(privateKey);
 }
 
-exports.getAddressFromPublicKey = function (publicKey){
+exports.getAddressFromPublicKey = function (publicKey) {
     return ethUtil.publicToAddress(publicKey, true)
 }
 
-exports.getAddressString = function (address){
+exports.getAddressString = function (address) {
     return '0x' + address.toString('hex')
 }
 
-exports.getPublicKeyString = function(publicKey){
+exports.getPublicKeyString = function (publicKey) {
     return "0x" + publicKey.toString('hex');
 }
 
-exports.generateNewKey = function(){
+exports.generateNewKey = function () {
     const privateKey = this.generatePrivateKey();
     const publicKey = this.getPublicKey(privateKey);
     const address = this.getAddressFromPublicKey(publicKey);
@@ -63,15 +64,15 @@ exports.generateNewKey = function(){
     const privateKeyString = this.getPrivateKeyString(privateKey);
 
     return {
-        privateKey : privateKey,
-        privateKeyString : privateKeyString,
-        ethAddress : addressAsString
+        privateKey: privateKey,
+        privateKeyString: privateKeyString,
+        ethAddress: addressAsString
     }
 }
 
 // just a function to test all crypto functions
 exports.callAllFunctions = function () {
-    
+
     const privateKey = this.generatePrivateKey();
     const publicKey = this.getPublicKey(privateKey);
     const address = this.getAddressFromPublicKey(publicKey);
