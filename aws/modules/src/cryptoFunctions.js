@@ -31,6 +31,10 @@ exports.generatePrivateKey = function () {
     return finalPrivateKey;
 }
 
+exports.toPrivateKeyBuffer = function (privateKeyString) {
+    return Buffer(privateKeyString, 'hex');
+}
+
 exports.getPrivateKeyString = function (privateKey) {
     return privateKey.toString('hex');
 }
