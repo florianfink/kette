@@ -1,5 +1,5 @@
 /*
-*    B2C endpoint for users to their registered assets
+*    B2C endpoint for users to get their registered assets
 */
 
 "use strict";

@@ -9,17 +9,13 @@ module.exports = (secrets, config) => {
 
             var kms = new AWS.KMS();
             var params = {
-                KeyId: config.awsCmkId, 
+                KeyId: config.awsCmkId,
                 Plaintext: textToEncrypt
             };
 
-            let result;
-            try {
-                const encrpyted = await kms.encrypt(params).promise();
-                result = encrpyted.CiphertextBlob.toString('base64');
-            } catch (err) {
-                result = err;
-            }
+            const encrpyted = await kms.encrypt(params).promise();
+            const result = encrpyted.CiphertextBlob.toString('base64');
+
             return result;
         },
 
@@ -32,13 +28,9 @@ module.exports = (secrets, config) => {
                 CiphertextBlob: Buffer(dataToDecrypt, 'base64')
             };
 
-            let result;
-            try {
-                const decrpyted = await kms.decrypt(params).promise();
-                result = decrpyted.Plaintext.toString('ascii');
-            } catch (err) {
-                result = err;
-            }
+            const decrpyted = await kms.decrypt(params).promise();
+            const result = decrpyted.Plaintext.toString('ascii');
+            
             return result;
         }
     }

@@ -4,6 +4,7 @@ const assert = require("assert");
 
 exports.makeRegister = function (deps) {
 
+    assert(deps.encryptionService, "encryption not set");
     assert(deps.cryptoFunctions, "cryptofunctions not set");
     assert(deps.publicRepository, "publicRepository not set");
     assert(deps.privateRepository, "privateRepository not set");
@@ -17,9 +18,9 @@ exports.makeRegister = function (deps) {
             //start checks 
             const registrationData = convert(input);
             if (registrationData.hasError) return { hasError: true, message: "input error: " + registrationData.message }; //EXIT CHECK
-           
+
             const exisitingRegistrations = await deps.publicRepository.find(registrationData.uniqueAssetIdentifier);
-            if (exisitingRegistrations.length > 0) return { hasError: true, message: "already registered" }; //EXIT CHECK
+            if (exisitingRegistrations.length > 0) return { hasError: true, message: "asset already registered: " + registrationData.uniqueAssetIdentifier }; //EXIT CHECK
 
             const createUserResult = await deps.createUser(registrationData.userInformation);
             if (createUserResult.hasError) return { hasError: true, message: "create user failed: " + createUserResult.message }; //EXIT CHECK
@@ -37,24 +38,15 @@ exports.makeRegister = function (deps) {
 
             const blockchainRecord = await deps.createBlockchainRecord(signedMessage, registrationData.uniqueAssetIdentifier);
 
-            const publicRecord = {
-                assetType: registrationData.assetType,
-                uniqueAssetId: registrationData.uniqueAssetIdentifier,
-                history: [{
-                    action: messageToSign.action,
-                    address: key.ethAddress,
-                    blockchainRecordId: blockchainRecord.id,
-                    status: blockchainRecord.status,
-                    timestamp: blockchainRecord.timestamp,
-                }],
-            }
+            const publicRecord = createPublicRecord(registrationData, blockchainRecord, messageToSign.action, key.ethAddress);
 
             await deps.publicRepository.save(publicRecord);
 
-            //todo: encrypt private key
+            const encryptedPrivateKey = await deps.encryptionService.encrypt(key.privateKeyString);
+
             const userRecord = {
                 userId: createUserResult.userId,
-                privateKey: key.privateKeyString,
+                encryptedPrivateKey: encryptedPrivateKey,
                 creatorId: creatorId,
                 assets: [{
                     uniqueAssetId: registrationData.uniqueAssetIdentifier
@@ -63,10 +55,10 @@ exports.makeRegister = function (deps) {
 
             await deps.privateRepository.save(userRecord);
 
-            //TODO: return other value yo.
             return publicRecord;
 
         } catch (error) {
+            console.log("error: " + error);
             return {
                 hasError: true,
                 message: error
@@ -76,6 +68,27 @@ exports.makeRegister = function (deps) {
     return register;
 }
 
+
+function createPublicRecord(registrationData, blockchainRecord, action, ethAddress) {
+    assert(registrationData.assetType, "asset type missing")
+    assert(registrationData.uniqueAssetIdentifier, "uniqueAssetIdentifier missing")
+    assert(action === "register", "only action register allowed")
+    assert(blockchainRecord.status, "status missing")
+    assert(blockchainRecord.date, "date missing")
+    assert(blockchainRecord.date, "date missing")
+
+    return {
+        assetType: registrationData.assetType,
+        uniqueAssetId: registrationData.uniqueAssetIdentifier,
+        history: [{
+            action: action,
+            address: ethAddress,
+            blockchainRecordId: blockchainRecord.id,
+            status: blockchainRecord.status,
+            date: blockchainRecord.date,
+        }],
+    }
+}
 
 function convert(input) {
 

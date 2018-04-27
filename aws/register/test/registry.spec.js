@@ -10,8 +10,8 @@ it('conversion test', () => {
 
     const input = "My Unique Asset Id ä😃ää ???";
 
-    const asBuffer = Buffer.from(input).toString('base64');
-    const output = Buffer.from(asBuffer, 'base64').toString('utf8');
+    const base64Representation = Buffer.from(input).toString('base64');
+    const output = Buffer.from(base64Representation, 'base64').toString('utf8');
 
     expect(input, "not equal").to.be.equal(output);
 })
@@ -46,11 +46,14 @@ it('no lastName should return an error', async () => {
     expect(result.hasError).to.be.true;
 })
 
-it('should save with created user and private key', async () => {
+it('should save with created user and encrypted private key', async () => {
 
-    var saveCalled = false;
+    let saveCalled = false;
+    let encryptCalled = false;
+
     const expectedUserId = "my expected user id";
-    const expectedPrivateKey = "my expected private key";
+    const expectedPrivateKey = "my private key";
+    const expectedEncryptedPrivateKey = "my encrypted private key";
     const expectedAssets = [{ id: "my watch id" }];
     const input = createInput();
     const expectedCreatorId = "looney toones";
@@ -62,6 +65,13 @@ it('should save with created user and private key', async () => {
 
     const deps =
         {
+            encryptionService: {
+                encrypt: (dataToEncrypt) => {
+                    expect(dataToEncrypt).to.equal(expectedPrivateKey);
+                    encryptCalled = true;
+                    return expectedEncryptedPrivateKey;
+                }
+            },
             cryptoFunctions: cryptoFunctionsLocal,
             publicRepository: {
                 save: () => "not needed",
@@ -70,21 +80,22 @@ it('should save with created user and private key', async () => {
             privateRepository: {
                 save: (recordToSave) => {
                     expect(recordToSave.userId).to.equal(expectedUserId);
-                    expect(recordToSave.privateKey).to.equal(expectedPrivateKey);
+                    expect(recordToSave.encryptedPrivateKey).to.equal(expectedEncryptedPrivateKey);
                     expect(recordToSave.creatorId).to.equal(expectedCreatorId);
                     expect(recordToSave.assets[0].uniqueAssetId).to.equal(input.uniqueAssetIdentifier);
                     saveCalled = true;
                 }
             },
-            createUser: () => { return { userId: expectedUserId, privateKey: expectedPrivateKey, assets : expectedAssets } },
+            createUser: () => { return { userId: expectedUserId, privateKey: expectedPrivateKey, assets: expectedAssets } },
             createBlockchainRecord: () => "not needed"
         }
 
     const register = makeRegister(deps);
-    
+
     var result = await register(input, expectedCreatorId);
     expect(result.hasError, result.message).to.be.undefined;
     expect(saveCalled, "privateRepository.save() was not called").to.be.true;
+    expect(encryptCalled, "encryptionSerivce.encyrpt() was not called").to.be.true;
 })
 
 
@@ -92,6 +103,10 @@ it('should save with created user and private key', async () => {
 function createMockedRegister() {
     const deps =
         {
+            encryptionService: {
+                encrypt: (input) => { return Buffer.from(input).toString('base64'); },
+                decrypt: (input) => { return Buffer.from(input, 'base64').toString('utf8') },
+            },
             cryptoFunctions: cryptoFunctions,
             publicRepository: {
                 save: () => "not needed",

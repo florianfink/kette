@@ -14,6 +14,9 @@ const makeCreateUser = require("./register/src/userManagement").makeCreateUser;
 
 const makePublicRepository = require("./modules/src/publicRepository");
 const makePrivateRepository = require("./modules/src/privateRepository");
+
+const makeEncryptionService = require("./modules/src/encryptionService");
+
 const cryptoFunctions = require("./modules/src/cryptoFunctions");
 
 module.exports.register = async (event, context, callback) => {
@@ -44,6 +47,7 @@ module.exports.register = async (event, context, callback) => {
 
 function makeDependencies() {
   return {
+    encryptionService : makeEncryptionService(secrets, config),
     cryptoFunctions: cryptoFunctions,
     createBlockchainRecord: makeCreateBlockchainRecord(secrets, config),
     createUser: makeCreateUser(secrets, config),
@@ -54,6 +58,10 @@ function makeDependencies() {
 
 function makeMockDependencies() {
   return {
+    encryptionService : {
+      encrypt : (input) => {return Buffer.from(input).toString('base64');},
+      decrypt : (input) => {return Buffer.from(input, 'base64').toString('utf8')},
+    },
     cryptoFunctions: cryptoFunctions,
     createBlockchainRecord: (signedMessage) => {
       console.log("createBlockchainRecord called");

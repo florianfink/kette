@@ -19,7 +19,7 @@ exports.makeCreateBlockchainRecord = function (secrets, config) {
         
         return {
             id: result.id,
-            timestamp : result.time,
+            date : result.time,
             status : "pending"
         };
     }

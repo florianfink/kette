@@ -1,5 +1,5 @@
 /*
-*    B2B endpoint for registerd registrators to get all users that where created by them
+*    B2B endpoint for registerd registrators to get all users that were created by them
 */
 
 "use strict";
