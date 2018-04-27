@@ -17,7 +17,7 @@ exports.makeRegister = function (deps) {
             //start checks 
             const registrationData = convert(input);
             if (registrationData.hasError) return { hasError: true, message: "input error: " + registrationData.message }; //EXIT CHECK
-
+           
             const exisitingRegistrations = await deps.publicRepository.find(registrationData.uniqueAssetIdentifier);
             if (exisitingRegistrations.length > 0) return { hasError: true, message: "already registered" }; //EXIT CHECK
 
@@ -35,7 +35,7 @@ exports.makeRegister = function (deps) {
 
             const signedMessage = deps.cryptoFunctions.sign(JSON.stringify(messageToSign), key.privateKey);
 
-            const blockchainRecord = await deps.createBlockchainRecord(signedMessage);
+            const blockchainRecord = await deps.createBlockchainRecord(signedMessage, registrationData.uniqueAssetIdentifier);
 
             const publicRecord = {
                 assetType: registrationData.assetType,

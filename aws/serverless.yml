@@ -55,6 +55,12 @@ functions:
               path: register
               cors: true
               private : true
+  webHookAssets:
+    handler: handlerWebHookAssets.updateAsset
+    events:
+      - http:
+              method: post
+              path: assets/{id}
   getAssets:
     handler: handlerAssets.getAssets
     events:

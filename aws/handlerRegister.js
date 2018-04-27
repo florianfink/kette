@@ -7,10 +7,9 @@
 //secrets is not included in source control and needs to be created locally
 const secrets = require("./secrets");
 const config = require("./config");
-const fetch = require("node-fetch");
 
 const makeRegister = require("./register/src/registry").makeRegister;
-const makeCreateBlockchainRecord = require("./register/src/tierionConnector").makeCreateBlockchainRecord;
+const makeCreateBlockchainRecord = require("./register/src/stamperyConnector").makeCreateBlockchainRecord;
 const makeCreateUser = require("./register/src/userManagement").makeCreateUser;
 
 const makePublicRepository = require("./modules/src/publicRepository");
@@ -46,7 +45,7 @@ module.exports.register = async (event, context, callback) => {
 function makeDependencies() {
   return {
     cryptoFunctions: cryptoFunctions,
-    createBlockchainRecord: makeCreateBlockchainRecord(secrets, fetch),
+    createBlockchainRecord: makeCreateBlockchainRecord(secrets, config),
     createUser: makeCreateUser(secrets, config),
     publicRepository: makePublicRepository(),
     privateRepository: makePrivateRepository()
