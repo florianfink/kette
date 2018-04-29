@@ -7,13 +7,14 @@
 const assert = require("assert");
 const makePublicRepository = require("./modules/src/publicRepository");
 const makePrivateRepository = require("./modules/src/privateRepository");
+const convertTransactions = require("./assets/src/transactionConverter").convert;
 
 module.exports.getAssets = async (event, context, callback) => {
     let userId;
     const IS_OFFLINE = process.env.IS_OFFLINE
 
     if (IS_OFFLINE) {
-        userId = "a80a8096-0a74-41d5-9739-4c2c35460a37";
+        userId = "361109f3-92aa-4b2d-9b6f-c7f36ce46632";
     }
     else {
         const cognitoAuthenticationProvider = event.requestContext.identity.cognitoAuthenticationProvider;
@@ -27,29 +28,7 @@ module.exports.getAssets = async (event, context, callback) => {
     const userRecord = await privateRepository.get(userId);
     const assetTransactions = await publicRepository.findByEthAddress(userRecord.ethAddress);
 
-    const result = [
-        {
-            uniqueAssetId: "First Asset Id",
-            assetType: "bicycle",
-            assetTransactions: [{
-                action: "register",
-                date: new Date(),
-                blockchainRecordId: "blockchain Record 1",
-                id: "id 1",
-                status: "pending"
-            }]
-        },
-        {
-            uniqueAssetId: "Second Asset Id",
-            assetType: "bicycle",
-            assetTransactions: [{
-                action: "register",
-                date: new Date(),
-                blockchainRecordId: "blockchain Record 2",
-                id: "id 2",
-                status: "pending"
-            }]
-        }]
+    const assets = convertTransactions(assetTransactions);
 
     const response = {
         headers: {
@@ -57,9 +36,7 @@ module.exports.getAssets = async (event, context, callback) => {
             "Access-Control-Allow-Credentials": true
         },
         statusCode: 200,
-        body: JSON.stringify(result)
-
-
+        body: JSON.stringify(assets)
     }
 
     callback(null, response);
