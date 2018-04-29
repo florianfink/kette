@@ -23,16 +23,15 @@ module.exports = function () {
             };
             await dynamoDb.put(params).promise();
         },
-        find: async (userId) => {
+        get: async (userId) => {
             var params = {
                 TableName: USERS_TABLE,
-                KeyConditionExpression: 'userId = :userId',
-                ExpressionAttributeValues: {
-                    ':userId': userId
+                Key: {
+                    'userId': userId
                 },
             };
-            const result = await dynamoDb.query(params).promise();
-            return result.Items;
+            const result = await dynamoDb.get(params).promise();
+            return result.Item;
         },
         findByCreatorId: async (creatorId) => {
             var params = {

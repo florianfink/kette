@@ -26,7 +26,7 @@ API.configure({
     }
 })
 
-
+/*
 Auth.signIn("yyy", "xxx")
     .then(user => {
         console.log(user);
@@ -38,14 +38,15 @@ Auth.signIn("yyy", "xxx")
         console.log("lol error");
         console.log(err);
     });
+*/
 
 
 
 
-/*
-Auth.signIn("yyy", "xxx")
+Auth.signIn("meinTestNutzer@gibtsnicht.ui", "tempPassword1234!")
     .then(user => {
-        Auth.completeNewPassword(user, 'zzz')
+        //console.log(user);
+        Auth.completeNewPassword(user, 'tempPassword12345!')
             .then(result => console.log(result))
             .catch(err => {
                 console.log("changePassword error")
@@ -57,7 +58,7 @@ Auth.signIn("yyy", "xxx")
         console.log(err);
     });
     
-
+/*
 Auth.signOut()
     .then(result => {
         console.log(result);

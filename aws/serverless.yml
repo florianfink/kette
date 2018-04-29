@@ -15,8 +15,10 @@ service: kette
 
 custom:
   usersTableName: 'users-table-${self:provider.stage}'
-  asstesTableName: 'assets-table-${self:provider.stage}'
+  assetTransactionsTableName: 'assetTransactions-table-${self:provider.stage}'
   creatorIdIndex: 'users-table-creatorId-index-${self:provider.stage}'
+  ethAddressIndex : 'assetTransactions-table-ethAddress-index-${self:provider.stage}'
+  uniqueAssetIdIndex : 'assetTransactions-table-uniqueAssetId-index-${self:provider.stage}'
   dynamodb:
     start:
       migrate: true
@@ -40,8 +42,10 @@ provider:
         - "arn:aws:dynamodb:us-east-1:*:*"
   environment:
     USERS_TABLE: ${self:custom.usersTableName}
-    ASSETS_TABLE: ${self:custom.asstesTableName}
+    ASSETTRANSACTIONS_TABLE: ${self:custom.assetTransactionsTableName}
     USERS_TABLE_CREATORID_INDEX: ${self:custom.creatorIdIndex}
+    ASSETTRANSACTIONS_TABLE_ETHADDRESS_INDEX : ${self:custom.ethAddressIndex}
+    ASSETTRANSACTIONS_TABLE_UNIQUEASSETID_INDEX : ${self:custom.uniqueAssetIdIndex}
 plugins:
   - serverless-dynamodb-local
   - serverless-offline
@@ -109,18 +113,47 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:custom.usersTableName}
-    AssetsDynamoDBTable:
+    AssetTransactionsDynamoDBTable:
       Type: 'AWS::DynamoDB::Table'
       Properties:
         AttributeDefinitions:
           -
+            AttributeName: id
+            AttributeType: S
+          -
             AttributeName: uniqueAssetId
+            AttributeType: S
+          -
+            AttributeName: ethAddress
             AttributeType: S
         KeySchema:
           -
-            AttributeName: uniqueAssetId
+            AttributeName: id
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:custom.asstesTableName}
+        GlobalSecondaryIndexes:
+          -
+            IndexName: ${self:provider.environment.ASSETTRANSACTIONS_TABLE_UNIQUEASSETID_INDEX}
+            KeySchema:
+              -
+                AttributeName: uniqueAssetId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+          -
+            IndexName: ${self:provider.environment.ASSETTRANSACTIONS_TABLE_ETHADDRESS_INDEX}
+            KeySchema:
+              -
+                AttributeName: ethAddress
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+        TableName: ${self:custom.assetTransactionsTableName}

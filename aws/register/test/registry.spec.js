@@ -21,13 +21,6 @@ it('makeRegister should not be null', () => {
     expect(register).to.be.not.null;
 })
 
-it('happy path. all working', async () => {
-    const register = createMockedRegister();
-    const input = createInput();
-    var result = await register(input, "creator");
-    expect(result.hasError, result.message).to.be.undefined;
-})
-
 it('no input should return an error', async () => {
     const register = createMockedRegister();
     var result = await register(null, "creator");
@@ -46,7 +39,7 @@ it('no lastName should return an error', async () => {
     expect(result.hasError).to.be.true;
 })
 
-it('should save with created user and encrypted private key', async () => {
+it('should complete workflow', async () => {
 
     let saveCalled = false;
     let encryptCalled = false;
@@ -54,14 +47,10 @@ it('should save with created user and encrypted private key', async () => {
     const expectedUserId = "my expected user id";
     const expectedPrivateKey = "my private key";
     const expectedEncryptedPrivateKey = "my encrypted private key";
-    const expectedAssets = [{ id: "my watch id" }];
     const input = createInput();
     const expectedCreatorId = "looney toones";
-
-    const cryptoFunctionsLocal = require("../../modules/src/cryptoFunctions");
-
-    cryptoFunctionsLocal.generateNewKey = () => { return { privateKeyString: expectedPrivateKey } }
-    cryptoFunctionsLocal.sign = () => "not needed";
+    const expectedEthAddress = "my eth address";
+    const expectedSignedMessage = "my signed Message";
 
     const deps =
         {
@@ -72,22 +61,31 @@ it('should save with created user and encrypted private key', async () => {
                     return expectedEncryptedPrivateKey;
                 }
             },
-            cryptoFunctions: cryptoFunctionsLocal,
+            cryptoFunctions: {
+                generateNewKey: () => {
+                    return { privateKeyString: expectedPrivateKey, ethAddress: expectedEthAddress }
+                },
+                sign: () => {
+                    return expectedSignedMessage
+                }
+            },
             publicRepository: {
-                save: () => "not needed",
-                find: () => { return [] }
+                save: (publicRecordToSave) => {
+                    expect(publicRecordToSave.signedMessage).to.equal(expectedSignedMessage);
+                },
+                findByUniqueAssetId: (uniqueAssetId) => { return [] }
             },
             privateRepository: {
                 save: (recordToSave) => {
                     expect(recordToSave.userId).to.equal(expectedUserId);
                     expect(recordToSave.encryptedPrivateKey).to.equal(expectedEncryptedPrivateKey);
                     expect(recordToSave.creatorId).to.equal(expectedCreatorId);
-                    expect(recordToSave.assets[0].uniqueAssetId).to.equal(input.uniqueAssetIdentifier);
+                    expect(recordToSave.ethAddress).to.equal(expectedEthAddress);
                     saveCalled = true;
                 }
             },
-            createUser: () => { return { userId: expectedUserId, privateKey: expectedPrivateKey, assets: expectedAssets } },
-            createBlockchainRecord: () => "not needed"
+            createUser: () => { return { userId: expectedUserId } },
+            createBlockchainRecord: () => { return { status: "pending", date: new Date() } }
         }
 
     const register = makeRegister(deps);
@@ -115,8 +113,8 @@ function createMockedRegister() {
             privateRepository: {
                 save: (user) => "not needed"
             },
-            createUser: () => "user",
-            createBlockchainRecord: () => "record"
+            createUser: () => { return { userId: "myUser" } },
+            createBlockchainRecord: () => { return { status: "pending", date: new Date() } }
         }
 
     const register = makeRegister(deps);
@@ -124,5 +122,5 @@ function createMockedRegister() {
 }
 
 function createInput() {
-    return { uniqueAssetIdentifier: "uniqueAssetIdentifier", assetType: "bicycle", email: "email", country: "germany", lastName: "lastName", city: "lol", zipcode: "asdas", street: "lol", firstName: "firstName" };
+    return { uniqueAssetId: "uniqueAssetId", assetType: "bicycle", email: "email", country: "germany", lastName: "lastName", city: "lol", zipcode: "asdas", street: "lol", firstName: "firstName" };
 }

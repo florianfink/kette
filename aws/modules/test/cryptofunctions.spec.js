@@ -13,9 +13,6 @@ it('should sign a message', () => {
 
     const signedMessage = cryptoFunctions.sign(JSON.stringify(messageToSign), key.privateKey);
 
-    console.log(signedMessage);
-    console.log(key.privateKeyString);
-    console.log(JSON.stringify(signedMessage))
 })
 
 it('recreate private key buffer from string', () => {

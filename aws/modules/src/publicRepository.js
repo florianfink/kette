@@ -3,7 +3,7 @@
 const AWS = require('aws-sdk');
 const assert = require("assert");
 
-const ASSETS_TABLE = process.env.ASSETS_TABLE;
+const ASSETTRANSACTIONS_TABLE = process.env.ASSETTRANSACTIONS_TABLE;
 const IS_OFFLINE = process.env.IS_OFFLINE
 
 let dynamoDb;
@@ -19,19 +19,30 @@ module.exports = function () {
         save: async (entry) => {
             
             var params = {
-                TableName: ASSETS_TABLE,
+                TableName: ASSETTRANSACTIONS_TABLE,
                 Item: entry
             };
             await dynamoDb.put(params).promise();
         },
-        find: async (uniqueAssetIdentifier) => {
+        findByUniqueAssetId: async (uniqueAssetId) => {
             var params = {
-                TableName: ASSETS_TABLE,
-                KeyConditionExpression: 'uniqueAssetId = :uniqueAssetId',
-                ExpressionAttributeValues: {
-                    ':uniqueAssetId': uniqueAssetIdentifier
-                },
+                TableName: ASSETTRANSACTIONS_TABLE,
+                IndexName: process.env.ASSETTRANSACTIONS_TABLE_UNIQUEASSETID_INDEX,
+                KeyConditionExpression: "uniqueAssetId=:uniqueAssetId",
+                ExpressionAttributeValues: { ":uniqueAssetId": uniqueAssetId }
             };
+
+            const result = await dynamoDb.query(params).promise();
+            return result.Items;
+        },
+        findByEthAddress: async (ethAddress) => {
+            var params = {
+                TableName: ASSETTRANSACTIONS_TABLE,
+                IndexName: process.env.ASSETTRANSACTIONS_TABLE_ETHADDRESS_INDEX,
+                KeyConditionExpression: "ethAddress=:ethAddress",
+                ExpressionAttributeValues: { ":ethAddress": ethAddress }
+            };
+
             const result = await dynamoDb.query(params).promise();
             return result.Items;
         }
