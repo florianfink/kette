@@ -20,9 +20,6 @@ project.lock.json
 .secrets
 appsettings.json
 
-#ApiKeys for developement
-secrets.js
-
 # Logs
 logs
 *.log
