@@ -26,9 +26,14 @@
     <div :style="theme.inputRow">
       <input :style="theme.input" v-model="phone_number" placeholder="Phone Number" />
     </div>
+        <div :style="theme.error" v-if="error">
+      {{ error }}
+    </div>
+    <!-- Comment 
     <div :style="theme.actionRow">
       <button :style="theme.action" v-on:click="signUp" :disabled="!username || !password">Sign Up</button>
     </div>
+    -->
     <div :style="theme.footer">
       <div :style="theme.footerLeft">
         <a :style="theme.link" v-on:click="signIn">Back to Sign In</a>
@@ -41,42 +46,44 @@
 </template>
 
 <script>
-import { Auth, Logger } from 'aws-amplify'
-import AmplifyStore from '../../AmplifyStore'
-import AmplifyTheme from '../../AmplifyTheme'
+import { Auth, Logger } from "aws-amplify";
+import AmplifyStore from "../../AmplifyStore";
+import AmplifyTheme from "../../AmplifyTheme";
 
-const logger = new Logger('SignUpComp');
+const logger = new Logger("SignUpComp");
 
 export default {
-  name: 'SignUp',
-  data () {
+  name: "SignUp",
+  data() {
     return {
-      username: '',
-      password: '',
-      email: '',
-      phone_number: '',
+      username: "",
+      password: "",
+      email: "",
+      phone_number: "",
+      error: "Registration not opened",
       theme: AmplifyTheme
-    }
+    };
   },
   computed: {
-    user() { return AmplifyStore.state.user }
+    user() {
+      return AmplifyStore.state.user;
+    }
   },
   methods: {
     signUp: function(event) {
-        Auth.signUp(this.username, this.password, this.email, this.phone_number)
-            .then(data => {
-                logger.debug('sign up success', data);
-                this.$router.push('/auth/confirmSignUp');
-            })
-            .catch(err => logger.error('sign up error', err))
-
+      Auth.signUp(this.username, this.password, this.email, this.phone_number)
+        .then(data => {
+          logger.debug("sign up success", data);
+          this.$router.push("/auth/confirmSignUp");
+        })
+        .catch(err => logger.error("sign up error", err));
     },
     signIn: function() {
-        this.$router.push('/auth/signIn');
+      this.$router.push("/auth/signIn");
     },
     confirm: function() {
-        this.$router.push('/auth/confirmSignUp');
+      this.$router.push("/auth/confirmSignUp");
     }
   }
-}
+};
 </script>
