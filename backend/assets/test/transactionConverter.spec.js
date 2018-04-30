@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const transformer = require('../src/transactionConverter');
+const converter = require('../src/transactionConverter');
 
 
 it('should transform transactions into assets', () => {
@@ -74,7 +74,7 @@ it('should transform transactions into assets', () => {
     
     const transactions = [transaction1, transaction2, transaction3]
 
-    const assets = transformer.transform(transactions);
+    const assets = converter.convert(transactions);
 
     expect(assets).to.deep.equal(expectedResult);
 })

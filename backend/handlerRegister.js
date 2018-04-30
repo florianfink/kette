@@ -18,6 +18,7 @@ const makePrivateRepository = require("./modules/src/privateRepository");
 const makeEncryptionService = require("./modules/src/encryptionService");
 
 const cryptoFunctions = require("./modules/src/cryptoFunctions");
+const AWS = require('aws-sdk');
 
 module.exports.register = async (event, context, callback) => {
 
@@ -45,14 +46,22 @@ module.exports.register = async (event, context, callback) => {
   };
 }
 
-function makeDependencies() {
+function makeDependencies(){
+  if (process.env.IS_OFFLINE === 'true'){
+    return makeMockDependencies();
+  }else{
+    return makeRealDependencies();
+  }
+}
+
+function makeRealDependencies() {
   return {
     encryptionService : makeEncryptionService(secrets, config),
     cryptoFunctions: cryptoFunctions,
     createBlockchainRecord: makeCreateBlockchainRecord(secrets, config),
     createUser: makeCreateUser(secrets, config),
-    publicRepository: makePublicRepository(),
-    privateRepository: makePrivateRepository()
+    publicRepository: makePublicRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion})),
+    privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion}))
   }
 }
 
@@ -63,16 +72,16 @@ function makeMockDependencies() {
       decrypt : (input) => {return Buffer.from(input, 'base64').toString('utf8')},
     },
     cryptoFunctions: cryptoFunctions,
-    createBlockchainRecord: (signedMessage) => {
-      console.log("createBlockchainRecord called");
-      return { id: "blockchainrecordId " + Math.random(), data: { message: signedMessage }, status: "pending", timestamp: 1231254235345 }
+    createBlockchainRecord: (signedMessage, id) => {
+      console.log("createBlockchainRecord called with id: " + id);
+      return { id: "blockchainrecordId " + Math.random(), status: "pending", date: new Date() }
     },
     createUser: (userInfo) => {
       const userId = "user " + Math.random();
       console.log("create user called: "+ userId);
       return { userId: userId }
     },
-    publicRepository: makePublicRepository(),
-    privateRepository: makePrivateRepository()
+    publicRepository: makePublicRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
+    privateRepository: makePrivateRepository( new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' }))
   }
 }

@@ -1,32 +1,31 @@
 "use strict";
-
-const AWS = require('aws-sdk');
 const assert = require("assert");
 
-const ASSETTRANSACTIONS_TABLE = process.env.ASSETTRANSACTIONS_TABLE;
-const IS_OFFLINE = process.env.IS_OFFLINE
+module.exports = function (dynamoDb) {
+    assert(dynamoDb, "dynamo db not set");
 
-let dynamoDb;
-if (IS_OFFLINE === 'true') {
-    dynamoDb = new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })
-}
-else {
-    dynamoDb = new AWS.DynamoDB.DocumentClient();
-}
-
-module.exports = function () {
     return {
         save: async (entry) => {
             
             var params = {
-                TableName: ASSETTRANSACTIONS_TABLE,
+                TableName: process.env.ASSETTRANSACTIONS_TABLE,
                 Item: entry
             };
             await dynamoDb.put(params).promise();
         },
+        get: async (id) => {
+            var params = {
+                TableName: process.env.ASSETTRANSACTIONS_TABLE,
+                Key: {
+                    'id': id
+                },
+            };
+            const result = await dynamoDb.get(params).promise();
+            return result.Item;
+        },
         findByUniqueAssetId: async (uniqueAssetId) => {
             var params = {
-                TableName: ASSETTRANSACTIONS_TABLE,
+                TableName: process.env.ASSETTRANSACTIONS_TABLE,
                 IndexName: process.env.ASSETTRANSACTIONS_TABLE_UNIQUEASSETID_INDEX,
                 KeyConditionExpression: "uniqueAssetId=:uniqueAssetId",
                 ExpressionAttributeValues: { ":uniqueAssetId": uniqueAssetId }
@@ -37,7 +36,7 @@ module.exports = function () {
         },
         findByEthAddress: async (ethAddress) => {
             var params = {
-                TableName: ASSETTRANSACTIONS_TABLE,
+                TableName: process.env.ASSETTRANSACTIONS_TABLE,
                 IndexName: process.env.ASSETTRANSACTIONS_TABLE_ETHADDRESS_INDEX,
                 KeyConditionExpression: "ethAddress=:ethAddress",
                 ExpressionAttributeValues: { ":ethAddress": ethAddress }
