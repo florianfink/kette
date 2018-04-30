@@ -22,53 +22,42 @@
           v-bind:placeholder="field.label || field.name"
         />
       </div>
-      <div :style="style.lineBreak" v-if="field.type === 'lineBreak'"></div>
-    </div>
-    <div :style="style.actionRow">
-      <button :style="style.action" v-on:click="save">Save</button>
     </div>
   </div>
 </template>
 
 <script>
-import { Auth, Storage, Logger } from 'aws-amplify'
-import AmplifyStore from '../../AmplifyStore'
-import AmplifyTheme from '../../AmplifyTheme'
+import { Auth, Storage, Logger } from "aws-amplify";
+import AmplifyStore from "../../AmplifyStore";
+import AmplifyTheme from "../../AmplifyTheme";
 
-const logger = new Logger('SimpleForm');
+const logger = new Logger("SimpleForm");
 
 export default {
-  name: 'SimpleForm',
-  data () {
+  name: "SimpleForm",
+  data() {
     return {
-      profile: {},
+      profile: { },
       style: this.theme || AmplifyTheme
+    };
+  },
+  props: ["path", "fields", "theme"],
+  computed: {
+    userId: function() {
+      return AmplifyStore.state.userId;
     }
   },
-  props: ['path', 'fields', 'theme'],
-  computed: {
-    userId: function() { return AmplifyStore.state.userId }
-  },
   created() {
-    logger.debug('simple form created...')
-    this.load()
+    logger.debug("simple form created...");
+    this.load();
   },
   methods: {
     load() {
-      Storage.get(this.path, { download: true })
-        .then(data => {
-          const body = data.Body.toString('utf8')
-          this.profile = JSON.parse(body)
-        })
-        .catch(err => logger.error(err))
-    },
-    save() {
-      if (!this.userId) { return }
-      const data = JSON.stringify(this.profile)
-      Storage.put(this.path, data, { contentType: 'application/json' })
-        .then(data => logger.debug(data))
-        .catch(err => logger.error(err))
+      this.profile = {
+        firstName: AmplifyStore.state.user.signInUserSession.idToken.payload.given_name,
+        lastName :AmplifyStore.state.user.signInUserSession.idToken.payload.family_name
+      }
     }
   }
-}
+};
 </script>

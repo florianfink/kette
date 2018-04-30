@@ -13,13 +13,10 @@
 
 import Vue from 'vue'
 
-import PhotoPicker from './PhotoPicker'
 import SimpleForm from './SimpleForm'
 
-Vue.component('a-photo-picker', PhotoPicker)
 Vue.component('a-simple-form', SimpleForm)
 
 export {
-  PhotoPicker,
   SimpleForm
 }

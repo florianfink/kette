@@ -21,7 +21,7 @@
       <h2 :style="theme.h2">Sample Structure</h2>
       <pre :style="theme.pre">
         src/
-        ├── App.vue
+        ├─- App.vue
         ├── amplify
         │   ├── AmplifyStore.js
         │   ├── AmplifyTheme.js

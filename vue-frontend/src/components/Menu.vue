@@ -19,7 +19,7 @@
     </div>
     <div :style="navStyle.right">
       <span :style="navStyle.greeting" v-if="!user">Please Sign In</span>
-      <span :style="navStyle.greeting" v-if="user">{{user.username}}</span>
+      <span :style="navStyle.greeting" v-if="user">{{user.signInUserSession.idToken.payload.email}}</span>
       <a :style="navStyle.item" v-on:click="profile" v-if="user">Profile</a>
       <a :style="navStyle.item" v-on:click="signOut" v-if="user">Sign Out</a>
     </div>

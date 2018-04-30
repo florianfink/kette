@@ -13,14 +13,7 @@
 
 <template>
   <div :style="theme.container">
-    <a-photo-picker
-      :defSrc="'/static/avatar.png'"
-      :path="'avatars/' + userId"
-      :theme="theme"
-      v-if="userId"
-    />
-
-    <div v-if="user">{{user.username}}</div>
+    <div v-if="user">{{user.signInUserSession.idToken.payload.email}}</div>
 
     <a-simple-form
       :path="'profiles/' + userId"
@@ -43,10 +36,8 @@ export default {
   data () {
     return {
       fields: [
-        { type: 'string', name: 'firstName', label: 'FirstName' },
-        { type: 'string', name: 'lastName', label: 'LastName' },
-        { type: 'lineBreak' },
-        { type: 'string', name: 'nickname', label: 'Nickname' }
+        { type: 'string', name: 'firstName', label: 'FirstName'},
+        { type: 'string', name: 'lastName', label: 'LastName' }
       ],
       theme: AmplifyTheme
     }
