@@ -13,9 +13,9 @@
 
 <template>
   <div :style="theme.form">
-    <h1 :style="theme.header" v-if="!confirmView">Sign In</h1>
-    <h1 :style="theme.header" v-if="confirmView">Confirm Sign In</h1>
-    <div v-if="!confirmView">
+    <h1 :style="theme.header" v-if="!changePasswordView">Sign In</h1>
+    <h1 :style="theme.header" v-if="changePasswordView">Confirm Sign In</h1>
+    <div v-if="!changePasswordView">
       <div :style="theme.inputRow">
         <input :style="theme.input" v-model="username" placeholder="Username" autofocus v-on:keyup.enter="signIn" />
       </div>
@@ -26,12 +26,12 @@
         <button :style="theme.action" v-on:click="signIn" :disabled="!username || !password">Sign In</button>
       </div>
     </div>
-    <div v-if="confirmView">
+    <div v-if="changePasswordView">
       <div :style="theme.inputRow">
-        <input :style="theme.input" v-model="code" placeholder="Code" v-on:keyup.enter="confirm" />
+        <input :style="theme.input" v-model="newPassword" type="password" placeholder="new Password" v-on:keyup.enter="confirm" />
       </div>
       <div :style="theme.actionRow">
-        <button :style="theme.action" v-on:click="confirm" :disabled="!code">Confirm</button>
+        <button :style="theme.action" v-on:click="confirm" :disabled="!newPassword">Confirm</button>
       </div>
     </div>
     <div :style="theme.footer">
@@ -64,8 +64,8 @@ export default {
         password: '',
 
         user: null,
-        confirmView: false,
-        code: '',
+        changePasswordView: false,
+        newPassword: '',
 
         error: '',
         theme: AmplifyTheme
@@ -82,8 +82,8 @@ export default {
         })
         .then(user => {
           that.user = user
-          if (user.challengeName === 'SMS_MFA') {
-            that.confirmView = true
+          if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+            that.changePasswordView = true
             return
           }
           this.checkUser()
@@ -107,7 +107,7 @@ export default {
         });
     },
     confirm: function() {
-      Auth.confirmSignIn(this.user, this.code)
+      Auth.completeNewPassword(this.user, this.newPassword)
         .then(() => {
           this.$router.push('/');
         })
