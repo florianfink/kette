@@ -33,6 +33,27 @@ it('no firstName should return an error', async () => {
     expect(result.hasError).to.be.true;
 })
 
+it('no result for api key should return an error', async () => {
+    const deps =
+        {
+            encryptionService: {},
+            cryptoFunctions: {},
+            transactionRepository: {},
+            privateRepository: {},
+            apiKeyRepository: {
+                get: (bla) => {}
+            },
+            createUser: {},
+            createBlockchainRecord: {},
+        }
+        
+    const register = makeRegister(deps);
+
+    var result = await register({ }, "creator");
+    expect(result.message).to.contain("api key not linked");
+    expect(result.hasError).to.be.true;
+})
+
 it('no lastName should return an error', async () => {
     const register = createMockedRegister();
     var result = await register({ frameNumber: "frameNumber", email: "email", firstName: "firstName" }, "creator");

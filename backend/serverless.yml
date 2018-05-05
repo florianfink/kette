@@ -1,9 +1,8 @@
 service: kette
 
 custom:
-  apiKeysTableName: 'apiKeys-table-${self:provider.stage}'
+  apiKeysTableName: 'apiKeys2-table-${self:provider.stage}'
   userIdIndex : 'apiKeys-table-userId-index-${self:provider.stage}'
-  apiKeyIndex : 'apiKeys-table-apiKey-index-${self:provider.stage}'
   usersTableName: 'users-table-${self:provider.stage}'
   creatorIdIndex: 'users-table-creatorId-index-${self:provider.stage}'
   assetTransactionsTableName: 'assetTransactions-table-${self:provider.stage}'
@@ -42,7 +41,6 @@ provider:
   environment:
     APIKEYS_TABLE: ${self:custom.apiKeysTableName}
     APIKEYS_TABLE_USERID_INDEX : ${self:custom.userIdIndex}
-    APIKEYS_TABLE_APIKEY_INDEX : ${self:custom.apiKeyIndex}
     USERS_TABLE: ${self:custom.usersTableName}
     USERS_TABLE_CREATORID_INDEX: ${self:custom.creatorIdIndex}
     ASSETTRANSACTIONS_TABLE: ${self:custom.assetTransactionsTableName}

@@ -17,6 +17,10 @@ exports.makeRegister = function (deps) {
 
         try {
             //start checks 
+
+            const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
+            if (!apiKeyMapping) return { hasError: true, message: "api key not linked with any valid B2B user" }; //EXIT CHECK
+
             const registrationData = convert(input);
             if (registrationData.hasError) return { hasError: true, message: "input error: " + registrationData.message }; //EXIT CHECK
 
@@ -47,7 +51,7 @@ exports.makeRegister = function (deps) {
 
             const encryptedPrivateKey = await deps.encryptionService.encrypt(key.privateKeyString);
 
-            const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
+            
             const userRecord = createUserRecord(createUserResult.userId, key.ethAddress, encryptedPrivateKey, apiKeyMapping.userId);
             await deps.privateRepository.save(userRecord);
 
