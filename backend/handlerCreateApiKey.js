@@ -9,13 +9,12 @@ const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
 const secrets = require("./secrets");
 const config = require("./config");
 const AWS = require('aws-sdk');
-const createUniqueId = require("uuid").v1;
 
 module.exports.createApiKey = async (event, context, callback) => {
+    
     let userId;
-
     if (process.env.IS_OFFLINE === 'true') {
-        userId = "user 0.07714873582932413";
+        userId = "B2B-user-called-creator";
     }
     else {
         const cognitoAuthenticationProvider = event.requestContext.identity.cognitoAuthenticationProvider;
@@ -23,13 +22,18 @@ module.exports.createApiKey = async (event, context, callback) => {
         userId = splitted[2];
     }
 
-    const createApiKey = makeCreateApiKey(secrets, config);
-    const newApiKey = await createApiKey();
+    let newApiKey;
+    if (process.env.IS_OFFLINE === 'true') {
+        newApiKey = "offlineContext_apiKey";
+    }
+    else {
+        const createApiKey = makeCreateApiKey(secrets, config);
+        newApiKey = await createApiKey();
+    }
 
     const apiKeyRepository = makeApiKeyRepository(createDynamoDb());
 
     const newApiKeyUserIdMapping = {
-        id : createUniqueId(),
         apiKey : newApiKey,
         userId : userId
     }
@@ -42,7 +46,7 @@ module.exports.createApiKey = async (event, context, callback) => {
             "Access-Control-Allow-Credentials": true
         },
         statusCode: 200,
-        body: JSON.stringify({newApiKey : newApiKey, saveResult : apiKeyUserMappingSaveResult})
+        body: JSON.stringify({apiKey : newApiKey})
     }
 
     callback(null, response);

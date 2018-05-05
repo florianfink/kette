@@ -24,16 +24,15 @@ module.exports = function (dynamoDb) {
             const result = await dynamoDb.query(params).promise();
             return result.Items;
         },
-        findByApiKey: async (apiKey) => {
+        get: async (apiKey) => {
             var params = {
                 TableName: process.env.APIKEYS_TABLE,
-                IndexName: process.env.APIKEYS_TABLE_APIKEY_INDEX,
-                KeyConditionExpression: "apiKey=:apiKey",
-                ExpressionAttributeValues: { ":apiKey": apiKey }
+                Key: {
+                    "apiKey": apiKey
+                },
             };
-
-            const result = await dynamoDb.query(params).promise();
-            return result.Items;
+            const result = await dynamoDb.get(params).promise();
+            return result.Item;
         }
     }
 }

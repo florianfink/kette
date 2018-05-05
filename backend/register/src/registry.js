@@ -4,22 +4,23 @@ const assert = require("assert");
 
 exports.makeRegister = function (deps) {
 
+    assert(deps.apiKeyRepository, "apiKeyRepository not set");
     assert(deps.encryptionService, "encryption not set");
     assert(deps.cryptoFunctions, "cryptofunctions not set");
-    assert(deps.publicRepository, "publicRepository not set");
+    assert(deps.transactionRepository, "transactionRepository not set");
     assert(deps.privateRepository, "privateRepository not set");
     assert(deps.createUser, "createUser not set");
     assert(deps.createBlockchainRecord, "createBlockchainRecord not set");
 
-    const register = async function (input, creatorId) {
-        assert(creatorId, "no creatorId");
+    const register = async function (input, apiKey) {
+        assert(apiKey, "no apiKey");
 
         try {
             //start checks 
             const registrationData = convert(input);
             if (registrationData.hasError) return { hasError: true, message: "input error: " + registrationData.message }; //EXIT CHECK
 
-            const exisitingRegistrations = await deps.publicRepository.findByUniqueAssetId(registrationData.uniqueAssetId);
+            const exisitingRegistrations = await deps.transactionRepository.findByUniqueAssetId(registrationData.uniqueAssetId);
             if (exisitingRegistrations.length > 0) return { hasError: true, message: "asset already registered: " + registrationData.uniqueAssetId }; //EXIT CHECK
 
             const createUserResult = await deps.createUser(registrationData.userInformation);
@@ -40,17 +41,17 @@ exports.makeRegister = function (deps) {
 
             const blockchainRecord = await deps.createBlockchainRecord(signedMessage, id);
 
-            const publicRecord = createPublicRecord(id, registrationData, blockchainRecord, messageToSign.action, key.ethAddress, signedMessage);
+            const transaction = createTransaction(id, registrationData, blockchainRecord, messageToSign.action, key.ethAddress, signedMessage);
 
-            await deps.publicRepository.save(publicRecord);
+            await deps.transactionRepository.save(transaction);
 
             const encryptedPrivateKey = await deps.encryptionService.encrypt(key.privateKeyString);
 
-            const userRecord = createUserRecord(createUserResult.userId, key.ethAddress, encryptedPrivateKey, creatorId);
-
+            const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
+            const userRecord = createUserRecord(createUserResult.userId, key.ethAddress, encryptedPrivateKey, apiKeyMapping.userId);
             await deps.privateRepository.save(userRecord);
 
-            return publicRecord;
+            return transaction;
 
         } catch (error) {
             console.log("error: " + error);
@@ -79,7 +80,7 @@ function createUserRecord(userId, ethAddress, encryptedPrivateKey, creatorId) {
     return userRecord;
 }
 
-function createPublicRecord(id, registrationData, blockchainRecord, action, ethAddress, signedMessage) {
+function createTransaction(id, registrationData, blockchainRecord, action, ethAddress, signedMessage) {
     assert(id, "id missing")
     assert(registrationData.assetType, "asset type missing")
     assert(registrationData.uniqueAssetId, "uniqueAssetId missing")

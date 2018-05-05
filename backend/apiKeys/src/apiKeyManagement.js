@@ -16,8 +16,7 @@ exports.makeCreateApiKey = function (secrets, config) {
             }
 
             var apiKeyParams = {
-                enabled: true,
-                generateDistinctId: false
+                enabled: true
             };
 
             const apiGateway = new AWS.APIGateway(options);

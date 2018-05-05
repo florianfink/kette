@@ -5,7 +5,7 @@
 "use strict";
 
 const assert = require("assert");
-const makePublicRepository = require("./modules/src/publicRepository");
+const makeTransactionRepository = require("./modules/src/transactionRepository");
 const makePrivateRepository = require("./modules/src/privateRepository");
 const config = require("./config");
 const convertTransactions = require("./assets/src/transactionConverter").convert;
@@ -15,7 +15,7 @@ module.exports.getAssets = async (event, context, callback) => {
     let userId;
 
     if (process.env.IS_OFFLINE === 'true') {
-        userId = "user 0.07714873582932413";
+        userId = "B2C user called user Id: 0.030790430664574542";
     }
     else {
         const cognitoAuthenticationProvider = event.requestContext.identity.cognitoAuthenticationProvider;
@@ -24,10 +24,10 @@ module.exports.getAssets = async (event, context, callback) => {
     }
 
     const privateRepository = makePrivateRepository(createDynamoDb());
-    const publicRepository = makePublicRepository(createDynamoDb());
+    const transactionRepository = makeTransactionRepository(createDynamoDb());
 
     const userRecord = await privateRepository.get(userId);
-    const assetTransactions = await publicRepository.findByEthAddress(userRecord.ethAddress);
+    const assetTransactions = await transactionRepository.findByEthAddress(userRecord.ethAddress);
 
     const assets = convertTransactions(assetTransactions);
 

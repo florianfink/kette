@@ -172,9 +172,6 @@ resources:
       Properties:
         AttributeDefinitions:
           -
-            AttributeName: id
-            AttributeType: S
-          -
             AttributeName: apiKey
             AttributeType: S
           -
@@ -182,23 +179,12 @@ resources:
             AttributeType: S
         KeySchema:
           -
-            AttributeName: id
+            AttributeName: apiKey
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         GlobalSecondaryIndexes:
-          -
-            IndexName: ${self:provider.environment.APIKEYS_TABLE_APIKEY_INDEX}
-            KeySchema:
-              -
-                AttributeName: apiKey
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
-            ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
           -
             IndexName: ${self:provider.environment.APIKEYS_TABLE_USERID_INDEX}
             KeySchema:

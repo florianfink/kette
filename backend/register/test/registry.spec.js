@@ -48,10 +48,9 @@ it('should complete workflow', async () => {
     const expectedPrivateKey = "my private key";
     const expectedEncryptedPrivateKey = "my encrypted private key";
     const input = createInput();
-    const expectedCreatorId = "looney toones";
     const expectedEthAddress = "my eth address";
     const expectedSignedMessage = "my signed Message";
-
+    const expectedCreatorId = "my expected creator id";
     const deps =
         {
             encryptionService: {
@@ -69,9 +68,9 @@ it('should complete workflow', async () => {
                     return expectedSignedMessage
                 }
             },
-            publicRepository: {
-                save: (publicRecordToSave) => {
-                    expect(publicRecordToSave.signedMessage).to.equal(expectedSignedMessage);
+            transactionRepository: {
+                save: (transaction) => {
+                    expect(transaction.signedMessage).to.equal(expectedSignedMessage);
                 },
                 findByUniqueAssetId: (uniqueAssetId) => { return [] }
             },
@@ -83,6 +82,9 @@ it('should complete workflow', async () => {
                     expect(recordToSave.ethAddress).to.equal(expectedEthAddress);
                     saveCalled = true;
                 }
+            },
+            apiKeyRepository: {
+                get: (apiKey) => { return {userId : expectedCreatorId} }
             },
             createUser: () => { return { userId: expectedUserId } },
             createBlockchainRecord: () => { return { status: "pending", date: new Date() } }
@@ -106,12 +108,15 @@ function createMockedRegister() {
                 decrypt: (input) => { return Buffer.from(input, 'base64').toString('utf8') },
             },
             cryptoFunctions: cryptoFunctions,
-            publicRepository: {
+            transactionRepository: {
                 save: () => "not needed",
                 find: () => { return [] }
             },
             privateRepository: {
                 save: (user) => "not needed"
+            },
+            apiKeyRepository: {
+                get: (apiKey) => { return {userId : "looney tones"} }
             },
             createUser: () => { return { userId: "myUser" } },
             createBlockchainRecord: () => { return { status: "pending", date: new Date() } }

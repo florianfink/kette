@@ -12,8 +12,9 @@ const makeRegister = require("./register/src/registry").makeRegister;
 const makeCreateBlockchainRecord = require("./register/src/stamperyConnector").makeCreateBlockchainRecord;
 const makeCreateUser = require("./register/src/userManagement").makeCreateUser;
 
-const makePublicRepository = require("./modules/src/publicRepository");
+const makeTransactionRepository = require("./modules/src/transactionRepository");
 const makePrivateRepository = require("./modules/src/privateRepository");
+const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
 
 const makeEncryptionService = require("./modules/src/encryptionService");
 
@@ -24,7 +25,7 @@ module.exports.register = async (event, context, callback) => {
 
   const input = JSON.parse(event.body);
   const creatorId = event.requestContext.identity.apiKey;
-  
+
   const dependencies = makeDependencies();
 
   const register = makeRegister(dependencies);
@@ -46,42 +47,44 @@ module.exports.register = async (event, context, callback) => {
   };
 }
 
-function makeDependencies(){
-  if (process.env.IS_OFFLINE === 'true'){
+function makeDependencies() {
+  if (process.env.IS_OFFLINE === 'true') {
     return makeMockDependencies();
-  }else{
+  } else {
     return makeRealDependencies();
   }
 }
 
 function makeRealDependencies() {
   return {
-    encryptionService : makeEncryptionService(secrets, config),
+    encryptionService: makeEncryptionService(secrets, config),
     cryptoFunctions: cryptoFunctions,
     createBlockchainRecord: makeCreateBlockchainRecord(secrets, config),
     createUser: makeCreateUser(secrets, config),
-    publicRepository: makePublicRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion})),
-    privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion}))
+    transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
+    privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
+    apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
   }
 }
 
 function makeMockDependencies() {
   return {
-    encryptionService : {
-      encrypt : (input) => {return Buffer.from(input).toString('base64');},
-      decrypt : (input) => {return Buffer.from(input, 'base64').toString('utf8')},
+    encryptionService: {
+      encrypt: (input) => { return Buffer.from(input).toString('base64'); },
+      decrypt: (input) => { return Buffer.from(input, 'base64').toString('utf8') },
     },
     cryptoFunctions: cryptoFunctions,
     createBlockchainRecord: (signedMessage, id) => {
       console.log("createBlockchainRecord called with id: " + id);
-      return { id: "blockchainrecordId " + Math.random(), status: "pending", date: new Date() }
+      return { id: "blockchainrecordId " + Math.random(), status: "pending", date: new Date().toString() }
     },
     createUser: (userInfo) => {
-      const userId = "user " + Math.random();
-      console.log("create user called: "+ userId);
+      const userId = "B2C user called user Id: " + Math.random();
+      console.log("create user called: " + userId);
       return { userId: userId }
     },
-    publicRepository: makePublicRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
-    privateRepository: makePrivateRepository( new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' }))
+    transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
+    privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
+    apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
   }
 }

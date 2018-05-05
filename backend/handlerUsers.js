@@ -5,16 +5,18 @@
 "use strict";
 
 const AWS = require('aws-sdk');
-const assert = require("assert");
+const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
 const makePrivateRepository = require("./modules/src/privateRepository");
 const config = require("./config");
 
 module.exports.getUsers = async (event, context, callback) => {
 
-    const creatorId = event.requestContext.identity.apiKey;
+    const apiKey = event.requestContext.identity.apiKey;
+    const apiKeyRepository = makeApiKeyRepository(createDynamoDb());
+    const apiKeyUserIdMapping = await apiKeyRepository.get(apiKey);
 
     const privateRepository = makePrivateRepository(createDynamoDb());
-    const users = await privateRepository.findByCreatorId(creatorId);
+    const users = await privateRepository.findByCreatorId(apiKeyUserIdMapping.userId);
 
     const response = {
         statusCode: 200,

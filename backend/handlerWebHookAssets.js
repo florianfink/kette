@@ -5,7 +5,7 @@
 "use strict";
 
 const assert = require("assert");
-const makePublicRepository = require("./modules/src/publicRepository");
+const makeTransactionRepository = require("./modules/src/transactionRepository");
 const secrets = require("./secrets");
 const config = require("./config");
 const AWS = require('aws-sdk');
@@ -23,9 +23,9 @@ module.exports.updateAsset = async (event, context, callback) => {
         return
     }
 
-    const publicRepository = makePublicRepository(createDynamoDb());
+    const transactionRepository = makeTransactionRepository(createDynamoDb());
     const id = event.pathParameters.id;
-    const transaction = await publicRepository.get(id);
+    const transaction = await transactionRepository.get(id);
     
     if(!transaction){
         const response = {
