@@ -1,24 +1,15 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
-
 service: kette
 
 custom:
+  apiKeysTableName: 'apiKeys-table-${self:provider.stage}'
+  userIdIndex : 'apiKeys-table-userId-index-${self:provider.stage}'
+  apiKeyIndex : 'apiKeys-table-apiKey-index-${self:provider.stage}'
   usersTableName: 'users-table-${self:provider.stage}'
-  assetTransactionsTableName: 'assetTransactions-table-${self:provider.stage}'
   creatorIdIndex: 'users-table-creatorId-index-${self:provider.stage}'
+  assetTransactionsTableName: 'assetTransactions-table-${self:provider.stage}'
   ethAddressIndex : 'assetTransactions-table-ethAddress-index-${self:provider.stage}'
   uniqueAssetIdIndex : 'assetTransactions-table-uniqueAssetId-index-${self:provider.stage}'
+
   dynamodb:
     start:
       migrate: true
@@ -26,7 +17,15 @@ custom:
 provider:
   name: aws
   apiKeys:
-    - ${self:provider.stage}-allverta
+    - ${self:provider.stage}-forTests
+  usagePlan:
+    quota:
+      limit: 50000
+      offset: 0
+      period: MONTH
+    throttle:
+      burstLimit: 200
+      rateLimit: 100
   runtime: nodejs8.10
   region: us-east-1
   iamRoleStatements:
@@ -41,9 +40,12 @@ provider:
       Resource:
         - "arn:aws:dynamodb:us-east-1:*:*"
   environment:
+    APIKEYS_TABLE: ${self:custom.apiKeysTableName}
+    APIKEYS_TABLE_USERID_INDEX : ${self:custom.userIdIndex}
+    APIKEYS_TABLE_APIKEY_INDEX : ${self:custom.apiKeyIndex}
     USERS_TABLE: ${self:custom.usersTableName}
-    ASSETTRANSACTIONS_TABLE: ${self:custom.assetTransactionsTableName}
     USERS_TABLE_CREATORID_INDEX: ${self:custom.creatorIdIndex}
+    ASSETTRANSACTIONS_TABLE: ${self:custom.assetTransactionsTableName}
     ASSETTRANSACTIONS_TABLE_ETHADDRESS_INDEX : ${self:custom.ethAddressIndex}
     ASSETTRANSACTIONS_TABLE_UNIQUEASSETID_INDEX : ${self:custom.uniqueAssetIdIndex}
 plugins:
@@ -65,6 +67,14 @@ functions:
       - http:
               method: post
               path: assets/{id}
+  createApiKey:
+    handler: handlerCreateApiKey.createApiKey
+    events:
+      - http:
+              method: post
+              path: apiKeys
+              cors: true
+              authorizer: aws_iam
   getAssets:
     handler: handlerAssets.getAssets
     events:
@@ -157,3 +167,47 @@ resources:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
         TableName: ${self:custom.assetTransactionsTableName}
+    ApiKeysDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+          -
+            AttributeName: apiKey
+            AttributeType: S
+          -
+            AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          -
+            IndexName: ${self:provider.environment.APIKEYS_TABLE_APIKEY_INDEX}
+            KeySchema:
+              -
+                AttributeName: apiKey
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+          -
+            IndexName: ${self:provider.environment.APIKEYS_TABLE_USERID_INDEX}
+            KeySchema:
+              -
+                AttributeName: userId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+        TableName: ${self:custom.apiKeysTableName}
