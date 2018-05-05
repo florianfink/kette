@@ -21,6 +21,7 @@ import Amplify, { Auth, Logger } from 'aws-amplify'
 
 Vue.config.productionTip = false
 
+// Hannes kann nicht kämpfen
 Amplify.configure({
   Auth: {
     identityPoolId: 'us-east-1:7def8cb7-a390-4ba8-a3c3-63fb2f85290b',
