@@ -6,15 +6,11 @@ module.exports = function (dynamoDb) {
 
     return {
         save: async (entry) => {
-            console.log(entry);
             var params = {
                 TableName: process.env.APIKEYS_TABLE,
                 Item: entry
             };
-
-            console.log(params);
             const saveResult = await dynamoDb.put(params).promise();
-            console.log(saveResult);
             return saveResult;
         },
         findByUserId: async (userId) => {
