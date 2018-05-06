@@ -1,12 +1,12 @@
 var AWS = require('aws-sdk');
 const assert = require("assert");
 
-exports.makeCreateApiKey = function (secrets, config) {
+exports.makeInternalCreateApiKey = function (secrets, config) {
     assert(config.awsRegion, "awsRegion not set");
     assert(secrets.awsAccessKeyId, "awsAccessKeyId not set");
     assert(secrets.awsSecretAccessKey, "awsSecretAccessKey not set");
 
-    const createApiKey = async function () {
+    const internalCreateApiKey = async function () {
 
         try {
             const options = {
@@ -41,5 +41,5 @@ exports.makeCreateApiKey = function (secrets, config) {
         }
     }
 
-    return createApiKey;
+    return internalCreateApiKey;
 }
