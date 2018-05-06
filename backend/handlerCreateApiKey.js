@@ -11,6 +11,7 @@ const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
 const secrets = require("./secrets");
 const config = require("./config");
 const AWS = require('aws-sdk');
+const assert = require("assert");
 
 module.exports.createApiKey = async (event, context, callback) => {
 
@@ -20,28 +21,26 @@ module.exports.createApiKey = async (event, context, callback) => {
 
     const result = await createApiKey(cognitoAuthenticationProvider);
 
+    let statusCode;
+    let body;
     if (result.hasError) {
-        const response = {
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true
-            },
-            statusCode: 400,
-            body: JSON.stringify(result.message)
-        }
-        callback(null, response);
+        statusCode = 400;
+        body = JSON.stringify({message : "oops something went wrong"});
+        console.log("ERROR: "  + result.message);
+    } else {
+        statusCode = 200;
+        body = JSON.stringify({ apiKey: result.apiKey });
     }
-    else {
-        const response = {
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true
-            },
-            statusCode: 200,
-            body: JSON.stringify({ apiKey: result.apiKey })
-        };
-        callback(null, response);
+
+    const response = {
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": true
+        },
+        statusCode: statusCode,
+        body: body
     }
+    callback(null, response);
 }
 
 
@@ -54,26 +53,40 @@ function makeDependencies() {
 }
 
 function makeMockDependencies() {
+    const apiGatewayMock = {
+        createApiKey: (params) => {
+            return { promise: () => { return { value: "offlineContext_apiKey", id: "lol" } } }
+        },
+        createUsagePlanKey: (params) => {
+            return { promise: () => { return { value: "not used" } } }
+        }
+    };
+
     return {
         extractUserId: (cognitoUserId) => {
             return "B2B-user-called-creator";
         },
-        internalCreateApiKey: () => {
-            return "offlineContext_apiKey";
-        },
+        internalCreateApiKey: makeInternalCreateApiKey(apiGatewayMock, secrets.awsUsagePlanId),
         apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' }))
     }
 }
 
 function makeRealDependencies() {
+
+    const apiGateWayOptions = {
+        accessKeyId: secrets.awsAccessKeyId,
+        secretAccessKey: secrets.awsSecretAccessKey,
+        region: config.awsRegion
+    };
+
     return {
-        extractUserId: (cognitoUserId) => {
-            const cognitoAuthenticationProvider = event.requestContext.identity.cognitoAuthenticationProvider;
+        extractUserId: (cognitoAuthenticationProvider) => {
             const splitted = cognitoAuthenticationProvider.split(":");
             const userId = splitted[2];
+            assert(userId, "userId could not be extracted from: " + cognitoAuthenticationProvider);
             return userId;
         },
-        internalCreateApiKey: makeInternalCreateApiKey(secrets, config),
+        internalCreateApiKey: makeInternalCreateApiKey(new AWS.APIGateway(apiGateWayOptions), secrets.awsUsagePlanId),
         apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion }))
     }
 }

@@ -6,6 +6,9 @@ module.exports = function (dynamoDb) {
 
     return {
         save: async (entry) => {
+            assert(entry.userId, "userId not set")
+            assert(entry.apiKey, "apiKey not set")
+
             var params = {
                 TableName: process.env.APIKEYS_TABLE,
                 Item: entry
