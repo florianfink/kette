@@ -15,7 +15,7 @@ module.exports.getAssets = async (event, context, callback) => {
     let userId;
 
     if (process.env.IS_OFFLINE === 'true') {
-        userId = "B2C user called user Id: 0.030790430664574542";
+        userId = "B2C user called user Id: 0.23650526215605727";
     }
     else {
         const cognitoAuthenticationProvider = event.requestContext.identity.cognitoAuthenticationProvider;

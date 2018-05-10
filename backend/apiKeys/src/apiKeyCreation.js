@@ -2,7 +2,7 @@ const assert = require("assert");
 
 exports.makeCreateApiKey = (deps) => {
     assert(deps.extractUserId, "extractUserId missing");
-    assert(deps.internalCreateApiKey, "internalCreateNewApiKey missing");
+    assert(deps.internalCreateApiKey, "internalCreateApiKey missing");
     assert(deps.apiKeyRepository, "apiKeyRepository is missing");
 
     const createApiKey = async function createApiKey(cognitoAuthenticationProvider) {

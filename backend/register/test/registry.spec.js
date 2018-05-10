@@ -16,24 +16,24 @@ it('conversion test', () => {
     expect(input, "not equal").to.be.equal(output);
 })
 
-it('makeRegister should not be null', () => {
+it('[makeRegister] -> result should not be null', () => {
     const register = createMockedRegister();
     expect(register).to.be.not.null;
 })
 
-it('no input should return an error', async () => {
+it('[register] -> no input should return an error', async () => {
     const register = createMockedRegister();
     var result = await register(null, "creator");
     expect(result.hasError).to.be.true;
 })
 
-it('no firstName should return an error', async () => {
+it('[register] -> no firstName should return an error', async () => {
     const register = createMockedRegister();
     var result = await register({ frameNumber: "frameNumber", email: "email", lastName: "lastName" }, "creator");
     expect(result.hasError).to.be.true;
 })
 
-it('no result for api key should return an error', async () => {
+it('[register] -> no result for api key should return an error', async () => {
     const deps =
         {
             encryptionService: {},
@@ -54,13 +54,13 @@ it('no result for api key should return an error', async () => {
     expect(result.hasError).to.be.true;
 })
 
-it('no lastName should return an error', async () => {
+it('[register] -> no lastName should return an error', async () => {
     const register = createMockedRegister();
     var result = await register({ frameNumber: "frameNumber", email: "email", firstName: "firstName" }, "creator");
     expect(result.hasError).to.be.true;
 })
 
-it('should complete workflow', async () => {
+it('[register] -> should complete full workflow', async () => {
 
     let saveCalled = false;
     let encryptCalled = false;
