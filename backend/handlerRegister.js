@@ -76,7 +76,7 @@ function makeMockDependencies() {
     cryptoFunctions: cryptoFunctions,
     createBlockchainRecord: (signedMessage, id) => {
       console.log("createBlockchainRecord called with id: " + id);
-      return { id: "blockchainrecordId " + Math.random(), status: "pending", date: new Date().toString() }
+      return { id: "blockchainrecordId " + Math.random(), status: "pending", date: new Date() }
     },
     createUser: (userInfo) => {
       const userId = "B2C user called user Id: " + Math.random();

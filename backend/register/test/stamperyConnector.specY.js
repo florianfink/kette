@@ -10,6 +10,8 @@ const assert = require('chai').assert;
 
 
 it('makeRegister should not be null', async () => {
+
+    
     const createBlockchainRecord = makeCreateBlockchainRecord(secrets, config);
     
     const key = cryptoFunctions.generateNewKey();
@@ -23,6 +25,10 @@ it('makeRegister should not be null', async () => {
     const signedMessage = cryptoFunctions.sign(JSON.stringify(messageToSign), key.privateKey);
 
     const result = await createBlockchainRecord(signedMessage, messageToSign.uniqueId);
-
+    
     console.log(result);
+
+    const firstDate = "2018-05-10 19:06:00.270483";
+    const secondDate = "2018-05-10 19:06:00.270484";
+    console.log(new Date(firstDate));
 })
