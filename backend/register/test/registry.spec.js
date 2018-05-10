@@ -6,7 +6,7 @@ const expect = require('chai').expect;
 const assert = require('chai').assert;
 
 
-it('conversion test', () => {
+it('[Buffer.from] -> conversion test for unique', () => {
 
     const input = "My Unique Asset Id ä😃ää ???";
 
