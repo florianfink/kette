@@ -45,14 +45,14 @@ exports.makeRegister = function (deps) {
 
             const blockchainRecord = await deps.createBlockchainRecord(signedMessage, id);
 
-            const transaction = createTransaction(id, registrationData, blockchainRecord, messageToSign.action, key.ethAddress, signedMessage);
+            const transaction = exports.createTransaction(id, registrationData, blockchainRecord, messageToSign.action, key.ethAddress, signedMessage);
 
             await deps.transactionRepository.save(transaction);
 
             const encryptedPrivateKey = await deps.encryptionService.encrypt(key.privateKeyString);
 
-            
             const userRecord = createUserRecord(createUserResult.userId, key.ethAddress, encryptedPrivateKey, apiKeyMapping.userId);
+
             await deps.privateRepository.save(userRecord);
 
             return transaction;
@@ -84,7 +84,7 @@ function createUserRecord(userId, ethAddress, encryptedPrivateKey, creatorId) {
     return userRecord;
 }
 
-function createTransaction(id, registrationData, blockchainRecord, action, ethAddress, signedMessage) {
+exports.createTransaction = function (id, registrationData, blockchainRecord, action, ethAddress, signedMessage) {
     assert(id, "id missing")
     assert(registrationData.assetType, "asset type missing")
     assert(registrationData.uniqueAssetId, "uniqueAssetId missing")
@@ -101,7 +101,7 @@ function createTransaction(id, registrationData, blockchainRecord, action, ethAd
         ethAddress: ethAddress,
         blockchainRecordId: blockchainRecord.id,
         status: blockchainRecord.status,
-        date: blockchainRecord.date,
+        date: blockchainRecord.date.toISOString(),
         signedMessage: signedMessage
     }
 }
