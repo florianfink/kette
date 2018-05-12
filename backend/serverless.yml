@@ -73,6 +73,15 @@ functions:
               path: apiKeys
               cors: true
               authorizer: aws_iam
+  getApiKeys:
+    handler: handlerGetApiKeys.getApiKeys
+    events:
+      - http:
+              method: get
+              path: apiKeys
+              cors: true
+              authorizer: aws_iam
+
   getAssets:
     handler: handlerAssets.getAssets
     events:
