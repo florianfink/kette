@@ -2,6 +2,8 @@ const cryptoFunctions = require("../../modules/src/cryptoFunctions");
 
 const makeRegister = require('../src/registry').makeRegister;
 
+const createTransaction = require('../src/registry').createTransaction;
+
 const expect = require('chai').expect;
 const assert = require('chai').assert;
 
@@ -60,11 +62,37 @@ it('[register] -> no lastName should return an error', async () => {
     expect(result.hasError).to.be.true;
 })
 
+it('[createTransaction] -> create proper transaction with correct date', async () => {
+    const expectedId = "my id that i expecte";
+    const date = new Date();
+    const registrationData = {
+        assetType : "Unicorn",
+        uniqueAssetId : "Unicorn Id"
+    }
+
+    const blockchainRecord = {
+        status : "hungry",
+        date : date,
+        id : "myBlockchainRecordId"
+    }
+
+    const action = "register"
+    const ethAddress = "lol bitcoin"
+    const signedMessage = "hjihi";
+
+    const transaction = createTransaction(expectedId, registrationData, blockchainRecord, action, ethAddress, signedMessage);
+
+    expect(transaction.id).to.be.equal(expectedId);
+    expect(transaction.blockchainRecordId).to.be.equal(blockchainRecord.id);
+    expect(transaction.date).to.be.equal(date.toISOString());
+})
+
 it('[register] -> should complete full workflow', async () => {
 
     let saveCalled = false;
     let encryptCalled = false;
 
+    const expectedDateAsString = "2018-05-10T17:06:00.270Z"
     const expectedUserId = "my expected user id";
     const expectedPrivateKey = "my private key";
     const expectedEncryptedPrivateKey = "my encrypted private key";
@@ -92,6 +120,7 @@ it('[register] -> should complete full workflow', async () => {
             transactionRepository: {
                 save: (transaction) => {
                     expect(transaction.signedMessage).to.equal(expectedSignedMessage);
+                    expect(transaction.date).to.equal(expectedDateAsString);
                 },
                 findByUniqueAssetId: (uniqueAssetId) => { return [] }
             },
@@ -108,7 +137,7 @@ it('[register] -> should complete full workflow', async () => {
                 get: (apiKey) => { return {userId : expectedCreatorId} }
             },
             createUser: () => { return { userId: expectedUserId } },
-            createBlockchainRecord: () => { return { status: "pending", date: new Date() } }
+            createBlockchainRecord: () => { return { status: "pending", date: new Date(expectedDateAsString) } }
         }
 
     const register = makeRegister(deps);
