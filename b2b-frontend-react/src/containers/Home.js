@@ -44,9 +44,7 @@ export default class Home extends Component {
         i !== 0
           ? <ListGroupItem
             key={apiKey.apiKey}
-            href={`/apiKeys/${apiKey.apiKey}`}
-            onClick={this.handleApiKeyClick}
-            header={apiKey.apiKey.trim().split("\n")[0]}
+            header={apiKey.apiKey}
           >
           </ListGroupItem>
           : <ListGroupItem
@@ -55,7 +53,7 @@ export default class Home extends Component {
             onClick={this.handleApiKeyClick}
           >
             <h4>
-              <b>{"\uFF0B"}</b> Create a new apiKey
+              <b>{"\uFF0B"}</b> Create a new API key
               </h4>
           </ListGroupItem>
     );
@@ -64,8 +62,8 @@ export default class Home extends Component {
   renderLander() {
     return (
       <div className="lander">
-        <h1>Scratch</h1>
-        <p>A simple apiKey taking app</p>
+        <h1>Dashboard</h1>
+        <p>KETTE Dashboard</p>
         <div>
           <Link to="/login" className="btn btn-info btn-lg">
             Login
@@ -81,7 +79,7 @@ export default class Home extends Component {
   renderApiKeys() {
     return (
       <div className="apiKeys">
-        <PageHeader>Your apiKeys</PageHeader>
+        <PageHeader>Your API key</PageHeader>
         <ListGroup>
           {!this.state.isLoading && this.renderApiKeysList(this.state.apiKeys)}
         </ListGroup>

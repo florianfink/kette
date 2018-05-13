@@ -19,6 +19,10 @@ module.exports.getUsers = async (event, context, callback) => {
     const users = await privateRepository.findByCreatorId(apiKeyUserIdMapping.userId);
 
     const response = {
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": true
+        },
         statusCode: 200,
         body: JSON.stringify(users)
     }

@@ -55,7 +55,10 @@ class App extends Component {
         <Navbar fluid collapseOnSelect>
           <Navbar.Header>
             <Navbar.Brand>
-              <Link to="/">Scratch</Link>
+              <Link to="/">API Key</Link>
+            </Navbar.Brand>
+            <Navbar.Brand>
+              <Link to="/users">created users</Link>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
