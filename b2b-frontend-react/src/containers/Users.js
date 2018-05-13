@@ -48,8 +48,8 @@ export default class Users extends Component {
     return users.map(
       (user) =>
         <ListGroupItem
-          key={user.userId}
-          header={user.userId}
+          key={user.Username}
+          header={user.UserAttributes[3].Value}
         />
     );
   }
