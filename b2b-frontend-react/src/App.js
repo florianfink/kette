@@ -58,7 +58,7 @@ class App extends Component {
               <Link to="/">API Key</Link>
             </Navbar.Brand>
             <Navbar.Brand>
-              <Link to="/users">created users</Link>
+              <Link to="/users">Users</Link>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>

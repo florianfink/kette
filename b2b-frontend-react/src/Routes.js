@@ -1,7 +1,6 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import Home from "./containers/Home";
-import Notes from "./containers/Notes";
 import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import Settings from "./containers/Settings";

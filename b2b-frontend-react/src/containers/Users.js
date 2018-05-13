@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { API } from "aws-amplify";
-import { Link } from "react-router-dom";
 import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
 import "./Home.css";
 
@@ -20,7 +19,10 @@ export default class Users extends Component {
     }
     const apiKeys = await API.get("apiKeys", "/apiKeys");
     const firstApiKey = apiKeys[0];
-    if(!firstApiKey) return;
+    if (!firstApiKey) {
+      this.setState({ isLoading: false });
+      return
+    };
 
     const apiKey = firstApiKey.apiKey;
     try {
@@ -31,27 +33,25 @@ export default class Users extends Component {
       };
       const response = await fetch("https://uxd0ifjso8.execute-api.us-east-1.amazonaws.com/dev/users", init)
       const users = await response.json();
-      this.setState({ users });
+      this.setState({ isLoading: false, users: users });
     } catch (e) {
+      this.setState({ isLoading: false });
       alert(e);
     }
-
-    this.setState({ isLoading: false });
-  }
-
-  handleApiKeyClick = event => {
-    event.preventDefault();
-    this.props.history.push(event.currentTarget.getAttribute("href"));
   }
 
   renderApiKeysList(users) {
-    return users.map(
-      (user) =>
+    return (
+      users.map((user) =>
         <ListGroupItem
           key={user.Username}
           header={user.UserAttributes[3].Value}
         />
-    );
+      ));
+  }
+
+  renderLoading() {
+    return <ListGroupItem key="Key" header="Loading ..." />
   }
 
   render() {
@@ -59,7 +59,7 @@ export default class Users extends Component {
       <div className="apiKeys">
         <PageHeader>Users created with your API key</PageHeader>
         <ListGroup>
-          {!this.state.isLoading && this.renderApiKeysList(this.state.users)}
+          {this.state.isLoading ? this.renderLoading() : this.renderApiKeysList(this.state.users)}
         </ListGroup>
       </div>
     );
