@@ -48,10 +48,8 @@ function makeMockDependencies() {
 
     const mockCognitoyIdentityServiceProvider = {
         adminGetUser: (params) => {
-            return {
-                promise: async () => {
-                    return { name: "Hans Wurst", id: params.Username };
-                }
+            return { 
+                promise: async () => { return { name: "Hans Wurst", id: params.Username }; } 
             }
         }
     }
