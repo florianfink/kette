@@ -15,7 +15,7 @@ module.exports.createAwsResponse = (result) => {
     let body;
     if (result.hasError) {
         statusCode = 400;
-        body = JSON.stringify({ message: "oops something went wrong" });
+        body = JSON.stringify({ error : result.message });
         console.log("ERROR: " + result.message);
     } else {
         statusCode = 200;

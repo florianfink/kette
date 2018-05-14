@@ -8,50 +8,47 @@ const assert = require("assert");
 const makeTransactionRepository = require("./modules/src/transactionRepository");
 const makePrivateRepository = require("./modules/src/privateRepository");
 const extractUserId = require("./modules/src/awsHelper").extractUserId;
+const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
 
-const convertTransactions = require("./assets/src/transactionConverter").convert;
+const makeGetAssets = require("./assets/src/assetGetter").makeGetAssets;
 
 const AWS = require('aws-sdk');
 const config = require("./config");
 
 module.exports.getAssets = async (event, context, callback) => {
-    let userId;
 
-    if (process.env.IS_OFFLINE === 'true') {
-        userId = "B2C user called user Id: 0.32171075833974827";
-    }
-    else {
-        const cognitoAuthenticationProvider = event.requestContext.identity.cognitoAuthenticationProvider;
-        userId = extractUserId(cognitoAuthenticationProvider);
-    }
+    const cognitoAuthenticationProvider = event.requestContext.identity.cognitoAuthenticationProvider;
 
-    const privateRepository = makePrivateRepository(createDynamoDb());
-    const transactionRepository = makeTransactionRepository(createDynamoDb());
+    const dependencies = makeDependencies();
+    const getAssets = makeGetAssets(dependencies);
 
-    const userRecord = await privateRepository.get(userId);
-    const assetTransactions = await transactionRepository.findByEthAddress(userRecord.ethAddress);
+    const result = await getAssets(cognitoAuthenticationProvider);
 
-    const assets = convertTransactions(assetTransactions);
-
-    const response = {
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": true
-        },
-        statusCode: 200,
-        body: JSON.stringify(assets)
-    }
-
+    const response = createAwsResponse(result);
     callback(null, response);
 }
 
-function createDynamoDb() {
-    let dynamoDb;
+function makeDependencies() {
     if (process.env.IS_OFFLINE === 'true') {
-        dynamoDb = new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })
+        return makeMockDependencies();
+    } else {
+        return makeRealDependencies();
     }
-    else {
-        dynamoDb = new AWS.DynamoDB.DocumentClient({ region: config.awsRegion });
+}
+
+function makeRealDependencies() {
+    return {
+        transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
+        privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
+        extractUserId: awsHelper.extractUserId
     }
-    return dynamoDb;
+}
+
+function makeMockDependencies() {
+
+    return {
+        transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
+        privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
+        extractUserId: () => { return "B2C user called user Id: 0.6064210506573497" }
+    }
 }

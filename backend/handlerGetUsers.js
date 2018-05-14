@@ -8,6 +8,9 @@ const AWS = require('aws-sdk');
 const makeGetUser = require("./modules/src/userManagement").makeGetUser;
 const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
 const makePrivateRepository = require("./modules/src/privateRepository");
+
+const makeGetUsers = require("./users/src/usersGetter").makeGetUsers;
+
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
 const config = require("./config");
 const secrets = require("./secrets");
@@ -15,26 +18,13 @@ const secrets = require("./secrets");
 module.exports.getUsers = async (event, context, callback) => {
 
     const apiKey = event.requestContext.identity.apiKey;
-    const deps = makeDependencies();
 
-    const apiKeyUserIdMapping = await deps.apiKeyRepository.get(apiKey);
-    const users = await deps.privateRepository.findByCreatorId(apiKeyUserIdMapping.userId);
-    
-    const cognitoUserPromises = users.map(async (user) => {
-        return await deps.getUser(user.userId);
-    });
+    const dependencies = makeDependencies();
+    const getUsers = makeGetUsers(dependencies);
 
-    const cognitoUsers = await Promise.all(cognitoUserPromises);
+    const result = await getUsers(apiKey);
 
-    const response = {
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": true
-        },
-        statusCode: 200,
-        body: JSON.stringify(cognitoUsers)
-    }
-
+    const response = createAwsResponse(result);
     callback(null, response);
 }
 

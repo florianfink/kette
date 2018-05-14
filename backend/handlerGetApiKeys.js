@@ -8,23 +8,21 @@ const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
 const awsHelper = require("./modules/src/awsHelper");
 const secrets = require("./secrets");
 const config = require("./config");
+
+const makeGetApiKeys = require("./apiKeys/src/apiKeysGetter").makeGetApiKeys;
+
 const AWS = require('aws-sdk');
 
 module.exports.getApiKeys = async (event, context, callback) => {
 
     const cognitoAuthenticationProvider = event.requestContext.identity.cognitoAuthenticationProvider;
-    const deps = makeDependencies();
+    
+    const dependencies = makeDependencies();
+    const getApiKeys = makeGetApiKeys(dependencies);
 
-    const userId = deps.extractUserId(cognitoAuthenticationProvider);
-    const apiKeys = await deps.apiKeyRepository.findByUserId(userId);
+    const result = await getApiKeys(cognitoAuthenticationProvider);
 
-    const response = {
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": true
-        },
-        body: JSON.stringify(apiKeys)
-    }
+    const response = awsHelper.createAwsResponse(result);
     callback(null, response);
 }
 
