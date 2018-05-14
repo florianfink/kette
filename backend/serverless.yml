@@ -59,8 +59,8 @@ functions:
               path: register
               cors: true
               private : true
-  webHookAssets:
-    handler: handlerWebHookAssets.updateAsset
+  updateTransaction:
+    handler: handlerUpdateTransaction.updateTransaction
     events:
       - http:
               method: post
@@ -83,7 +83,7 @@ functions:
               authorizer: aws_iam
 
   getAssets:
-    handler: handlerAssets.getAssets
+    handler: handlerGetAssets.getAssets
     events:
       - http:
               method: get
@@ -91,7 +91,7 @@ functions:
               cors: true
               authorizer: aws_iam
   getUsers:
-    handler: handlerUsers.getUsers
+    handler: handlerGetUsers.getUsers
     events:
       - http:
               method: get

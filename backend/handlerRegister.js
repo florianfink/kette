@@ -10,15 +10,15 @@ const config = require("./config");
 
 const makeRegister = require("./register/src/registry").makeRegister;
 const makeCreateBlockchainRecord = require("./register/src/blockchainService").makeCreateBlockchainRecord;
-const makeCreateUser = require("./register/src/userManagement").makeCreateUser;
 
 const makeTransactionRepository = require("./modules/src/transactionRepository");
 const makePrivateRepository = require("./modules/src/privateRepository");
 const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
-
+const makeCreateUser = require("./modules/src/userManagement").makeCreateUser;
 const makeEncryptionService = require("./modules/src/encryptionService");
-
 const cryptoFunctions = require("./modules/src/cryptoFunctions");
+const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
+
 const AWS = require('aws-sdk');
 const Stampery = require('stampery');
 
@@ -28,24 +28,13 @@ module.exports.register = async (event, context, callback) => {
   const creatorId = event.requestContext.identity.apiKey;
 
   const dependencies = makeDependencies();
-
   const register = makeRegister(dependencies);
+
   const result = await register(input, creatorId);
 
-  if (result.hasError) {
-    const response = {
-      statusCode: 400,
-      body: JSON.stringify(result.message)
-    }
-    callback(null, response);
-  }
-  else {
-    const response = {
-      statusCode: 200,
-      body: JSON.stringify(result)
-    }
-    callback(null, response);
-  };
+  const response = createAwsResponse(result);
+  callback(null, response);
+
 }
 
 function makeDependencies() {
@@ -71,17 +60,17 @@ function makeRealDependencies() {
 function makeMockDependencies() {
 
   const mockBlockchainService = {
-    hash : (messageToHash) => {
-      return Buffer.from(messageToHash).toString('base64').substring(0,10);
+    hash: (messageToHash) => {
+      return Buffer.from(messageToHash).toString('base64').substring(0, 10);
     },
     stamp: (hash, hook) => {
       return {
-        id : Buffer.from(hash).toString('base64').substring(0,10),
-        time : "2018-05-10 19:06:00.270483"
+        id: Buffer.from(hash).toString('base64').substring(0, 10),
+        time: "2018-05-10 19:06:00.270483"
       }
     }
   }
-  
+
   return {
     encryptionService: {
       encrypt: (input) => { return Buffer.from(input).toString('base64'); },
@@ -89,7 +78,7 @@ function makeMockDependencies() {
     },
     cryptoFunctions: cryptoFunctions,
     createBlockchainRecord: makeCreateBlockchainRecord(mockBlockchainService, config.webHookUrl, secrets.ketteSecret),
-    
+
     createUser: (userInfo) => {
       const userId = "B2C user called user Id: " + Math.random();
       console.log("create user called: " + userId);

@@ -10,7 +10,7 @@ const secrets = require("./secrets");
 const config = require("./config");
 const AWS = require('aws-sdk');
 
-module.exports.updateAsset = async (event, context, callback) => {
+module.exports.updateTransaction = async (event, context, callback) => {
 
     const secretInRequest = event.queryStringParameters.ketteSecret;
 
