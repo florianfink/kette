@@ -45,3 +45,31 @@ exports.makeCreateUser = function (secrets, config) {
 
     return createUser;
 }
+
+
+exports.makeGetUser = function (cognitoIdentityServiceProvider, awsUserPoolId) {
+    assert(cognitoIdentityServiceProvider, "cognitoIdentityServiceProvider not set");
+    assert(cognitoIdentityServiceProvider.adminGetUser, "adminGetUser not set");
+    assert(awsUserPoolId, "awsUserPoolId not set");
+
+    const getUser = async function (userId) {
+        try {
+
+            var params = {
+                UserPoolId: awsUserPoolId,
+                Username: userId
+            };
+
+            const getUserResult = await cognitoIdentityServiceProvider.adminGetUser(params).promise();
+            return getUserResult;
+
+        } catch (error) {
+            return {
+                hasError: true,
+                message: error.message
+            }
+        }
+    }
+
+    return getUser;
+}

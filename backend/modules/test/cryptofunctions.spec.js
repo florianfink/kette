@@ -2,7 +2,7 @@ const expect = require('chai').expect;
 const cryptoFunctions = require('../src/cryptoFunctions');
 var ethUtil = require('ethereumjs-util');
 
-it('should sign a message', () => {
+it('[sign] -> should sign a message', () => {
     const key = cryptoFunctions.generateNewKey();
 
     const messageToSign = {
@@ -12,13 +12,11 @@ it('should sign a message', () => {
     }
 
     const signedMessage = cryptoFunctions.sign(JSON.stringify(messageToSign), key.privateKey);
-
+    expect(signedMessage).not.to.be.null;
 })
 
-it('recreate private key buffer from string', () => {
+it('[toPrivateKeyBuffer] -> recreate private key buffer from string', () => {
     const key = cryptoFunctions.generateNewKey();
-    
     const privateKeyBufferFromString = cryptoFunctions.toPrivateKeyBuffer(key.privateKeyString);
-
     expect(key.privateKey, "keys are not the same").to.be.deep.equal(privateKeyBufferFromString)
 })

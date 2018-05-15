@@ -2,11 +2,13 @@ const cryptoFunctions = require("../../modules/src/cryptoFunctions");
 
 const makeRegister = require('../src/registry').makeRegister;
 
+const createTransaction = require('../src/registry').createTransaction;
+
 const expect = require('chai').expect;
 const assert = require('chai').assert;
 
 
-it('conversion test', () => {
+it('[Buffer.from] -> conversion test for unique', () => {
 
     const input = "My Unique Asset Id ä😃ää ???";
 
@@ -16,42 +18,88 @@ it('conversion test', () => {
     expect(input, "not equal").to.be.equal(output);
 })
 
-it('makeRegister should not be null', () => {
+it('[makeRegister] -> result should not be null', () => {
     const register = createMockedRegister();
     expect(register).to.be.not.null;
 })
 
-it('no input should return an error', async () => {
+it('[register] -> no input should return an error', async () => {
     const register = createMockedRegister();
     var result = await register(null, "creator");
     expect(result.hasError).to.be.true;
 })
 
-it('no firstName should return an error', async () => {
+it('[register] -> no firstName should return an error', async () => {
     const register = createMockedRegister();
     var result = await register({ frameNumber: "frameNumber", email: "email", lastName: "lastName" }, "creator");
     expect(result.hasError).to.be.true;
 })
 
-it('no lastName should return an error', async () => {
+it('[register] -> no result for api key should return an error', async () => {
+    const deps =
+        {
+            encryptionService: {},
+            cryptoFunctions: {},
+            transactionRepository: {},
+            privateRepository: {},
+            apiKeyRepository: {
+                get: (bla) => {}
+            },
+            createUser: {},
+            createBlockchainRecord: {},
+        }
+        
+    const register = makeRegister(deps);
+
+    var result = await register({ }, "creator");
+    expect(result.message).to.contain("api key not linked");
+    expect(result.hasError).to.be.true;
+})
+
+it('[register] -> no lastName should return an error', async () => {
     const register = createMockedRegister();
     var result = await register({ frameNumber: "frameNumber", email: "email", firstName: "firstName" }, "creator");
     expect(result.hasError).to.be.true;
 })
 
-it('should complete workflow', async () => {
+it('[createTransaction] -> create proper transaction with correct date', async () => {
+    const expectedId = "my id that i expecte";
+    const date = new Date();
+    const registrationData = {
+        assetType : "Unicorn",
+        uniqueAssetId : "Unicorn Id"
+    }
+
+    const blockchainRecord = {
+        status : "hungry",
+        date : date,
+        id : "myBlockchainRecordId"
+    }
+
+    const action = "register"
+    const ethAddress = "lol bitcoin"
+    const signedMessage = "hjihi";
+
+    const transaction = createTransaction(expectedId, registrationData, blockchainRecord, action, ethAddress, signedMessage);
+
+    expect(transaction.id).to.be.equal(expectedId);
+    expect(transaction.blockchainRecordId).to.be.equal(blockchainRecord.id);
+    expect(transaction.date).to.be.equal(date.toISOString());
+})
+
+it('[register] -> should complete full workflow', async () => {
 
     let saveCalled = false;
     let encryptCalled = false;
 
+    const expectedDateAsString = "2018-05-10T17:06:00.270Z"
     const expectedUserId = "my expected user id";
     const expectedPrivateKey = "my private key";
     const expectedEncryptedPrivateKey = "my encrypted private key";
     const input = createInput();
-    const expectedCreatorId = "looney toones";
     const expectedEthAddress = "my eth address";
     const expectedSignedMessage = "my signed Message";
-
+    const expectedCreatorId = "my expected creator id";
     const deps =
         {
             encryptionService: {
@@ -69,9 +117,10 @@ it('should complete workflow', async () => {
                     return expectedSignedMessage
                 }
             },
-            publicRepository: {
-                save: (publicRecordToSave) => {
-                    expect(publicRecordToSave.signedMessage).to.equal(expectedSignedMessage);
+            transactionRepository: {
+                save: (transaction) => {
+                    expect(transaction.signedMessage).to.equal(expectedSignedMessage);
+                    expect(transaction.date).to.equal(expectedDateAsString);
                 },
                 findByUniqueAssetId: (uniqueAssetId) => { return [] }
             },
@@ -84,8 +133,11 @@ it('should complete workflow', async () => {
                     saveCalled = true;
                 }
             },
+            apiKeyRepository: {
+                get: (apiKey) => { return {userId : expectedCreatorId} }
+            },
             createUser: () => { return { userId: expectedUserId } },
-            createBlockchainRecord: () => { return { status: "pending", date: new Date() } }
+            createBlockchainRecord: () => { return { status: "pending", date: new Date(expectedDateAsString) } }
         }
 
     const register = makeRegister(deps);
@@ -106,12 +158,15 @@ function createMockedRegister() {
                 decrypt: (input) => { return Buffer.from(input, 'base64').toString('utf8') },
             },
             cryptoFunctions: cryptoFunctions,
-            publicRepository: {
+            transactionRepository: {
                 save: () => "not needed",
                 find: () => { return [] }
             },
             privateRepository: {
                 save: (user) => "not needed"
+            },
+            apiKeyRepository: {
+                get: (apiKey) => { return {userId : "looney tones"} }
             },
             createUser: () => { return { userId: "myUser" } },
             createBlockchainRecord: () => { return { status: "pending", date: new Date() } }

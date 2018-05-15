@@ -2,7 +2,7 @@ const expect = require('chai').expect;
 const converter = require('../src/transactionConverter');
 
 
-it('should transform transactions into assets', () => {
+it('[convert] -> convert transactions into assets', () => {
     
     const transaction1 = {
         id: "Id1",

@@ -5,11 +5,11 @@ module.exports = function (dynamoDb) {
     assert(dynamoDb, "dynamo db not set");
 
     return {
-        save: async (entry) => {
+        save: async (transaction) => {
             
             var params = {
                 TableName: process.env.ASSETTRANSACTIONS_TABLE,
-                Item: entry
+                Item: transaction
             };
             await dynamoDb.put(params).promise();
         },
