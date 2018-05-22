@@ -1,42 +1,5 @@
 global.fetch = require('node-fetch');
-/*
-global.window = {
-    setTimeout,
-    clearTimeout,
-    WebSocket: (global).WebSocket,
-    ArrayBuffer: (global).ArrayBuffer,
-    addEventListener() { },
-    navigator: { onLine: true },
-    location: {
-        href: ''
-    }
-}
 
-/*
-const InMemoryCache = require('../node_modules/aws-amplify/lib/Cache/InMemoryCache').default;
-console.log(InMemoryCache);
-
-global.localStorage = {
-    store: {},
-    getItem(key) {
-        return this.store[key]
-    },
-    setItem(key, value) {
-        this.store[key] = value
-    },
-    removeItem(key) {
-        delete this.store[key]
-    }
-}*/
-
-global.window = global.window || {
-    setTimeout: setTimeout,
-    clearTimeout: clearTimeout,
-    WebSocket: global.WebSocket,
-    ArrayBuffer: global.ArrayBuffer,
-    addEventListener: function () { },
-    navigator: { onLine: true }
-};
 global.localStorage = {
     store: {},
     getItem: function (key) {
@@ -48,6 +11,16 @@ global.localStorage = {
     removeItem: function (key) {
         delete this.store[key]
     }
+};
+
+global.window = global.window || {
+    setTimeout: setTimeout,
+    clearTimeout: clearTimeout,
+    WebSocket: global.WebSocket,
+    ArrayBuffer: global.ArrayBuffer,
+    addEventListener: function () { },
+    navigator: { onLine: true },
+    localStorage : global.localStorage
 };
 
 
