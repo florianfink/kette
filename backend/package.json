@@ -4,7 +4,9 @@
   "description": "registration API for kette",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -- */test/*.spec.js"
+    "test": "mocha -- */test/*.spec.js",
+    "endTest" : "mocha -- ./_end2endtests/end2endTest.spec.js",
+    "cleanUp" : "mocha -- ./_end2endtests/cleanUp.spec.js"
   },
   "author": "Hannes Rang",
   "license": "ISC",

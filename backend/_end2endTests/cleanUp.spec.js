@@ -36,7 +36,10 @@ const eMail = "nix@doesnotExist.iy";
 
 describe('...', function () {
     this.timeout(15000);
-    it('[End2EndTest]', async () => {
+
+    it('[Delete User]', async () => {
+
+        var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({ region: awsConfig.cognito.REGION, accessKeyId: secrets.awsAccessKeyId, secretAccessKey: secrets.awsSecretAccessKey });
 
         const tempPassword = "LolOlo123123!"
 
@@ -52,29 +55,16 @@ describe('...', function () {
             ]
         };
 
-        var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({ region: awsConfig.cognito.REGION, accessKeyId: secrets.awsAccessKeyId, secretAccessKey: secrets.awsSecretAccessKey });
         const createUserResult = await cognitoIdentityServiceProvider.adminCreateUser(params).promise();
 
-        Amplify.configure(amplifyConfig);
-        const user = await Amplify.Auth.signIn(eMail, tempPassword);
-        await Amplify.Auth.completeNewPassword(user, "D!iesDa1232139");
-        
-        const apiKeys = await Amplify.API.get("apiKeys", "/apiKeys");
+        console.log(createUserResult.User.Username);
 
-        console.log("api keys");
-        console.log(apiKeys);
+        var deleteUserParams = {
+            UserPoolId: awsConfig.cognito.USER_POOL_ID,
+            Username: createUserResult.User.Username
+        };
 
-        /*
-        const firstApiKey = apiKeys[0];
-
-        const apiKey = firstApiKey.apiKey;
-        const init = { headers: { 'x-api-key': apiKey } };
-        const getUsersResponse = await fetch("https://uxd0ifjso8.execute-api.us-east-1.amazonaws.com/dev/users", init)
-        const users = await getUsersResponse.json();
-
-        users.forEach(user => {
-            console.log(user.UserAttributes[3].Value)
-        });*/
-
+        const deleteUserResult = await cognitoIdentityServiceProvider.adminDeleteUser(deleteUserParams).promise();
+        console.log(deleteUserResult)
     })
 })
