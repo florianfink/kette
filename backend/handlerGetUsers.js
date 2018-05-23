@@ -40,7 +40,12 @@ function makeRealDependencies() {
     return {
         apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
         privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
-        getUser: makeGetUser(new AWS.CognitoIdentityServiceProvider({ region: config.awsRegion, accessKeyId: secrets.awsAccessKeyId, secretAccessKey: secrets.awsSecretAccessKey }))
+        getUser: makeGetUser(
+            new AWS.CognitoIdentityServiceProvider({
+                region: config.awsRegion,
+                accessKeyId: secrets.awsAccessKeyId,
+                secretAccessKey: secrets.awsSecretAccessKey
+            }), config.awsUserPoolId)
     }
 }
 
@@ -48,8 +53,8 @@ function makeMockDependencies() {
 
     const mockCognitoyIdentityServiceProvider = {
         adminGetUser: (params) => {
-            return { 
-                promise: async () => { return { name: "Hans Wurst", id: params.Username }; } 
+            return {
+                promise: async () => { return { name: "Hans Wurst", id: params.Username }; }
             }
         }
     }
