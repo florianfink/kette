@@ -41,7 +41,7 @@ function makeMockDependencies() {
             return { promise: () => { return { value: "offlineContext_apiKey", id: "lol" } } }
         },
         createUsagePlanKey: (params) => {
-            return { promise: () => { return { value: "not used" } } }
+            return { promise: () => { return { id: "usagePlanKeyId for test" } } }
         }
     };
 
