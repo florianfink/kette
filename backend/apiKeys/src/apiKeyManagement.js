@@ -4,7 +4,7 @@ const assert = require("assert");
 exports.makeInternalCreateApiKey = function (apiGateway, awsUsagePlanId) {
     assert(apiGateway, "apiGateway not set");
     assert(awsUsagePlanId, "awsUsagePlanId not set");
-    
+
     const internalCreateApiKey = async function () {
 
         try {
@@ -23,7 +23,11 @@ exports.makeInternalCreateApiKey = function (apiGateway, awsUsagePlanId) {
 
             const usagePlanCreationResult = await apiGateway.createUsagePlanKey(usagePlanParams).promise();
 
-            return apiKey;
+            return { 
+                apiKey: apiKey, 
+                apiKeyId: createApiKeyResult.id, 
+                usagePlanKeyId: usagePlanCreationResult.id 
+            };
 
         } catch (error) {
             return {

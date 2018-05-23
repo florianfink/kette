@@ -13,8 +13,10 @@ exports.makeCreateApiKey = (deps) => {
             const apiKey = await deps.internalCreateApiKey();
 
             const apiKeyUserIdMapping = {
-                apiKey: apiKey,
-                userId: userId
+                apiKey: apiKey.apiKey,
+                userId: userId,
+                apiKeyId : apiKey.apiKeyId,
+                usagePlanKeyId : apiKey.usagePlanKeyId
             };
 
             await deps.apiKeyRepository.save(apiKeyUserIdMapping);

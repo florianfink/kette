@@ -6,11 +6,15 @@ var makeCreateApiKey = require('../src/apiKeyCreation').makeCreateApiKey;
 it('[createApiKey] -> create an apikey and create an apiKey user mapping', async () => {
 
     const expectedApiKey = "expecetd Api Key";
+    const expectedApiKeyId = "expecetd Api Key";
+    const expectedUsagePlanKeyId = "expectedUsagePlanKeyId";
     const expectedUserId = "expected User Id";
 
     const expectedApiKeyUserIdMapping = {
         apiKey: expectedApiKey,
-        userId: expectedUserId
+        userId: expectedUserId,
+        apiKeyId : expectedApiKeyId,
+        usagePlanKeyId : expectedUsagePlanKeyId
     };
 
     let saveCalled = false;
@@ -19,7 +23,11 @@ it('[createApiKey] -> create an apikey and create an apiKey user mapping', async
             return expectedUserId;
         },
         internalCreateApiKey: () => {
-            return expectedApiKey;
+            return { 
+                apiKey: expectedApiKey, 
+                apiKeyId: expectedApiKeyId, 
+                usagePlanKeyId: expectedUsagePlanKeyId
+            };
         },
         apiKeyRepository: {
             save: (mappingToSave) => {
@@ -34,7 +42,7 @@ it('[createApiKey] -> create an apikey and create an apiKey user mapping', async
     const apiKeyCreationResult = await createApiKey();
 
     expect(apiKeyCreationResult.hasError, apiKeyCreationResult.message).to.be.undefined;
-    expect(apiKeyCreationResult.apiKey).to.be.equal(expectedApiKey);
+    expect(apiKeyCreationResult.apiKey.apiKey).to.be.equal(expectedApiKey);
 
     expect(saveCalled).to.be.true;
 })

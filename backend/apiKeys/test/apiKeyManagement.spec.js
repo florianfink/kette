@@ -6,7 +6,7 @@ var makeInternalCreateApiKey = require('../src/apiKeyManagement').makeInternalCr
 it('[internalCreateApiKey] -> create an apikey and call createUsagePlanKey', async () => {
     const expectedApiKey = "lol cool apiKey";
     const expectedApiKeyId = "lol cool Id";
-    const expectedUsageKeyId = "usagePlanCreationResultValue";
+    const expectedUsagePlanKeyId = "usagePlanCreationResultValue";
     const expectedUsagePlanId = "cool usage plan Id";
 
     const expectedApiKeyCreationParams = {
@@ -31,15 +31,17 @@ it('[internalCreateApiKey] -> create an apikey and call createUsagePlanKey', asy
         createUsagePlanKey: (params) => {
             expect(params).to.be.deep.equal(expectedUsagePlanParams);
             createUsagePlanCalled = true;
-            return { promise: () => { return { value: expectedUsageKeyId } } }
+            return { promise: () => { return { id: expectedUsagePlanKeyId } } }
         }
     };
 
     const internalCreateApiKey = makeInternalCreateApiKey(apiGatewayMock, expectedUsagePlanId);
 
-    const apikey = await internalCreateApiKey();
+    const apiKeyCreationResult = await internalCreateApiKey();
 
-    expect(apikey).to.be.equal(expectedApiKey);
+    expect(apiKeyCreationResult.apiKey).to.be.equal(expectedApiKey);
+    expect(apiKeyCreationResult.apiKeyId).to.be.equal(expectedApiKeyId);
+    expect(apiKeyCreationResult.usagePlanKeyId).to.be.equal(expectedUsagePlanKeyId);
     expect(createUsagePlanCalled).to.be.true;
     expect(createApiKeyCalled).to.be.true;
 })
