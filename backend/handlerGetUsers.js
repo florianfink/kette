@@ -45,7 +45,8 @@ function makeRealDependencies() {
                 region: config.awsRegion,
                 accessKeyId: secrets.awsAccessKeyId,
                 secretAccessKey: secrets.awsSecretAccessKey
-            }), config.awsUserPoolId)
+            }), 
+            config.awsUserPoolId)
     }
 }
 
