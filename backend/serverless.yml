@@ -38,6 +38,10 @@ provider:
         - dynamodb:DeleteItem
       Resource:
         - "arn:aws:dynamodb:us-east-1:*:*"
+    - Effect: Allow
+      Action: 'ssm:GetParameter'
+      Resource:
+        - "arn:aws:ssm:us-east-1:*:parameter/*"
   environment:
     APIKEYS_TABLE: ${self:custom.apiKeysTableName}
     APIKEYS_TABLE_USERID_INDEX : ${self:custom.userIdIndex}
@@ -98,6 +102,13 @@ functions:
               path: users
               cors: true
               private : true
+  getParameters:
+    handler: handlerGetParameters.getParameters
+    events:
+      - http:
+              method: get
+              path: parameters
+              cors: true
 resources:
   Resources:
     UsersDynamoDBTable:
