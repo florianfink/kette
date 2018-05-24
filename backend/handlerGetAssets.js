@@ -40,7 +40,7 @@ function makeRealDependencies() {
     return {
         transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
         privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
-        extractUserId: awsHelper.extractUserId
+        extractUserId: extractUserId
     }
 }
 
