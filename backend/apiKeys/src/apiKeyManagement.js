@@ -7,34 +7,26 @@ exports.makeInternalCreateApiKey = function (apiGateway, awsUsagePlanId) {
 
     const internalCreateApiKey = async function () {
 
-        try {
-            var apiKeyParams = {
-                enabled: true
-            };
+        var apiKeyParams = {
+            enabled: true
+        };
 
-            const createApiKeyResult = await apiGateway.createApiKey(apiKeyParams).promise();
-            const apiKey = createApiKeyResult.value;
+        const createApiKeyResult = await apiGateway.createApiKey(apiKeyParams).promise();
+        
+        var usagePlanParams = {
+            keyId: createApiKeyResult.id,
+            keyType: 'API_KEY',
+            usagePlanId: awsUsagePlanId
+        };
 
-            var usagePlanParams = {
-                keyId: createApiKeyResult.id,
-                keyType: 'API_KEY',
-                usagePlanId: awsUsagePlanId
-            };
+        const usagePlanCreationResult = await apiGateway.createUsagePlanKey(usagePlanParams).promise();
 
-            const usagePlanCreationResult = await apiGateway.createUsagePlanKey(usagePlanParams).promise();
+        return {
+            apiKey: createApiKeyResult.value,
+            apiKeyId: createApiKeyResult.id,
+            usagePlanKeyId: usagePlanCreationResult.id
+        };
 
-            return { 
-                apiKey: apiKey, 
-                apiKeyId: createApiKeyResult.id, 
-                usagePlanKeyId: usagePlanCreationResult.id 
-            };
-
-        } catch (error) {
-            return {
-                hasError: true,
-                message: error.message
-            }
-        }
     }
     return internalCreateApiKey;
 }

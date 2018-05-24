@@ -42,6 +42,10 @@ provider:
       Action: 'ssm:GetParameter'
       Resource:
         - "arn:aws:ssm:us-east-1:*:parameter/*"
+    - Effect: Allow
+      Action: 'apigateway:POST'
+      Resource:
+        - "arn:aws:apigateway:us-east-1::/*"
   environment:
     APIKEYS_TABLE: ${self:custom.apiKeysTableName}
     APIKEYS_TABLE_USERID_INDEX : ${self:custom.userIdIndex}

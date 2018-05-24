@@ -56,15 +56,10 @@ function makeMockDependencies() {
 
 function makeRealDependencies() {
 
-    const apiGateWayOptions = {
-        accessKeyId: secrets.awsAccessKeyId,
-        secretAccessKey: secrets.awsSecretAccessKey,
-        region: config.awsRegion
-    };
-
     return {
         extractUserId: extractUserId,
-        internalCreateApiKey: makeInternalCreateApiKey(new AWS.APIGateway(apiGateWayOptions), secrets.awsUsagePlanId),
-        apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion }))
+        internalCreateApiKey: makeInternalCreateApiKey(new AWS.APIGateway(), secrets.awsUsagePlanId),
+        apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient())
     }
+    
 }
