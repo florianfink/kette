@@ -52,31 +52,35 @@ describe('...', function () {
             ]
         };
 
+        
         var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({ region: awsConfig.cognito.REGION, accessKeyId: secrets.awsAccessKeyId, secretAccessKey: secrets.awsSecretAccessKey });
         await cognitoIdentityServiceProvider.adminCreateUser(params).promise();
 
+        console.log("B2B user created");
+
         Amplify.configure(amplifyConfig);
         const user = await Amplify.Auth.signIn(eMail, tempPassword);
+        console.log("Signed in");
         await Amplify.Auth.completeNewPassword(user, finalPassword);
-
+        console.log("Password changed");
         const createdApiKey = await Amplify.API.post("apiKeys", "/apiKeys");
-
+        console.log("ApiKey created");
         const apiKey = createdApiKey.apiKey.apiKey;
-        console.log(apiKey);
 
         //wait one minute to let the aws system recognize the newly created API-Key as valid
+        console.log("Waiting 60 seconds for api key to be recognized in AWS system");
         await new Promise(resolve => setTimeout(resolve, 60000));
-
+        console.log("Waiting over");
         const registrationData = {
             firstName: "Peter",
             lastName: "Lustig",
-            uniqueAssetId: "DiesDasAnanas",
+            uniqueAssetId: "DiesDasAnanas2",
             assetType: "bicycle",
             street: "Kingstreet",
             zipcode: "12345",
             city: "Boss City",
             country: "Germany",
-            email: "info@kette.io"
+            email: "info@kette2.io"
         }
 
         const init = {
@@ -90,7 +94,8 @@ describe('...', function () {
 
         const registerResponse = await fetch("https://uxd0ifjso8.execute-api.us-east-1.amazonaws.com/dev/register", init)
         const registerResult = await registerResponse.json();
-
+        console.log("registration complete");
+        
         console.log(registerResult);
 
     }),

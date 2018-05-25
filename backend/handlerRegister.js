@@ -47,13 +47,13 @@ function makeDependencies() {
 
 function makeRealDependencies() {
   return {
-    encryptionService: makeEncryptionService(secrets, config),
+    encryptionService: makeEncryptionService(new AWS.KMS()),
     cryptoFunctions: cryptoFunctions,
     createBlockchainRecord: makeCreateBlockchainRecord(new Stampery(secrets.stamperySecret), config.webHookUrl, secrets.ketteSecret),
     createUser: makeCreateUser(secrets, config),
-    transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
-    privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
-    apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
+    transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient()),
+    privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient()),
+    apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient()),
   }
 }
 

@@ -8,7 +8,7 @@ custom:
   assetTransactionsTableName: 'assetTransactions-table-${self:provider.stage}'
   ethAddressIndex : 'assetTransactions-table-ethAddress-index-${self:provider.stage}'
   uniqueAssetIdIndex : 'assetTransactions-table-uniqueAssetId-index-${self:provider.stage}'
-
+  encryptionKeyId : '7f46370f-d1d7-4083-b058-e3eb2b30dbf9'
   dynamodb:
     start:
       migrate: true
@@ -46,6 +46,12 @@ provider:
       Action: 'apigateway:POST'
       Resource:
         - "arn:aws:apigateway:us-east-1::/*"
+    - Effect: Allow
+      Action: 
+        - 'kms:Encrypt'
+        - 'kms:Decrypt'
+      Resource:
+        - "arn:aws:kms:us-east-1:*:key/${self:provider.environment.ENCRYPTION_KEYID}"
   environment:
     APIKEYS_TABLE: ${self:custom.apiKeysTableName}
     APIKEYS_TABLE_USERID_INDEX : ${self:custom.userIdIndex}
@@ -54,6 +60,7 @@ provider:
     ASSETTRANSACTIONS_TABLE: ${self:custom.assetTransactionsTableName}
     ASSETTRANSACTIONS_TABLE_ETHADDRESS_INDEX : ${self:custom.ethAddressIndex}
     ASSETTRANSACTIONS_TABLE_UNIQUEASSETID_INDEX : ${self:custom.uniqueAssetIdIndex}
+    ENCRYPTION_KEYID: ${self:custom.encryptionKeyId}
 plugins:
   - serverless-dynamodb-local
   - serverless-offline
