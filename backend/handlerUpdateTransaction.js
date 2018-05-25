@@ -4,10 +4,8 @@
 
 "use strict";
 
-const assert = require("assert");
 const makeTransactionRepository = require("./modules/src/transactionRepository");
 const secrets = require("./secrets");
-const config = require("./config");
 const AWS = require('aws-sdk');
 
 module.exports.updateTransaction = async (event, context, callback) => {
@@ -62,7 +60,7 @@ function createDynamoDb() {
         dynamoDb = new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })
     }
     else {
-        dynamoDb = new AWS.DynamoDB.DocumentClient({ region: config.awsRegion});
+        dynamoDb = new AWS.DynamoDB.DocumentClient();
     }
     return dynamoDb;
 }

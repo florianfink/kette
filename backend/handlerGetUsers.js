@@ -12,8 +12,6 @@ const makePrivateRepository = require("./modules/src/privateRepository");
 const makeGetUsers = require("./users/src/usersGetter").makeGetUsers;
 
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
-const config = require("./config");
-const secrets = require("./secrets");
 
 module.exports.getUsers = async (event, context, callback) => {
 
@@ -38,15 +36,9 @@ function makeDependencies() {
 
 function makeRealDependencies() {
     return {
-        apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
-        privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
-        getUser: makeGetUser(
-            new AWS.CognitoIdentityServiceProvider({
-                region: config.awsRegion,
-                accessKeyId: secrets.awsAccessKeyId,
-                secretAccessKey: secrets.awsSecretAccessKey
-            }), 
-            config.awsUserPoolId)
+        apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient()),
+        privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient()),
+        getUser: makeGetUser(new AWS.CognitoIdentityServiceProvider())
     }
 }
 

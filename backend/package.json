@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha -- */test/*.spec.js",
-    "endTest" : "mocha -- ./_end2endtests/end2endTest.spec.js",
-    "cleanUp" : "mocha -- ./_end2endtests/cleanUp.spec.js"
+    "end2EndTest": "mocha -- ./_end2endtests/end2endTest.spec.js",
+    "cleanUp": "mocha -- ./_end2endtests/cleanUp.spec.js"
   },
   "author": "Hannes Rang",
   "license": "ISC",

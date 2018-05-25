@@ -13,7 +13,6 @@ const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
 const makeGetAssets = require("./assets/src/assetGetter").makeGetAssets;
 
 const AWS = require('aws-sdk');
-const config = require("./config");
 
 module.exports.getAssets = async (event, context, callback) => {
 
@@ -38,8 +37,8 @@ function makeDependencies() {
 
 function makeRealDependencies() {
     return {
-        transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
-        privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
+        transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient()),
+        privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient()),
         extractUserId: extractUserId
     }
 }

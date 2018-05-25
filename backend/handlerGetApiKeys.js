@@ -6,9 +6,6 @@
 
 const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
 const awsHelper = require("./modules/src/awsHelper");
-const secrets = require("./secrets");
-const config = require("./config");
-
 const makeGetApiKeys = require("./apiKeys/src/apiKeysGetter").makeGetApiKeys;
 
 const AWS = require('aws-sdk');
@@ -36,7 +33,7 @@ function makeDependencies() {
 
 function makeRealDependencies() {
     return {
-        apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: config.awsRegion })),
+        apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient()),
         extractUserId: awsHelper.extractUserId
     }
 }

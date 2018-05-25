@@ -7,7 +7,7 @@ it('[internalCreateApiKey] -> create an apikey and call createUsagePlanKey', asy
     const expectedApiKey = "lol cool apiKey";
     const expectedApiKeyId = "lol cool Id";
     const expectedUsagePlanKeyId = "usagePlanCreationResultValue";
-    const expectedUsagePlanId = "cool usage plan Id";
+    
 
     const expectedApiKeyCreationParams = {
         enabled: true
@@ -16,7 +16,7 @@ it('[internalCreateApiKey] -> create an apikey and call createUsagePlanKey', asy
     const expectedUsagePlanParams = {
         keyId: expectedApiKeyId,
         keyType: 'API_KEY',
-        usagePlanId: expectedUsagePlanId
+        usagePlanId: process.env.USAGEPLAN_ID
     };
 
     let createUsagePlanCalled = false;
@@ -35,7 +35,7 @@ it('[internalCreateApiKey] -> create an apikey and call createUsagePlanKey', asy
         }
     };
 
-    const internalCreateApiKey = makeInternalCreateApiKey(apiGatewayMock, expectedUsagePlanId);
+    const internalCreateApiKey = makeInternalCreateApiKey(apiGatewayMock);
 
     const apiKeyCreationResult = await internalCreateApiKey();
 

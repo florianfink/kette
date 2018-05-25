@@ -2,7 +2,7 @@ const secrets = require("../secrets");
 const awsConfig = require("./awsConfig")
 const AWS = require('aws-sdk');
 
-const eMail = "nix2@doesnotExist.iy";
+const eMail = "info@kette2.io";
 
 
 describe('...', function () {

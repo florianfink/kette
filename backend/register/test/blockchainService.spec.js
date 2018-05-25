@@ -6,7 +6,6 @@ const assert = require('chai').assert;
 
 it('[createBlockchainRecord] -> should a record with correct date', async () => {
 
-    const webHook = "hihi webhook";
     const ketteSecret = "huhu kette secret";
     const transactionId = "hihi unique id";
     
@@ -15,7 +14,8 @@ it('[createBlockchainRecord] -> should a record with correct date', async () => 
     
     const timeAsString = "2018-05-10 19:06:00.270483";
     
-    const expectedCompleteWebHook = webHook + "/" + transactionId + "?ketteSecret=" + ketteSecret;
+    const expectedCompleteWebHook = process.env.WEBHOOK_BASE_URL + "/" + transactionId + "?ketteSecret=" + ketteSecret;
+
     const expectedResult = {
         id: expectedId,
         date: new Date(timeAsString),
@@ -36,7 +36,7 @@ it('[createBlockchainRecord] -> should a record with correct date', async () => 
         }
     }
 
-    const createBlockchainRecord = makeCreateBlockchainRecord(mockBlockchainService, webHook, ketteSecret);
+    const createBlockchainRecord = makeCreateBlockchainRecord(mockBlockchainService, ketteSecret);
 
     const createBlockchainRecordResult = await createBlockchainRecord("mySignedMessage", transactionId);
 

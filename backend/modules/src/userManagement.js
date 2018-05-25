@@ -1,19 +1,15 @@
-var AWS = require('aws-sdk');
 const assert = require("assert");
 
-exports.makeCreateUser = function (secrets, config) {
-    assert(config.awsUserPoolId, "userPoolId not set");
-    assert(config.awsRegion, "awsRegion not set");
-    assert(secrets.awsAccessKeyId, "awsAccessKeyId not set");
-    assert(secrets.awsSecretAccessKey, "awsSecretAccessKey not set");
+exports.makeCreateUser = function (cognitoIdentityServiceProvider) {
+    
+    assert(cognitoIdentityServiceProvider, "cognitoIdentityServiceProvider not set");
+    assert(cognitoIdentityServiceProvider.adminCreateUser, "adminCreateUser not set");
 
     const createUser = async function (user) {
 
         try {
-            AWS.config.update({ accessKeyId: secrets.awsAccessKeyId, secretAccessKey: secrets.awsSecretAccessKey });
-
             var params = {
-                UserPoolId: config.awsUserPoolId,
+                UserPoolId: process.env.USERPOOL_ID,
                 Username: user.email,
                 DesiredDeliveryMediums: ["EMAIL"],
                 ForceAliasCreation: false,
@@ -28,7 +24,6 @@ exports.makeCreateUser = function (secrets, config) {
                 ]
             };
 
-            var cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider({ region: config.awsRegion });
             const createUserResult = await cognitoIdentityServiceProvider.adminCreateUser(params).promise();
 
             return {
@@ -47,16 +42,15 @@ exports.makeCreateUser = function (secrets, config) {
 }
 
 
-exports.makeGetUser = function (cognitoIdentityServiceProvider, awsUserPoolId) {
+exports.makeGetUser = function (cognitoIdentityServiceProvider) {
     assert(cognitoIdentityServiceProvider, "cognitoIdentityServiceProvider not set");
     assert(cognitoIdentityServiceProvider.adminGetUser, "adminGetUser not set");
-    assert(awsUserPoolId, "awsUserPoolId not set");
 
     const getUser = async function (userId) {
         try {
 
             var params = {
-                UserPoolId: awsUserPoolId,
+                UserPoolId: process.env.USERPOOL_ID,
                 Username: userId
             };
 

@@ -31,7 +31,7 @@ const awsConfig = require("./awsConfig")
 const amplifyConfig = require("./amplifyConfig")
 const AWS = require('aws-sdk');
 
-const eMail = "nix2@doesnotExist.iy";
+const eMail = "nix2@doesndotE2xist3.iy";
 const finalPassword = "D!iesDa1232139";
 
 describe('...', function () {
@@ -74,13 +74,13 @@ describe('...', function () {
         const registrationData = {
             firstName: "Peter",
             lastName: "Lustig",
-            uniqueAssetId: "DiesDasAnanas2",
+            uniqueAssetId: "DiesDasAnanas5",
             assetType: "bicycle",
             street: "Kingstreet",
             zipcode: "12345",
             city: "Boss City",
             country: "Germany",
-            email: "info@kette2.io"
+            email: "infd3o1@kette2.io"
         }
 
         const init = {

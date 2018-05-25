@@ -5,6 +5,7 @@ const awsHelper = require("./modules/src/awsHelper");
 const AWS = require('aws-sdk');
 const makeEncryptionService = require("./modules/src/encryptionService");
 
+const userManagement = require("./modules/src/userManagement");
 module.exports.getParameters = async (event, context, callback) => {
 
     /*
@@ -27,7 +28,6 @@ module.exports.getParameters = async (event, context, callback) => {
     const result = {
         normalParameter : np,
         decryptedSecret : ds
-    }*/
 
     const encryptionService = makeEncryptionService(new AWS.KMS());
 
@@ -40,8 +40,27 @@ module.exports.getParameters = async (event, context, callback) => {
         privateKey : privateKey,
         encryptedKey : encryptedKey,
         decryptedKey : decryptedKey
+    }*/
+
+    const createUser = userManagement.makeCreateUser(new AWS.CognitoIdentityServiceProvider());
+    const getUser = userManagement.makeGetUser(new AWS.CognitoIdentityServiceProvider());
+
+    const userInformation = {
+        email: "niclas@glieckase2.oi",
+        firstName: "Niclas",
+        lastName: "lieckase",
+        address: "Street Address Life"
+    }
+
+    const createdUser = await createUser(userInformation);
+    const retrievedUser = await getUser(createdUser.userId);
+
+    const result = {
+        createdUser : createdUser,
+        retrievedUser : retrievedUser
     }
 
     const response = awsHelper.createAwsResponse(result);
     callback(null, response);
+
 }

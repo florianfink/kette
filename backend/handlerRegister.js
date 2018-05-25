@@ -6,7 +6,6 @@
 
 //secrets is not included in source control and needs to be created locally
 const secrets = require("./secrets");
-const config = require("./config");
 
 const makeRegister = require("./register/src/registry").makeRegister;
 const makeCreateBlockchainRecord = require("./register/src/blockchainService").makeCreateBlockchainRecord;
@@ -49,8 +48,8 @@ function makeRealDependencies() {
   return {
     encryptionService: makeEncryptionService(new AWS.KMS()),
     cryptoFunctions: cryptoFunctions,
-    createBlockchainRecord: makeCreateBlockchainRecord(new Stampery(secrets.stamperySecret), config.webHookUrl, secrets.ketteSecret),
-    createUser: makeCreateUser(secrets, config),
+    createBlockchainRecord: makeCreateBlockchainRecord(new Stampery(secrets.stamperySecret), secrets.ketteSecret),
+    createUser: makeCreateUser(new AWS.CognitoIdentityServiceProvider()),
     transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient()),
     privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient()),
     apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient()),
@@ -77,7 +76,7 @@ function makeMockDependencies() {
       decrypt: (input) => { return Buffer.from(input, 'base64').toString('utf8') },
     },
     cryptoFunctions: cryptoFunctions,
-    createBlockchainRecord: makeCreateBlockchainRecord(mockBlockchainService, config.webHookUrl, secrets.ketteSecret),
+    createBlockchainRecord: makeCreateBlockchainRecord(mockBlockchainService, secrets.ketteSecret),
 
     createUser: (userInfo) => {
       const userId = "B2C user called user Id: " + Math.random();

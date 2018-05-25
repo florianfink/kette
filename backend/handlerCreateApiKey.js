@@ -10,8 +10,7 @@ const makeInternalCreateApiKey = require("./apiKeys/src/apiKeyManagement").makeI
 const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
 const extractUserId = require("./modules/src/awsHelper").extractUserId;
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
-const secrets = require("./secrets");
-const config = require("./config");
+
 const AWS = require('aws-sdk');
 
 module.exports.createApiKey = async (event, context, callback) => {
@@ -49,7 +48,7 @@ function makeMockDependencies() {
         extractUserId: (cognitoUserId) => {
             return "B2B-user-called-creator";
         },
-        internalCreateApiKey: makeInternalCreateApiKey(apiGatewayMock, secrets.awsUsagePlanId),
+        internalCreateApiKey: makeInternalCreateApiKey(apiGatewayMock),
         apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' }))
     }
 }
@@ -58,7 +57,7 @@ function makeRealDependencies() {
 
     return {
         extractUserId: extractUserId,
-        internalCreateApiKey: makeInternalCreateApiKey(new AWS.APIGateway(), secrets.awsUsagePlanId),
+        internalCreateApiKey: makeInternalCreateApiKey(new AWS.APIGateway()),
         apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient())
     }
     

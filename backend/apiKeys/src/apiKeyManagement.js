@@ -1,9 +1,8 @@
 var AWS = require('aws-sdk');
 const assert = require("assert");
 
-exports.makeInternalCreateApiKey = function (apiGateway, awsUsagePlanId) {
+exports.makeInternalCreateApiKey = function (apiGateway) {
     assert(apiGateway, "apiGateway not set");
-    assert(awsUsagePlanId, "awsUsagePlanId not set");
 
     const internalCreateApiKey = async function () {
 
@@ -16,7 +15,7 @@ exports.makeInternalCreateApiKey = function (apiGateway, awsUsagePlanId) {
         var usagePlanParams = {
             keyId: createApiKeyResult.id,
             keyType: 'API_KEY',
-            usagePlanId: awsUsagePlanId
+            usagePlanId: process.env.USAGEPLAN_ID
         };
 
         const usagePlanCreationResult = await apiGateway.createUsagePlanKey(usagePlanParams).promise();
