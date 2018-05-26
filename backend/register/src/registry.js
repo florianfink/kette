@@ -16,46 +16,43 @@ exports.makeRegister = function (deps) {
         assert(apiKey, "no apiKey");
 
         try {
-            //start checks 
+            const registrationData = exports.convertInput(input);
+            if (registrationData.hasError) return { hasError: true, message: "input error: " + registrationData.message };
 
-            const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
-            if (!apiKeyMapping) return { hasError: true, message: "api key not linked with any valid B2B user" }; //EXIT CHECK
-
-            const registrationData = convert(input);
-            if (registrationData.hasError) return { hasError: true, message: "input error: " + registrationData.message }; //EXIT CHECK
-
-            const exisitingRegistrations = await deps.transactionRepository.findByUniqueAssetId(registrationData.uniqueAssetId);
-            if (exisitingRegistrations.length > 0) return { hasError: true, message: "asset already registered: " + registrationData.uniqueAssetId }; //EXIT CHECK
-
+            // create user
             const createUserResult = await deps.createUser(registrationData.userInformation);
-            if (createUserResult.hasError) return { hasError: true, message: "create user failed: " + createUserResult.message }; //EXIT CHECK
-            // end checks
+            if (createUserResult.hasError) return { hasError: true, message: "create user failed: " + createUserResult.message };
 
             const key = deps.cryptoFunctions.generateNewKey();
+            const encryptedPrivateKey = await deps.encryptionService.encrypt(key.privateKeyString);
 
+            const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
+            if (!apiKeyMapping) return { hasError: true, message: "api key not linked with any valid B2B user" };
+
+            const userRecord = createUserRecord(createUserResult.userId, key.ethAddress, encryptedPrivateKey, apiKeyMapping.userId);
+            await deps.privateRepository.save(userRecord);
+            // end create user
+
+            // sign message
             const messageToSign = {
                 action: "register",
                 assetType: registrationData.assetType,
                 uniqueAssetId: registrationData.uniqueAssetId
             }
-
             const signedMessage = deps.cryptoFunctions.sign(JSON.stringify(messageToSign), key.privateKey);
+            // end sign message
+
+            //create transaction
+            const exisitingRegistrations = await deps.transactionRepository.findByUniqueAssetId(registrationData.uniqueAssetId);
+            if (exisitingRegistrations.length > 0) return { hasError: true, message: "asset already registered: " + registrationData.uniqueAssetId };
 
             const id = createUniqueId();
-
             const blockchainRecord = await deps.createBlockchainRecord(signedMessage, id);
 
             const transaction = exports.createTransaction(id, registrationData, blockchainRecord, messageToSign.action, key.ethAddress, signedMessage);
-
             await deps.transactionRepository.save(transaction);
-
-            const encryptedPrivateKey = await deps.encryptionService.encrypt(key.privateKeyString);
-
-            const userRecord = createUserRecord(createUserResult.userId, key.ethAddress, encryptedPrivateKey, apiKeyMapping.userId);
-
-            await deps.privateRepository.save(userRecord);
-
             return transaction;
+            //end create transaction
 
         } catch (error) {
             console.log("error: " + error);
@@ -84,7 +81,7 @@ function createUserRecord(userId, ethAddress, encryptedPrivateKey, creatorId) {
     return userRecord;
 }
 
-exports.createTransaction = function (id, registrationData, blockchainRecord, action, ethAddress, signedMessage) {
+exports.createTransaction = (id, registrationData, blockchainRecord, action, ethAddress, signedMessage) => {
     assert(id, "id missing")
     assert(registrationData.assetType, "asset type missing")
     assert(registrationData.uniqueAssetId, "uniqueAssetId missing")
@@ -106,7 +103,7 @@ exports.createTransaction = function (id, registrationData, blockchainRecord, ac
     }
 }
 
-function convert(input) {
+exports.convertInput = (input) => {
 
     if (!input) {
         return {
