@@ -5,51 +5,25 @@
 "use strict";
 
 const makeTransactionRepository = require("./modules/src/transactionRepository");
-const secrets = require("./secrets");
+const makeUpdateTransaction = require("./transaction/src/transactionUpdater").makeUpdateTransaction;
 const AWS = require('aws-sdk');
+const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
+const secrets = require("./secrets");
 
 module.exports.updateTransaction = async (event, context, callback) => {
 
-    const secretInRequest = event.queryStringParameters.ketteSecret;
-
-    if (secretInRequest !== secrets.ketteSecret) {
-        const response = {
-            statusCode: 403,
-            body : JSON.stringify({message: "Authorization required"})
-        }
+    const input = parseInputEvent(event);
+    if(input.hasError) {
+        const response = createAwsResponse(input);
         callback(null, response);
-        return
+        return;
     }
 
     const transactionRepository = makeTransactionRepository(createDynamoDb());
-    const id = event.pathParameters.id;
-    const transaction = await transactionRepository.get(id);
-    
-    if(!transaction){
-        const response = {
-            statusCode: 400,
-            body : JSON.stringify({message: "Transaction not found. Id: " + id})
-        }
-        callback(null, response);
-        return
-    }
+    const updateTransaction = makeUpdateTransaction(transactionRepository, secrets);
 
-    const blockchainReceipt = JSON.parse(event.body);
-    
-    if(transaction.blockchainRecordId !== blockchainReceipt.id) {
-        const response = {
-            statusCode: 400,
-            body : JSON.stringify({message: "transaction blockchainRecordId: " + transaction.blockchainId  + " and blockchainreceipt id: " + blockchainReceipt.id + "not not match "})
-        }
-        callback(null, response);
-        return
-    }
-
-    const response = {
-        statusCode: 200,
-        body: JSON.stringify(transaction)
-    }
-
+    const result = await updateTransaction(input.secretInRequest, input.transactionId, input.blockchainReceipt);
+    const response = createAwsResponse(result);
     callback(null, response);
 }
 
@@ -63,4 +37,25 @@ function createDynamoDb() {
         dynamoDb = new AWS.DynamoDB.DocumentClient();
     }
     return dynamoDb;
+}
+
+function parseInputEvent(event) {
+
+    try {
+        const secretInRequest = event.queryStringParameters.ketteSecret;
+        const blockchainReceipt = JSON.parse(event.body);
+        const transactionId = event.pathParameters.id;
+
+        if(!secretInRequest) return { hasError: true, message: "secret is missing" }
+        if(!blockchainReceipt) return { hasError: true, message: "blockchain receipt missing or wrong" }
+        if(!transactionId) return { hasError: true, message: "id is missing" }
+
+        return {
+            secretInRequest: secretInRequest,
+            blockchainReceipt: blockchainReceipt,
+            transactionId: transactionId
+        }
+    } catch (error) {
+        return { hasError: true, message: error.message }
+    }
 }

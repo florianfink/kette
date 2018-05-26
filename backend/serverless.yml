@@ -91,7 +91,7 @@ functions:
     events:
       - http:
               method: post
-              path: assets/{id}
+              path: transactions/{id}
   createApiKey:
     handler: handlerCreateApiKey.createApiKey
     events:
