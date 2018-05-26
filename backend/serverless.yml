@@ -11,7 +11,7 @@ custom:
   encryptionKeyId : '7f46370f-d1d7-4083-b058-e3eb2b30dbf9'
   userPoolId : 'us-east-1_ptfudUdBB'
   usagePlanId : 'ugvmus'
-  webHookBaseUrl : 'https://uxd0ifjso8.execute-api.us-east-1.amazonaws.com/dev/users/transactions'
+  webHookBaseUrl : 'https://uxd0ifjso8.execute-api.us-east-1.amazonaws.com/dev/transactions'
   dynamodb:
     start:
       migrate: true
