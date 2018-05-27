@@ -1,5 +1,5 @@
 /*
-*    B2B endpoint for creators to create their api key to use the register function
+*    B2B endpoint for B2B-Users to get their api key
 */
 
 "use strict";

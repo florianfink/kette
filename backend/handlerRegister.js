@@ -1,5 +1,5 @@
 /*
-*  B2B endpoint for registerd registrators to register an asset on behalf of one of their clients
+*  B2B endpoint for B2B users to register an asset on behalf of one of their clients (B2B-User)
 */
 
 "use strict";
