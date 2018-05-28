@@ -11,7 +11,9 @@ export default class Login extends Component {
     this.state = {
       isLoading: false,
       email: "",
-      password: ""
+      password: "",
+      changePw: false,
+      user: {}
     };
   }
 
@@ -29,10 +31,31 @@ export default class Login extends Component {
     event.preventDefault();
 
     this.setState({ isLoading: true });
+    
+    console.log(this.state.user);
+    console.log(this.state.password);
+    console.log(this.state.changePw);
 
     try {
-      await Auth.signIn(this.state.email, this.state.password);
-      this.props.userHasAuthenticated(true);
+      if (this.state.changePw) {
+        await Auth.completeNewPassword(this.state.user, this.state.password);
+        this.props.userHasAuthenticated(true);
+      }
+      else {
+        console.log("else pfad");
+        const user = await Auth.signIn(this.state.email, this.state.password);
+        if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+          this.setState({
+            changePw: true,
+            user: user,
+            isLoading: false,
+            password: ''
+          })
+        }
+        else {
+          this.props.userHasAuthenticated(true);
+        }
+      }
     } catch (e) {
       alert(e.message);
       this.setState({ isLoading: false });
@@ -40,37 +63,62 @@ export default class Login extends Component {
   }
 
   render() {
-    return (
-      <div className="Login">
-        <form onSubmit={this.handleSubmit}>
-          <FormGroup controlId="email" bsSize="large">
-            <ControlLabel>Email</ControlLabel>
-            <FormControl
-              autoFocus
-              type="email"
-              value={this.state.email}
-              onChange={this.handleChange}
+    if (!this.state.changePw)
+      return (
+        <div className="Login">
+          <form onSubmit={this.handleSubmit}>
+            <FormGroup controlId="email" bsSize="large">
+              <ControlLabel>Email</ControlLabel>
+              <FormControl
+                autoFocus
+                type="email"
+                value={this.state.email}
+                onChange={this.handleChange}
+              />
+            </FormGroup>
+            <FormGroup controlId="password" bsSize="large">
+              <ControlLabel>Password</ControlLabel>
+              <FormControl
+                value={this.state.password}
+                onChange={this.handleChange}
+                type="password"
+              />
+            </FormGroup>
+            <LoaderButton
+              block
+              bsSize="large"
+              disabled={!this.validateForm()}
+              type="submit"
+              isLoading={this.state.isLoading}
+              text="Login"
+              loadingText="Logging in…"
             />
-          </FormGroup>
-          <FormGroup controlId="password" bsSize="large">
-            <ControlLabel>Password</ControlLabel>
-            <FormControl
-              value={this.state.password}
-              onChange={this.handleChange}
-              type="password"
+          </form>
+        </div>
+      )
+    else
+      return (
+        <div className="Login">
+          <form onSubmit={this.handleSubmit}>
+            <FormGroup controlId="password" bsSize="large">
+              <ControlLabel>New Password</ControlLabel>
+              <FormControl
+                value={this.state.password}
+                onChange={this.handleChange}
+                type="password"
+              />
+            </FormGroup>
+            <LoaderButton
+              block
+              bsSize="large"
+              disabled={!this.validateForm()}
+              type="submit"
+              isLoading={this.state.isLoading}
+              text="Login"
+              loadingText="Logging in…"
             />
-          </FormGroup>
-          <LoaderButton
-            block
-            bsSize="large"
-            disabled={!this.validateForm()}
-            type="submit"
-            isLoading={this.state.isLoading}
-            text="Login"
-            loadingText="Logging in…"
-          />
-        </form>
-      </div>
-    );
+          </form>
+        </div>
+      );
   }
 }
