@@ -33,9 +33,11 @@ export default class Home extends Component {
     return API.get("apiKeys", "/apiKeys");
   }
 
-  handleApiKeyClick = event => {
+  handleApiKeyClick = async event => {
     event.preventDefault();
-    this.props.history.push(event.currentTarget.getAttribute("href"));
+    await API.post("apiKeys", "/apiKeys");
+    const apiKeys = await this.apiKeys();
+    this.setState({ apiKeys });
   }
 
   renderApiKeysList(apiKeys) {
