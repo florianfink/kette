@@ -10,13 +10,6 @@
         :theme="theme"
       />
     </ul>
-    <footer :style="theme.footer">
-      <div :style="theme.footer.filter">
-        <span :style="theme.footer.filter.mainItem" v-on:click="filter = 'all'">All</span>
-        <span :style="theme.footer.filter.item" v-on:click="filter = 'active'">Active</span>
-        <span :style="theme.footer.filter.item" v-on:click="filter = 'completed'">Completed</span>
-      </div>
-    </footer>
   </div>
 </template>
 

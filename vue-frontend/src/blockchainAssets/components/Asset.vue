@@ -1,6 +1,6 @@
 <template>
   <li :style="theme.item">
-    <div :style="theme.item.title">{{asset.uniqueAssetId}}</div>
+    <div :style="theme.item.title">Frame number: {{asset.uniqueAssetId}}</div>
   </li>
 </template>
 
