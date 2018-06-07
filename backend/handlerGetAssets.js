@@ -48,6 +48,6 @@ function makeMockDependencies() {
     return {
         transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
         privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
-        extractUserId: () => { return "B2C user called user Id: 0.6064210506573497" }
+        extractUserId: () => { return "B2C user called user Id: 0.8304487188324763" }
     }
 }
