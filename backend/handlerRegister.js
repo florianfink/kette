@@ -63,6 +63,7 @@ function makeMockDependencies() {
       return Buffer.from(messageToHash).toString('base64').substring(0, 10);
     },
     stamp: (hash, hook) => {
+      console.log(hook);
       return {
         id: Buffer.from(hash).toString('base64').substring(0, 10),
         time: "2018-05-10 19:06:00.270483"

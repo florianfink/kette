@@ -1,18 +1,19 @@
 # Setup
 #### AWS Cognito
-- [create user pool for B2C users](https://serverless-stack.com/chapters/create-a-cognito-user-pool.html)
-- [create identity pool for B2C users](https://serverless-stack.com/chapters/create-a-cognito-identity-pool.html)
-- [create user pool for B2B users](https://serverless-stack.com/chapters/create-a-cognito-user-pool.html)
-- [create identity pool for B2B users](https://serverless-stack.com/chapters/create-a-cognito-identity-pool.html)
+- [create user pools for B2C users (dev+prod)](https://serverless-stack.com/chapters/create-a-cognito-user-pool.html)
+- [create identity pools for B2C users(dev+prod)](https://serverless-stack.com/chapters/create-a-cognito-identity-pool.html)
+- [create user pools for B2B users(dev+prod)](https://serverless-stack.com/chapters/create-a-cognito-user-pool.html)
+- [create identity pools for B2B users(dev+prod)](https://serverless-stack.com/chapters/create-a-cognito-identity-pool.html)
 #### AWS IAM
-- create user with admin access for backend APIs (backend-admin)
-- create AWS central master key and add backend-admin as "Key User"
-- create sercets.js file that contains all necessary secrets
+- create aws encryption keys [dev+prod] and add ID to serverless.yml encryptionKeyId_{stage}
+- [end to end test] create user with admin access for backend APIs (backend-admin)
+- [obsolete] create sercets.js file that contains all necessary secrets
+#### AWS API Gateway
+- create usage plans [dev+prod] and add id to serverless.yml usagePlanId_{stage} 
 # Development
       module.exports = {
             awsAccessKeyId : 'backend admin api key',
             awsSecretAccessKey : 'backend admin api Secret',
-            awsUsagePlanId : "usage plan id from aws console",
             stamperySecret : "stampery secret",
             ketteSecret : "kette backend secret from common key"
         }
