@@ -1,4 +1,4 @@
-const secrets = require("../secrets");
+const secrets = require("./secrets");
 const awsConfig = require("./awsConfig")
 const AWS = require('aws-sdk');
 
