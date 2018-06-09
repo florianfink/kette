@@ -9,11 +9,11 @@ custom:
   ethAddressIndex : 'assetTransactions-table-ethAddress-index-${self:provider.stage}'
   uniqueAssetIdIndex : 'assetTransactions-table-uniqueAssetId-index-${self:provider.stage}'
 
-  webHookBaseUrl : 'https://uxd0ifjso8.execute-api.us-east-1.amazonaws.com/${self:provider.stage}/transactions'
+  webHookBaseUrl : https://8lc7n8q4ml.execute-api.eu-central-1.amazonaws.com/${self:provider.stage}/transactions
 
-  encryptionKeyId_dev : '7f46370f-d1d7-4083-b058-e3eb2b30dbf9'
-  userPoolId_dev : 'us-east-1_ptfudUdBB'
-  usagePlanId_dev : 'ugvmus'
+  encryptionKeyId_dev : 'e799a671-c500-43f5-b8e0-f5261e1a0bd5'
+  userPoolId_dev : 'eu-central-1_m6GXL0kiz'
+  usagePlanId_dev : 'z5kup9'
   
   encryptionKeyId_production : 'XXX'
   userPoolId_production : '___'
@@ -25,8 +25,18 @@ custom:
 
 provider:
   name: aws
+  apiKeys:	
+    - ${self:provider.stage}-forTests
+  usagePlan:	
+    quota:	
+      limit: 50000	
+      offset: 0	
+      period: MONTH	
+    throttle:	
+      burstLimit: 200	
+      rateLimit: 100
   runtime: nodejs8.10
-  region: us-east-1
+  region: eu-central-1
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -37,27 +47,27 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - "arn:aws:dynamodb:us-east-1:*:*"
+        - "arn:aws:dynamodb:eu-central-1:*:*"
     - Effect: Allow
       Action: 'ssm:GetParameter'
       Resource:
-        - "arn:aws:ssm:us-east-1:*:parameter/*"
+        - "arn:aws:ssm:eu-central-1:*:parameter/*"
     - Effect: Allow
       Action: 'apigateway:POST'
       Resource:
-        - "arn:aws:apigateway:us-east-1::/*"
+        - "arn:aws:apigateway:eu-central-1::/*"
     - Effect: Allow
       Action: 
         - 'kms:Encrypt'
         - 'kms:Decrypt'
       Resource:
-        - "arn:aws:kms:us-east-1:*:key/${self:provider.environment.ENCRYPTION_KEYID}"
+        - "arn:aws:kms:eu-central-1:*:key/${self:provider.environment.ENCRYPTION_KEYID}"
     - Effect: Allow
       Action: 
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminGetUser
       Resource:
-        - "arn:aws:cognito-idp:us-east-1:*:userpool/${self:provider.environment.USERPOOL_ID}"
+        - "arn:aws:cognito-idp:eu-central-1:*:userpool/${self:provider.environment.USERPOOL_ID}"
   environment:
     APIKEYS_TABLE: ${self:custom.apiKeysTableName}
     APIKEYS_TABLE_USERID_INDEX : ${self:custom.userIdIndex}

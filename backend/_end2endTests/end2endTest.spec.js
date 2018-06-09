@@ -31,7 +31,7 @@ const awsConfig = require("./awsConfig")
 const amplifyConfig = require("./amplifyConfig")
 const AWS = require('aws-sdk');
 
-const eMail = "nix22@doesn2dotE2xist3.iy";
+const eMail = "DiesDas3@kette3.io";
 const finalPassword = "D!iesDa1232139";
 
 describe('...', function () {
@@ -68,8 +68,8 @@ describe('...', function () {
         const apiKey = createdApiKey.apiKey.apiKey;
 
         //wait one minute to let the aws system recognize the newly created API-Key as valid
-        console.log("Waiting 60 seconds for api key to be recognized in AWS system");
-        await new Promise(resolve => setTimeout(resolve, 60000));
+        console.log("Waiting 45 seconds for api key to be recognized in AWS system");
+        await new Promise(resolve => setTimeout(resolve, 45000));
         console.log("Waiting over");
         const registrationData = {
             firstName: "Peter",
@@ -80,7 +80,7 @@ describe('...', function () {
             zipcode: "12345",
             city: "Boss City",
             country: "Germany",
-            email: "infd23o12@kette2.io"
+            email: "diesDas2@kette2.io"
         }
 
         const init = {
@@ -92,49 +92,12 @@ describe('...', function () {
             }
         };
 
-        const registerResponse = await fetch("https://uxd0ifjso8.execute-api.us-east-1.amazonaws.com/dev/register", init)
+        const url = awsConfig.apiGateway.URL;
+        const registerResponse = await fetch(url + "/register", init)
         const registerResult = await registerResponse.json();
         console.log("registration complete");
         
         console.log(registerResult);
 
-    }),
-
-        it('[register with existing B2C user]', async () => {
-            /*
-            const registrationData = {
-                firstName : "Peter",
-                lastName : "Lustig",
-                uniqueAssetId : "DiesDasAnanas",
-                assetType : "bicycle",
-                street : "Kingstreet",
-                zipcode : "12345",
-                city : "Boss City",
-                country : "Germany",
-                email : "info@kette.io"
-            }
-
-            Amplify.configure(amplifyConfig);
-
-            await Amplify.Auth.signIn(eMail, finalPassword);
-            const apiKeys = await Amplify.API.get("apiKeys", "/apiKeys");
-
-            const firstApiKey = apiKeys[0];
-            const apiKey = firstApiKey.apiKey;
-
-            console.log(apiKey)
-
-            const init = {
-                body: JSON.stringify(registrationData),
-                method: 'POST',
-                headers: {
-                    'x-api-key': apiKey,
-                    'content-type': 'application/json'
-                }
-            };
-            const registerResponse = await fetch("https://uxd0ifjso8.execute-api.us-east-1.amazonaws.com/dev/register", init)
-            const registerResult = await registerResponse.json();
-
-            console.log(registerResult);*/
-        })
+    })
 })
