@@ -31,23 +31,25 @@ const awsConfig = require("./awsConfig")
 const amplifyConfig = require("./amplifyConfig")
 const AWS = require('aws-sdk');
 
-const eMail = "DiesDas3@kette3.io";
 const finalPassword = "D!iesDa1232139";
 
 describe('...', function () {
     this.timeout(300000);
     it('[create new B2B user and register an asset]', async () => {
         
+        const b2bId = makeRandomString();
+        const b2bEmail = b2bId + "@kette3.io";
+
         const tempPassword = "LolOlo123123!"
 
         var params = {
             UserPoolId: awsConfig.cognito.USER_POOL_ID,
-            Username: eMail,
+            Username: b2bEmail,
             DesiredDeliveryMediums: ["EMAIL"],
             ForceAliasCreation: false,
             TemporaryPassword: tempPassword,
             UserAttributes: [
-                { Name: "email", Value: eMail },
+                { Name: "email", Value: b2bEmail },
                 { Name: "email_verified", Value: "true" }
             ]
         };
@@ -59,7 +61,7 @@ describe('...', function () {
         console.log("B2B user created");
 
         Amplify.configure(amplifyConfig);
-        const user = await Amplify.Auth.signIn(eMail, tempPassword);
+        const user = await Amplify.Auth.signIn(b2bEmail, tempPassword);
         console.log("Signed in");
         await Amplify.Auth.completeNewPassword(user, finalPassword);
         console.log("Password changed");
@@ -71,16 +73,20 @@ describe('...', function () {
         console.log("Waiting 45 seconds for api key to be recognized in AWS system");
         await new Promise(resolve => setTimeout(resolve, 45000));
         console.log("Waiting over");
+        
+        const b2cEmail = makeRandomString() + "@kette2.io";
+        const uniqueAssetId = makeRandomString();
+
         const registrationData = {
             firstName: "Peter",
             lastName: "Lustig",
-            uniqueAssetId: "DiesDasAn2anas5e",
+            uniqueAssetId: uniqueAssetId,
             assetType: "bicycle",
             street: "Kingstreet",
             zipcode: "12345",
             city: "Boss City",
             country: "Germany",
-            email: "diesDas2@kette2.io"
+            email: b2cEmail
         }
 
         const init = {
@@ -101,3 +107,13 @@ describe('...', function () {
 
     })
 })
+
+function makeRandomString() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  
+    for (var i = 0; i < 5; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+  
+    return text;
+  }
