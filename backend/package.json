@@ -20,6 +20,6 @@
     "chai": "^4.1.2",
     "node-fetch": "^2.1.2",
     "serverless-dynamodb-local": "^0.2.28",
-    "serverless-offline": "^3.20.1"
+    "serverless-offline": "^3.25.6"
   }
 }

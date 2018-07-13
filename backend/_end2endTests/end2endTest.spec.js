@@ -69,7 +69,6 @@ describe('...', function () {
         console.log("ApiKey created");
         const apiKey = createdApiKey.apiKey.apiKey;
 
-        //wait one minute to let the aws system recognize the newly created API-Key as valid
         console.log("Waiting 45 seconds for api key to be recognized in AWS system");
         await new Promise(resolve => setTimeout(resolve, 45000));
         console.log("Waiting over");
@@ -98,7 +97,7 @@ describe('...', function () {
             }
         };
 
-        const url = awsConfig.apiGateway.URL;
+        const url = "https://api.kette.io/dev";
         const registerResponse = await fetch(url + "/register", init)
         const registerResult = await registerResponse.json();
         console.log("registration complete");
