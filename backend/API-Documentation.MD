@@ -9,7 +9,12 @@ Every Data API request must contain the following headers:
 
 ## Endpoints
 
+- [Register](#Register)
+- [Get Users](#Get-Users)
+
+------
 ### Register
+
 Creates a record of the asset in the KETTE backend and a proof on the blockchain. Additionally, a user account and a private key are created. 
 
 [POST] https://api.kette.io/v1/register
@@ -39,10 +44,11 @@ Content-Type: “application/json”
           "street": "Lange Straße 24",
           "zipCode": "70166",
           "city": "Stuttgart",
+          "country": "Germany"
           "eMail": "Hans.Mueller@t-online.de"
       }
 
-#### Sampke Response
+#### Sample Response
       { 
         id: 'ed5c8e10-8741-11e8-b848-c1fdfa6344f7',
         assetType: 'bicycle',
@@ -64,5 +70,51 @@ Content-Type: “application/json”
            version: '2' 
           } 
       }
+------
+### Get-Users
+This method returns all users created with the api key provided in the header of the request.
 
+[GET] https://api.kette.io/v1/users/
+
+Sample response:
+
+      [
+          {
+              "Username": "6bcc8df6-5d45-4066-8c3b-5b94d5feca0f",
+              "UserAttributes": [
+                  {
+                      "Name": "sub",
+                      "Value": "6bcc8df6-5d45-4066-8c3b-5b94d5feca0f"
+                  },
+                  {
+                      "Name": "address",
+                      "Value": "Lange Straße 24 Stuttgart Germany"
+                  },
+                  {
+                      "Name": "email_verified",
+                      "Value": "true"
+                  },
+                  {
+                      "Name": "name",
+                      "Value": "Hans Müller"
+                  },
+                  {
+                      "Name": "given_name",
+                      "Value": "Hans"
+                  },
+                  {
+                      "Name": "family_name",
+                      "Value": "Müller"
+                  },
+                  {
+                      "Name": "email",
+                      "Value": "Hans.Mueller@t-online.de"
+                  }
+              ],
+              "UserCreateDate": "2018-06-09T08:37:47.042Z",
+              "UserLastModifiedDate": "2018-06-09T08:37:47.042Z",
+              "Enabled": true,
+              "UserStatus": "FORCE_CHANGE_PASSWORD"
+          }
+      ]
 
