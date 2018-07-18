@@ -6,17 +6,17 @@ import { withAuthenticator } from 'aws-amplify-react';
 
 Amplify.configure({
   Auth: {
-    identityPoolId: 'us-east-1:7def8cb7-a390-4ba8-a3c3-63fb2f85290b',
-    region: 'us-east-1',
-    userPoolId: 'us-east-1_ptfudUdBB',
-    userPoolWebClientId: '5m7rkuhq4bqv6e0bh2i6c03k6l',
+    identityPoolId: 'eu-central-1:44cb3772-bc89-4f1b-9071-a92df07e861d',
+    region: 'eu-central-1',
+    userPoolId: 'eu-central-1_m6GXL0kiz',
+    userPoolWebClientId: '3qhh4nkqbpkjk6oippehtvbq3l',
   },
   API: {
     endpoints: [
       {
         name: "assets",
-        endpoint: "https://uxd0ifjso8.execute-api.us-east-1.amazonaws.com/dev",
-        region: "us-east-1"
+        endpoint: "https://8lc7n8q4ml.execute-api.eu-central-1.amazonaws.com/dev",
+        region: "eu-central-1"
       },
     ]
   }

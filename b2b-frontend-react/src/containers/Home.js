@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { API } from "aws-amplify";
-import { Link } from "react-router-dom";
 import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
 import "./Home.css";
 
@@ -35,9 +34,14 @@ export default class Home extends Component {
 
   handleApiKeyClick = async event => {
     event.preventDefault();
-    await API.post("apiKeys", "/apiKeys");
-    const apiKeys = await this.apiKeys();
-    this.setState({ apiKeys });
+    const existingApiKeys = await this.apiKeys();
+    if (existingApiKeys.length > 0) {
+      alert("API key already created");
+    } else {
+      await API.post("apiKeys", "/apiKeys");
+      const apiKeys = await this.apiKeys();
+      this.setState({ apiKeys });
+    }
   }
 
   renderApiKeysList(apiKeys) {
@@ -61,23 +65,6 @@ export default class Home extends Component {
     );
   }
 
-  renderLander() {
-    return (
-      <div className="lander">
-        <h1>Dashboard</h1>
-        <p>KETTE Dashboard</p>
-        <div>
-          <Link to="/login" className="btn btn-info btn-lg">
-            Login
-          </Link>
-          <Link to="/signup" className="btn btn-success btn-lg">
-            Signup
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   renderApiKeys() {
     return (
       <div className="apiKeys">
@@ -92,7 +79,7 @@ export default class Home extends Component {
   render() {
     return (
       <div className="Home">
-        {this.props.isAuthenticated ? this.renderApiKeys() : this.renderLander()}
+        {this.renderApiKeys()}
       </div>
     );
   }

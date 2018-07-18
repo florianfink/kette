@@ -42,7 +42,6 @@ export default class Login extends Component {
         this.props.userHasAuthenticated(true);
       }
       else {
-        console.log("else pfad");
         const user = await Auth.signIn(this.state.email, this.state.password);
         if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
           this.setState({

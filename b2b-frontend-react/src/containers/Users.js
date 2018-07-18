@@ -31,7 +31,7 @@ export default class Users extends Component {
           'x-api-key': apiKey
         }
       };
-      const response = await fetch("https://uxd0ifjso8.execute-api.us-east-1.amazonaws.com/dev/users", init)
+      const response = await fetch("https://api.kette.io/dev/users", init)
       const users = await response.json();
       this.setState({ isLoading: false, users: users });
     } catch (e) {

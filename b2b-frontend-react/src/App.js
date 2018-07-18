@@ -2,7 +2,6 @@ import React, { Component, Fragment } from "react";
 import { Auth } from "aws-amplify";
 import { Link, withRouter } from "react-router-dom";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 import Routes from "./Routes";
 import "./App.css";
 
@@ -22,7 +21,7 @@ class App extends Component {
         this.userHasAuthenticated(true);
       }
     }
-    catch(e) {
+    catch (e) {
       if (e !== 'No current user') {
         alert(e);
       }
@@ -54,31 +53,32 @@ class App extends Component {
       <div className="App container">
         <Navbar fluid collapseOnSelect>
           <Navbar.Header>
-            <Navbar.Brand>
-              <Link to="/">API Key</Link>
-            </Navbar.Brand>
-            <Navbar.Brand>
-              <Link to="/users">Users</Link>
-            </Navbar.Brand>
+            {this.state.isAuthenticated
+              ? <Fragment>
+                <Navbar.Brand>
+                  <Link to="/">API Key</Link>
+                </Navbar.Brand>
+                <Navbar.Brand>
+                  <Link to="/users">Users</Link>
+                </Navbar.Brand>
+              </Fragment>
+              : <Fragment>
+                 <Navbar.Brand>
+                  <Link to="/">Welcome to the KETTE Dashboard!</Link>
+                </Navbar.Brand>
+              </Fragment>
+            }
             <Navbar.Toggle />
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav pullRight>
               {this.state.isAuthenticated
                 ? <Fragment>
-                    <LinkContainer to="/settings">
-                      <NavItem>Settings</NavItem>
-                    </LinkContainer>
-                    <NavItem onClick={this.handleLogout}>Logout</NavItem>
-                  </Fragment>
-                : <Fragment>
-                    <LinkContainer to="/signup">
-                      <NavItem>Signup</NavItem>
-                    </LinkContainer>
-                    <LinkContainer to="/login">
-                      <NavItem>Login</NavItem>
-                    </LinkContainer>
-                  </Fragment>
+                  <NavItem onClick={this.handleLogout}>Logout</NavItem>
+                </Fragment>
+                : 
+                <Fragment>
+                </Fragment>
               }
             </Nav>
           </Navbar.Collapse>

@@ -1,27 +1,17 @@
 const dev = {
-  STRIPE_KEY: "pk_test_v1amvR35uoCNduJfkqGB8RLD",
-  s3: {
-    REGION: "us-east-1",
-    BUCKET: "notes-app-2-api-dev-attachmentsbucket-1oaogqz41j2cn"
-  },
   apiGateway: {
-    REGION: "us-east-1",
-    URL: "https://uxd0ifjso8.execute-api.us-east-1.amazonaws.com/dev"
+    REGION: "eu-central-1",
+    URL: "https://8lc7n8q4ml.execute-api.eu-central-1.amazonaws.com/dev"
   },
   cognito: {
-    REGION: "us-east-1",
-    USER_POOL_ID: "us-east-1_FkjK4UxZV",
-    APP_CLIENT_ID: "7s4qkqr0nrl5uks2hbfmsu787p",
-    IDENTITY_POOL_ID: "us-east-1:98c42162-97a8-461c-a8d5-82eb0e4ebdbe"
+    REGION: "eu-central-1",
+    USER_POOL_ID: "eu-central-1_4plDryDkq",
+    APP_CLIENT_ID: "4ikgja298up4t2c955d94h83sf",
+    IDENTITY_POOL_ID: "eu-central-1:c9777e2d-ef46-4a98-b76e-c05f02652241"
   }
 };
 
 const prod = {
-  STRIPE_KEY: "pk_test_v1amvR35uoCNduJfkqGB8RLD",
-  s3: {
-    REGION: "us-east-1",
-    BUCKET: "notes-app-2-api-prod-attachmentsbucket-175uttt3tvcyb"
-  },
   apiGateway: {
     REGION: "us-east-1",
     URL: "https://api.serverless-stack.seed-demo.club/prod"
