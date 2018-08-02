@@ -28,7 +28,7 @@ Serverless deploy needs to be run twice for the very first deploy. Not ALL creat
 
         module.exports = {
             stamperySecret : "stampery secret",
-            ketteSecret : "kette backend secret from common key"
+            ketteSecret : "kette backend secret"
         }
 
 - npm install
