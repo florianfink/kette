@@ -13,8 +13,7 @@ const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
 
 const AWS = require('aws-sdk');
 
-module.exports.createApiKey = async (event, context, callback) => {
-
+module.exports.createApiKey = async (event) => {
     const cognitoAuthenticationProvider = event.requestContext.identity.cognitoAuthenticationProvider;
 
     const dependencies = makeDependencies();
@@ -23,7 +22,7 @@ module.exports.createApiKey = async (event, context, callback) => {
     const result = await createApiKey(cognitoAuthenticationProvider);
 
     const response = createAwsResponse(result);
-    callback(null, response);
+    return response;
 }
 
 function makeDependencies() {

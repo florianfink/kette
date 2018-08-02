@@ -9,11 +9,11 @@ custom:
   ethAddressIndex : 'assetTransactions-table-ethAddress-index-${self:provider.stage}'
   uniqueAssetIdIndex : 'assetTransactions-table-uniqueAssetId-index-${self:provider.stage}'
 
-  webHookBaseUrl : https://8lc7n8q4ml.execute-api.eu-central-1.amazonaws.com/${self:provider.stage}/transactions
+  webHookBaseUrl : ${file(./serverless-config.json):webHookBaseUrl}/${self:provider.stage}/transactions
 
-  encryptionKeyId_dev : 'e799a671-c500-43f5-b8e0-f5261e1a0bd5'
-  userPoolId_dev : 'eu-central-1_m6GXL0kiz'
-  usagePlanId_dev : 'z5kup9'
+  encryptionKeyId_dev : ${file(./serverless-config.json):encryptionKeyId_dev}
+  userPoolId_dev : ${file(./serverless-config.json):userPoolId_dev}
+  usagePlanId_dev : ${file(./serverless-config.json):usagePlanId_dev}
   
   encryptionKeyId_production : 'XXX'
   userPoolId_production : '___'
