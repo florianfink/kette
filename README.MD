@@ -8,14 +8,15 @@ Serverless deploy needs to be run twice for the very first deploy. Not ALL creat
 - [AWS Console - Cognito] [create identity pools for B2C users](https://serverless-stack.com/chapters/create-a-cognito-identity-pool.html). Use Gateway Id created on first serverless deploy
 - [AWS Console - Cognito] [create user pools for B2B users](https://serverless-stack.com/chapters/create-a-cognito-user-pool.html). Use Gateway Id created on first serverless deploy
 - [AWS Console - Cognito] [create identity pools for B2B users](https://serverless-stack.com/chapters/create-a-cognito-identity-pool.html). Use Gateway Id created on first serverless deploy
-- [local] create secrets.js
+- run "npm run prepare" to copy template files to the correct folders
+- [local] update secrets.js
 
         module.exports = {
             stamperySecret : "stampery secret",
             ketteSecret : "kette backend secret"
         }
 
-- [local] create serverless-config.json
+- [local] update serverless-config.json
 
       {
           "encryptionKeyId_dev": "(find at AWS Console - IAM)",
@@ -23,7 +24,7 @@ Serverless deploy needs to be run twice for the very first deploy. Not ALL creat
           "usagePlanId_dev": "(find at AWS Console - API Gateway)",
           "webHookBaseUrl" : "URL that deploy yields as result (find at result of first serverless deploy)"
       }
-- [local] create ./_end2endTests/test-secrets.js
+- [local] update ./_end2endTests/test-secrets.js
 
       module.exports = {
             awsAccessKeyId : 'backend admin api key',

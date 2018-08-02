@@ -23,6 +23,7 @@ appsettings.json
 
 #ApiKeys for developement
 secrets.js
+test-secrets.js
 
 # Dependency directories
 node_modules/

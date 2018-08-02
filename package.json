@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha -- */test/*.spec.js",
     "end2EndTest": "mocha -- ./_end2endtests/end2endTest.spec.js",
-    "cleanUp": "mocha -- ./_end2endtests/cleanUp.spec.js"
+    "prepare" : "cp ./_templates/template-test-secrets.js ./_end2endTests && mv ./_end2endTests/template-test-secrets.js ./_end2endTests/test-secrets.js && cp ./_templates/template-secrets.js . && mv ./template-secrets.js ./secrets.js && cp ./_templates/template-serverless-config.json . && mv ./template-serverless-config.json ./serverless-config.json"
   },
   "author": "Hannes Rang",
   "license": "ISC",
