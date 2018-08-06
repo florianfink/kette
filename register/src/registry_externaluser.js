@@ -19,11 +19,13 @@ exports.makeRegister = function (deps) {
             const registrationData = exports.convertInput(input);
             if (registrationData.hasError) return { hasError: true, message: "input error: " + registrationData.message };
 
+            const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
+            if (!apiKeyMapping) return { hasError: true, message: "api key not linked with any valid B2B user" };
+
             const userRecord = await deps.userRecordRepository.find(registrationData.userId);
 
             let privateKeyBuffer;
             let ethAddress;
-            
             if (userRecord) {
                 const privateKeyString = await deps.encryptionService.decrypt(userRecord.encryptedPrivateKey);
                 privateKeyBuffer = deps.cryptoFunctions.toPrivateKeyBuffer(privateKeyString);
@@ -32,17 +34,12 @@ exports.makeRegister = function (deps) {
             else {
                 const key = deps.cryptoFunctions.generateNewKey();
                 privateKeyBuffer = key.privateKey;
+                ethAddress = key.ethAddress;
+
                 const privateKeyString = key.privateKeyString;
-
                 const encryptedPrivateKey = await deps.encryptionService.encrypt(privateKeyString);
-
-                const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
-                if (!apiKeyMapping) return { hasError: true, message: "api key not linked with any valid B2B user" };
-
                 const userRecord = createUserRecord(registrationData.userId, key.ethAddress, encryptedPrivateKey, apiKeyMapping.userId);
                 await deps.userRecordRepository.save(userRecord);
-
-                ethAddress = userRecord.ethAddress;
             }
 
             // sign message
