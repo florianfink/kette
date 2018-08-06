@@ -42,6 +42,7 @@ describe("registry_externaluser", () => {
                     findByUniqueAssetId: (uniqueAssetId) => { return [] }
                 },
                 userRecordRepository: {
+                    find: (userId) => {},
                     save: (recordToSave) => {
                         expect(recordToSave.userId).to.equal(input.userId);
                         expect(recordToSave.encryptedPrivateKey).to.equal(expectedEncryptedPrivateKey);
@@ -76,7 +77,8 @@ describe("registry_externaluser", () => {
             const expectedDateAsString = "2018-05-10T17:06:00.270Z"
             const encryptedPrivateKey = "my encrypted private key";
             const decryptedPrivateKey = "decrypted_Private_Key";
-            const expectedEthAddress = "my eth address";
+            const privateKeyBuffer = Buffer("this is not a buffer lol");
+            const ethAddress = "my eth address";
             const expectedSignedMessage = "my signed Message";
             const expectedCreatorId = "my expected creator id";
 
@@ -91,15 +93,18 @@ describe("registry_externaluser", () => {
                 },
                 cryptoFunctions: {
                     sign: (message, privateKey) => {
-                        expect(privateKey).to.equal(decryptedPrivateKey);
+                        expect(privateKey).to.equal(privateKeyBuffer);
                         return expectedSignedMessage;
+                    },
+                    toPrivateKeyBuffer: (privateKeyString) => {
+                        return privateKeyBuffer;
                     }
                 },
                 transactionRepository: {
                     save: (transaction) => {
                         expect(transaction.signedMessage).to.equal(expectedSignedMessage);
                         expect(transaction.date).to.equal(expectedDateAsString);
-                        expect(transaction.ethAddress).to.equal(expectedEthAddress);
+                        expect(transaction.ethAddress).to.equal(ethAddress);
                     },
                     findByUniqueAssetId: (uniqueAssetId) => { return [] }
                 },
@@ -109,7 +114,7 @@ describe("registry_externaluser", () => {
                         findCalled = true;
                         return {
                             userId: userId,
-                            ethAddress: "ethAddress",
+                            ethAddress: ethAddress,
                             encryptedPrivateKey: encryptedPrivateKey,
                             creatorId: "creatorId",
                         }
