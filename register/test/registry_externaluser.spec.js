@@ -3,7 +3,7 @@ const makeRegister = require('../src/registry_externaluser').makeRegister;
 const expect = require('chai').expect;
 
 describe("registry_externaluser", () => {
-    describe("existing user", () => {
+    describe("register", () => {
         it('should use existing user', async () => {
 
             let saveCalled = false;
@@ -42,7 +42,7 @@ describe("registry_externaluser", () => {
                     findByUniqueAssetId: (uniqueAssetId) => { return [] }
                 },
                 userRecordRepository: {
-                    find: (userId) => {},
+                    find: (userId) => { },
                     save: (recordToSave) => {
                         expect(recordToSave.userId).to.equal(input.userId);
                         expect(recordToSave.encryptedPrivateKey).to.equal(expectedEncryptedPrivateKey);
@@ -64,8 +64,7 @@ describe("registry_externaluser", () => {
             expect(saveCalled, "privateRepository.save() was not called").to.be.true;
             expect(encryptCalled, "encryptionSerivce.encyrpt() was not called").to.be.true;
         })
-    })
-    describe("new user", () => {
+
         it('should create new user', async () => {
 
             let saveCalled = false;

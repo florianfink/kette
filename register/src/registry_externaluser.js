@@ -22,10 +22,11 @@ exports.makeRegister = function (deps) {
             const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
             if (!apiKeyMapping) return { hasError: true, message: "api key not linked with any valid B2B user" };
 
-            const userRecord = await deps.userRecordRepository.find(registrationData.userId);
-
             let privateKeyBuffer;
             let ethAddress;
+
+            const userRecord = await deps.userRecordRepository.find(registrationData.userId);
+
             if (userRecord) {
                 const privateKeyString = await deps.encryptionService.decrypt(userRecord.encryptedPrivateKey);
                 privateKeyBuffer = deps.cryptoFunctions.toPrivateKeyBuffer(privateKeyString);

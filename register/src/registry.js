@@ -19,6 +19,11 @@ exports.makeRegister = function (deps) {
             const registrationData = exports.convertInput(input);
             if (registrationData.hasError) return { hasError: true, message: "input error: " + registrationData.message };
 
+            const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
+            if (!apiKeyMapping) return { hasError: true, message: "api key not linked with any valid B2B user" };
+
+            let privateKeyBuffer;
+            let ethAddress;
             // create user
             const createUserResult = await deps.createUser(registrationData.userInformation);
             if (createUserResult.hasError) return { hasError: true, message: "create user failed: " + createUserResult.message };
@@ -26,11 +31,11 @@ exports.makeRegister = function (deps) {
             const key = deps.cryptoFunctions.generateNewKey();
             const encryptedPrivateKey = await deps.encryptionService.encrypt(key.privateKeyString);
 
-            const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
-            if (!apiKeyMapping) return { hasError: true, message: "api key not linked with any valid B2B user" };
-
             const userRecord = createUserRecord(createUserResult.userId, key.ethAddress, encryptedPrivateKey, apiKeyMapping.userId);
             await deps.privateRepository.save(userRecord);
+
+            privateKeyBuffer = key.privateKey;
+            ethAddress = key.ethAddress;
             // end create user
 
             // sign message
@@ -39,7 +44,7 @@ exports.makeRegister = function (deps) {
                 assetType: registrationData.assetType,
                 uniqueAssetId: registrationData.uniqueAssetId
             }
-            const signedMessage = deps.cryptoFunctions.sign(JSON.stringify(messageToSign), key.privateKey);
+            const signedMessage = deps.cryptoFunctions.sign(JSON.stringify(messageToSign), privateKeyBuffer);
             // end sign message
 
             //create transaction
@@ -49,7 +54,7 @@ exports.makeRegister = function (deps) {
             const id = createUniqueId();
             const blockchainRecord = await deps.createBlockchainRecord(signedMessage, id);
 
-            const transaction = exports.createTransaction(id, registrationData, blockchainRecord, messageToSign.action, key.ethAddress, signedMessage);
+            const transaction = exports.createTransaction(id, registrationData, blockchainRecord, messageToSign.action, ethAddress, signedMessage);
             await deps.transactionRepository.save(transaction);
             return transaction;
             //end create transaction
