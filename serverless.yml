@@ -87,6 +87,22 @@ plugins:
   - serverless-offline
 
 functions:
+  registerNew:
+    handler: handlerRegisterNew.register
+    events:
+      - http:
+              method: post
+              path: registerNew
+              cors: true
+              private : true
+  getAssetsNew:
+    handler: handlerGetAssetsNew.getAssets
+    events:
+      - http:
+              method: get
+              path: assetsNew/{id}
+              cors: true
+              private : true
   register:
     handler: handlerRegister.register
     events:

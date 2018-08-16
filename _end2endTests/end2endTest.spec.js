@@ -26,9 +26,9 @@ global.window = global.window || {
 
 const expect = require('chai').expect;
 const Amplify = require("aws-amplify").default;
-const secrets = require("./test-secrets");
-const awsConfig = require("./awsConfig")
-const amplifyConfig = require("./amplifyConfig")
+const awsConfig = require("./config/awsConfig")
+const amplifyConfig = require("./config/amplifyConfig")
+const secrets = require("./config/test-secrets");
 const AWS = require('aws-sdk');
 
 const finalPassword = "D!iesDa1232139";

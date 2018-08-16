@@ -8,10 +8,9 @@ module.exports.makeGetAssets = (deps) => {
     assert(deps.transactionRepository, "transactionRepository not set");
     assert(deps.privateRepository, "privateRepository not set");
 
-    const getAssets = async (cognitoAuthenticationProvider) => {
+    const getAssets = async (userId) => {
 
         try {
-            const userId = deps.extractUserId(cognitoAuthenticationProvider);
             const userRecord = await deps.privateRepository.get(userId);
             const assetTransactions = await deps.transactionRepository.findByEthAddress(userRecord.ethAddress);
             const assets = convertTransactions(assetTransactions);

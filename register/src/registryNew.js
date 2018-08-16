@@ -6,7 +6,7 @@ exports.makeRegister = function (deps) {
 
     assert(deps.apiKeyRepository, "apiKeyRepository not set");
     assert(deps.transactionRepository, "transactionRepository not set");
-    assert(deps.userRecordRepository, "privateRepository not set");
+    assert(deps.userRecordRepository, "userRecordRepository not set");
 
     assert(deps.encryptionService, "encryption not set");
     assert(deps.cryptoFunctions, "cryptofunctions not set");
@@ -25,8 +25,7 @@ exports.makeRegister = function (deps) {
             let privateKeyBuffer;
             let ethAddress;
 
-            const userRecord = await deps.userRecordRepository.find(registrationData.userId);
-
+            const userRecord = await deps.userRecordRepository.get(registrationData.userId);
             if (userRecord) {
                 const privateKeyString = await deps.encryptionService.decrypt(userRecord.encryptedPrivateKey);
                 privateKeyBuffer = deps.cryptoFunctions.toPrivateKeyBuffer(privateKeyString);
