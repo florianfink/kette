@@ -13,7 +13,7 @@ const makeGetUsers = require("./users/src/usersGetter").makeGetUsers;
 
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
 
-module.exports.getUsers = async (event, context, callback) => {
+module.exports.getUsers = async (event) => {
 
     const apiKey = event.requestContext.identity.apiKey;
 
@@ -23,7 +23,7 @@ module.exports.getUsers = async (event, context, callback) => {
     const result = await getUsers(apiKey);
 
     const response = createAwsResponse(result);
-    callback(null, response);
+    return response;
 }
 
 function makeDependencies() {

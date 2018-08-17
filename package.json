@@ -4,9 +4,12 @@
   "description": "registration API for kette",
   "main": "index.js",
   "scripts": {
+    "start-local-env": "serverless offline start",
+    "end2EndTest-local-env": "mocha -- ./_end2endtests/registerNewEnd2EndTest.spec.js",
+    "end2EndTest-dev-env": "mocha -- ./_end2endtests/end2endTest.spec.js",
+    "ci": "npm test && start-server-and-test start-local-env http://localhost:3000/check end2EndTest-local-env",
     "test": "mocha -- */test/*.spec.js",
-    "end2EndTest": "mocha -- ./_end2endtests/end2endTest.spec.js",
-    "prepare" : "cp ./_templates/template-test-secrets.js ./_end2endTests/config && mv ./_end2endTests/config/template-test-secrets.js ./_end2endTests/config/test-secrets.js && cp ./_templates/template-secrets.js . && mv ./template-secrets.js ./secrets.js && cp ./_templates/template-serverless-config.json . && mv ./template-serverless-config.json ./serverless-config.json"
+    "prepare": "cp ./_templates/template-test-secrets.js ./_end2endTests/config && mv ./_end2endTests/config/template-test-secrets.js ./_end2endTests/config/test-secrets.js && cp ./_templates/template-secrets.js . && mv ./template-secrets.js ./secrets.js && cp ./_templates/template-serverless-config.json . && mv ./template-serverless-config.json ./serverless-config.json"
   },
   "author": "Hannes Rang",
   "license": "ISC",
@@ -20,6 +23,7 @@
     "chai": "^4.1.2",
     "node-fetch": "^2.1.2",
     "serverless-dynamodb-local": "^0.2.28",
-    "serverless-offline": "^3.25.6"
+    "serverless-offline": "^3.25.6",
+    "start-server-and-test": "^1.7.0"
   }
 }

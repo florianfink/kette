@@ -87,6 +87,13 @@ plugins:
   - serverless-offline
 
 functions:
+  check:
+    handler: handlerCheck.check
+    events:
+      - http:
+              method: get
+              path: check
+              cors: true
   registerNew:
     handler: handlerRegisterNew.register
     events:
