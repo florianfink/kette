@@ -77,6 +77,7 @@ provider:
     USERPOOL_ID: ${self:custom.userPoolId}
     USAGEPLAN_ID: ${self:custom.usagePlanId}
     WEBHOOK_BASE_URL : ${self:custom.webHookBaseUrl}
+    STAGE: ${self:provider.stage}
 plugins:
   - serverless-dynamodb-local
   - serverless-offline

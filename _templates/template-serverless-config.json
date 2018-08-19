@@ -1,11 +1,11 @@
 {
-    "encryptionKeyId_dev": "__fill_me_in__",
-    "userPoolId_dev": "__fill_me_in__",
-    "usagePlanId_dev": "__fill_me_in__",
-    "webHookBaseUrl_dev" :"__fill_me_in__",
+    "encryptionKeyId_dev": "(find at AWS Console - IAM)",
+    "userPoolId_dev": "(find at AWS Console - Cognito - User pools)",
+    "usagePlanId_dev": "(find at AWS Console - API Gateway)",
+    "webHookBaseUrl_dev" : "URL that deploy yields as result (find at result of first serverless deploy)",
 
-    "encryptionKeyId_prod": "__fill_me_in__",
-    "userPoolId_prod": "__fill_me_in__",
-    "usagePlanId_prod": "__fill_me_in__",
-    "webHookBaseUrl_prod" : "__fill_me_in__"
-} 
+    "encryptionKeyId_prod": "(find at AWS Console - IAM)",
+    "userPoolId_prod": "(find at AWS Console - Cognito - User pools)",
+    "usagePlanId_prod": "(find at AWS Console - API Gateway)",
+    "webHookBaseUrl_prod" : "URL that deploy yields as result (find at result of first serverless deploy)"
+}
