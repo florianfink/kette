@@ -9,10 +9,10 @@ custom:
   ethAddressIndex : 'assetTransactions-table-ethAddress-index-${self:provider.stage}'
   uniqueAssetIdIndex : 'assetTransactions-table-uniqueAssetId-index-${self:provider.stage}'
 
-  encryptionKeyId : ${file(./serverless-config.json):encryptionKeyId_${self:provider.stage}}
-  userPoolId : ${file(./serverless-config.json):userPoolId_${self:provider.stage}}
-  usagePlanId : ${file(./serverless-config.json):usagePlanId_${self:provider.stage}}
-  webHookBaseUrl : ${file(./serverless-config.json):webHookBaseUrl_${self:provider.stage}}/${self:provider.stage}/transactions
+  encryptionKeyId : ${env:ENCRYPTION_KEYID_${self:provider.stage}} 
+  userPoolId : ${env:USERPOOLID_${self:provider.stage}} 
+  usagePlanId : ${env:USAGEPLANID_${self:provider.stage}} 
+  webHookBaseUrl: ${env:WEBHOOKBASEURL_${self:provider.stage}} 
   
   dynamodb:
     start:
@@ -73,15 +73,17 @@ provider:
     ASSETTRANSACTIONS_TABLE_ETHADDRESS_INDEX : ${self:custom.ethAddressIndex}
     ASSETTRANSACTIONS_TABLE_UNIQUEASSETID_INDEX : ${self:custom.uniqueAssetIdIndex}
     
+    STAGE: ${self:provider.stage}
+    
     ENCRYPTION_KEYID: ${self:custom.encryptionKeyId}
     USERPOOL_ID: ${self:custom.userPoolId}
     USAGEPLAN_ID: ${self:custom.usagePlanId}
     WEBHOOK_BASE_URL : ${self:custom.webHookBaseUrl}
-    STAGE: ${self:provider.stage}
+    
 plugins:
   - serverless-dynamodb-local
   - serverless-offline
-
+  - serverless-dotenv-plugin
 functions:
   check:
     handler: handlerCheck.check

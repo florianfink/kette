@@ -16,10 +16,10 @@ Serverless deploy needs to be run twice for the very first deploy. Not ALL creat
 - [AWS Console - Cognito] [create identity pools for B2B users](https://serverless-stack.com/chapters/create-a-cognito-identity-pool.html). Use Gateway Id created on first serverless deploy
 - [AWS Console - Cognito] create user with admin access for backend APIs (backend-admin) for end2end-tests
 - [local] run "npm run prepare" to copy template files to the correct folders
-- [local] update secrets.js
-- [local] update serverless-config.json
+- [local] update .env
 - [local] update ./_end2endTests/test-secrets.js
 - [local] update _end2EndTest/awsConfig with Cognito and API Gateway information
+
 - [local] run "serverless deploy" again with updates in config files
 
 # Misc
