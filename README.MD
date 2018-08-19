@@ -22,7 +22,12 @@ Serverless deploy needs to be run twice for the very first deploy. Not ALL creat
           "encryptionKeyId_dev": "(find at AWS Console - IAM)",
           "userPoolId_dev": "(find at AWS Console - Cognito - User pools)",
           "usagePlanId_dev": "(find at AWS Console - API Gateway)",
-          "webHookBaseUrl" : "URL that deploy yields as result (find at result of first serverless deploy)"
+          "webHookBaseUrl_dev" : "URL that deploy yields as result (find at result of first serverless deploy)",
+
+          "encryptionKeyId_prod": "(find at AWS Console - IAM)",
+          "userPoolId_prod": "(find at AWS Console - Cognito - User pools)",
+          "usagePlanId_prod": "(find at AWS Console - API Gateway)",
+          "webHookBaseUrl_prod" : "URL that deploy yields as result (find at result of first serverless deploy)"
       }
 - [local] update ./_end2endTests/test-secrets.js
 
@@ -44,3 +49,12 @@ Serverless deploy needs to be run twice for the very first deploy. Not ALL creat
 # Deployment
 
 - serverless deploy
+
+# Misc
+
+#### Setting different stages
+- https://github.com/dherault/serverless-offline/issues/338
+
+      provider:
+        stage: ${opt:stage, 'dev'}
+this will set the self:provider.stage variable either to given --stage parameter value or defaults to dev

@@ -9,15 +9,10 @@ custom:
   ethAddressIndex : 'assetTransactions-table-ethAddress-index-${self:provider.stage}'
   uniqueAssetIdIndex : 'assetTransactions-table-uniqueAssetId-index-${self:provider.stage}'
 
-  webHookBaseUrl : ${file(./serverless-config.json):webHookBaseUrl}/${self:provider.stage}/transactions
-
-  encryptionKeyId_dev : ${file(./serverless-config.json):encryptionKeyId_dev}
-  userPoolId_dev : ${file(./serverless-config.json):userPoolId_dev}
-  usagePlanId_dev : ${file(./serverless-config.json):usagePlanId_dev}
-  
-  encryptionKeyId_production : 'XXX'
-  userPoolId_production : '___'
-  usagePlanId_production : 'YYY'
+  encryptionKeyId : ${file(./serverless-config.json):encryptionKeyId_${self:provider.stage}}
+  userPoolId : ${file(./serverless-config.json):userPoolId_${self:provider.stage}}
+  usagePlanId : ${file(./serverless-config.json):usagePlanId_${self:provider.stage}}
+  webHookBaseUrl : ${file(./serverless-config.json):webHookBaseUrl_${self:provider.stage}}/${self:provider.stage}/transactions
   
   dynamodb:
     start:
@@ -37,6 +32,7 @@ provider:
       rateLimit: 100
   runtime: nodejs8.10
   region: eu-central-1
+  stage: ${opt:stage, 'dev'}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -77,10 +73,9 @@ provider:
     ASSETTRANSACTIONS_TABLE_ETHADDRESS_INDEX : ${self:custom.ethAddressIndex}
     ASSETTRANSACTIONS_TABLE_UNIQUEASSETID_INDEX : ${self:custom.uniqueAssetIdIndex}
     
-    ENCRYPTION_KEYID: ${self:custom.encryptionKeyId_${self:provider.stage}}
-    USERPOOL_ID: ${self:custom.userPoolId_${self:provider.stage}}
-    USAGEPLAN_ID: ${self:custom.usagePlanId_${self:provider.stage}}
-    
+    ENCRYPTION_KEYID: ${self:custom.encryptionKeyId}
+    USERPOOL_ID: ${self:custom.userPoolId}
+    USAGEPLAN_ID: ${self:custom.usagePlanId}
     WEBHOOK_BASE_URL : ${self:custom.webHookBaseUrl}
 plugins:
   - serverless-dynamodb-local

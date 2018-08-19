@@ -1,6 +1,11 @@
 {
-    "encryptionKeyId_dev": "_fill me in__",
-    "userPoolId_dev": "_fill me in__",
-    "usagePlanId_dev": "_fill me in__",
-    "webHookBaseUrl" : "_fill me in__"
+    "encryptionKeyId_dev": "__fill_me_in__",
+    "userPoolId_dev": "__fill_me_in__",
+    "usagePlanId_dev": "__fill_me_in__",
+    "webHookBaseUrl_dev" :"__fill_me_in__",
+
+    "encryptionKeyId_prod": "__fill_me_in__",
+    "userPoolId_prod": "__fill_me_in__",
+    "usagePlanId_prod": "__fill_me_in__",
+    "webHookBaseUrl_prod" : "__fill_me_in__"
 } 
