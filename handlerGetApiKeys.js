@@ -42,6 +42,6 @@ function makeMockDependencies() {
 
     return {
         apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
-        extractUserId: () => { return "B2B-user-called-creator" }
+        extractUserId: awsHelper.extractUserId
     }
 }

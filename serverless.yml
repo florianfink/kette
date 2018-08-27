@@ -10,7 +10,6 @@ custom:
   uniqueAssetIdIndex : 'assetTransactions-table-uniqueAssetId-index-${self:provider.stage}'
 
   encryptionKeyId : ${env:ENCRYPTION_KEYID_${self:provider.stage}} 
-  userPoolId : ${env:USERPOOLID_${self:provider.stage}} 
   usagePlanId : ${env:USAGEPLANID_${self:provider.stage}} 
   webHookBaseUrl: ${env:WEBHOOKBASEURL_${self:provider.stage}} 
   
@@ -58,12 +57,6 @@ provider:
         - 'kms:Decrypt'
       Resource:
         - "arn:aws:kms:eu-central-1:*:key/${self:provider.environment.ENCRYPTION_KEYID}"
-    - Effect: Allow
-      Action: 
-        - cognito-idp:AdminCreateUser
-        - cognito-idp:AdminGetUser
-      Resource:
-        - "arn:aws:cognito-idp:eu-central-1:*:userpool/${self:provider.environment.USERPOOL_ID}"
   environment:
     APIKEYS_TABLE: ${self:custom.apiKeysTableName}
     APIKEYS_TABLE_USERID_INDEX : ${self:custom.userIdIndex}
@@ -76,7 +69,6 @@ provider:
     STAGE: ${self:provider.stage}
     
     ENCRYPTION_KEYID: ${self:custom.encryptionKeyId}
-    USERPOOL_ID: ${self:custom.userPoolId}
     USAGEPLAN_ID: ${self:custom.usagePlanId}
     WEBHOOK_BASE_URL : ${self:custom.webHookBaseUrl}
     
@@ -92,20 +84,20 @@ functions:
               method: get
               path: check
               cors: true
-  registerNew:
-    handler: handlerRegisterNew.register
+  registerFor:
+    handler: handlerRegisterFor.registerFor
     events:
       - http:
               method: post
-              path: registerNew
+              path: registerFor
               cors: true
               private : true
-  getAssetsNew:
-    handler: handlerGetAssetsNew.getAssets
+  getAssetsFor:
+    handler: handlerGetAssetsFor.getAssets
     events:
       - http:
               method: get
-              path: assetsNew/{id}
+              path: assetsFor/{id}
               cors: true
               private : true
   register:
@@ -115,7 +107,7 @@ functions:
               method: post
               path: register
               cors: true
-              private : true
+              authorizer: aws_iam
   updateTransaction:
     handler: handlerUpdateTransaction.updateTransaction
     events:

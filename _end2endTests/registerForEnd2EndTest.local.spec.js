@@ -4,9 +4,9 @@ const secrets = require("./config/test-secrets");
 
 const url = "http://localhost:3000";
 
-describe('serverless offline integration test', function () {
+describe('serverless offline registerFor test', function () {
 
-    it('register new user with new asset', async () => {
+    it('registerFor user with new asset', async () => {
 
         //pre-prepare -------------------------------------------------------------------------------------------------------
         //in real life, the signed-in user creates an API key via AWS amplify and thus links the created api key to his 2b2 user account
@@ -38,7 +38,7 @@ describe('serverless offline integration test', function () {
 
         //act -------------------------------------------------------------------------------------------------------
 
-        const registerResponse = await fetch(url + "/registerNew", init)
+        const registerResponse = await fetch(url + "/registerFor", init)
         expect(registerResponse.status).to.equal(200, "request not succesful");
 
         const registerResult = await registerResponse.json();
@@ -48,11 +48,11 @@ describe('serverless offline integration test', function () {
 
         const getUsersResponse = await fetch(url + "/users", { method: 'GET', headers: { 'x-api-key': secrets.apiKey, 'content-type': 'application/json' } });
         const users = await getUsersResponse.json();
-        const createdUser = users.find(x => x.id === userId);
+        const createdUser = users.find(x => x === userId);
 
         expect(createdUser).not.to.be.undefined;
 
-        const getAssetsResponse = await fetch(url + "/assetsNew/" + userId, { method: 'GET', headers: { 'x-api-key': secrets.apiKey, 'content-type': 'application/json' } });
+        const getAssetsResponse = await fetch(url + "/assetsFor/" + userId, { method: 'GET', headers: { 'x-api-key': secrets.apiKey, 'content-type': 'application/json' } });
         const assets = await getAssetsResponse.json();
         const createdAsset = assets.find(x => x.uniqueAssetId === uniqueAssetId);
 

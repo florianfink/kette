@@ -5,9 +5,8 @@
 "use strict";
 
 const AWS = require('aws-sdk');
-const makeGetUser = require("./modules/src/userManagement").makeGetUser;
 const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
-const makePrivateRepository = require("./modules/src/privateRepository");
+const makeUserRecordRepository = require("./modules/src/privateRepository");
 
 const makeGetUsers = require("./users/src/usersGetter").makeGetUsers;
 
@@ -37,24 +36,14 @@ function makeDependencies() {
 function makeRealDependencies() {
     return {
         apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient()),
-        privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient()),
-        getUser: makeGetUser(new AWS.CognitoIdentityServiceProvider())
+        userRecordRepository: makeUserRecordRepository(new AWS.DynamoDB.DocumentClient()),
     }
 }
 
 function makeMockDependencies() {
 
-    const mockCognitoyIdentityServiceProvider = {
-        adminGetUser: (params) => {
-            return {
-                promise: async () => { return { name: "Hans Wurst", id: params.Username }; }
-            }
-        }
-    }
-
     return {
         apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
-        privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
-        getUser: makeGetUser(mockCognitoyIdentityServiceProvider, "lol does not matter")
+        userRecordRepository: makeUserRecordRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
     }
 }

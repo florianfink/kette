@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start-local-env": "serverless offline start",
-    "end2EndTest-local-env": "mocha -- ./_end2endtests/registerNewEnd2EndTest.spec.js",
+    "end2EndTest-local-env": "mocha -- ./_end2endtests/*.local.spec.js",
     "end2EndTest-dev-env": "mocha -- ./_end2endtests/end2endTest.spec.js",
     "ci": "npm test && start-server-and-test start-local-env http://localhost:3000/check end2EndTest-local-env",
     "test": "mocha -- */test/*.spec.js",
