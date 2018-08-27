@@ -1,5 +1,5 @@
 /*
-*    B2B endpoint for B2B user to get all B2C-users that were created by them
+*    B2B endpoint to get all B2C-users that were created by them
 */
 
 "use strict";

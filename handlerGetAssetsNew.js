@@ -1,3 +1,7 @@
+/*
+* B2B endpoint to get all registered assets of an user.
+*/
+
 "use strict";
 
 const makeTransactionRepository = require("./modules/src/transactionRepository");

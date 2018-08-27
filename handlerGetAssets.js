@@ -1,6 +1,7 @@
 /*
 *    B2C endpoint for B2C-Users to get their registered assets
 */
+
 "use strict";
 
 const assert = require("assert");
