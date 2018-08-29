@@ -36,19 +36,19 @@ function makeDependencies() {
 function makeMockDependencies() {
     const apiGatewayMock = {
         createApiKey: (params) => {
+            console.log("apiGateWay.createApiKey -> params");
             console.log(params);
-            return { promise: () => { return { value: "offlineContext_apiKey", id: "lol" } } }
+            return { promise: () => { return { value: process.env.OFFLINE_APIKEY, id: "offline_no_id" } } }
         },
         createUsagePlanKey: (params) => {
+            console.log("apiGateWay.createUsagePlanKey -> params");
             console.log(params);
             return { promise: () => { return { id: "usagePlanKeyId for test" } } }
         }
     };
 
     return {
-        extractUserId: (cognitoUserId) => {
-            return "B2B-user-called-creator";
-        },
+        extractUserId: extractUserId,
         internalCreateApiKey: makeInternalCreateApiKey(apiGatewayMock),
         apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' }))
     }

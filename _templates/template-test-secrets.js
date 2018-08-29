@@ -1,5 +1,4 @@
 module.exports = {
     awsAccessKeyId : '_fill me in__',
-    awsSecretAccessKey : '_fill me in__',
-    apiKey : "_fill me in __"
+    awsSecretAccessKey : '_fill me in__'
 }

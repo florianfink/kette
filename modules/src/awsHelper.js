@@ -3,13 +3,23 @@ const assert = require("assert");
 module.exports.extractUserId = (cognitoAuthenticationProvider) => {
 
     if (process.env.IS_OFFLINE === 'true') {
-        return "My Random User Id";
+        return "OfflineUser_Id";
     }
     else {
         const splitted = cognitoAuthenticationProvider.split(":");
         const userId = splitted[2];
         assert(userId, "userId could not be extracted from: " + cognitoAuthenticationProvider);
         return userId;
+    }
+}
+
+module.exports.extractApiKey = (event) => {
+
+    if (process.env.IS_OFFLINE === 'true') {
+        return process.env.OFFLINE_APIKEY;
+    }
+    else {
+        return event.requestContext.identity.apiKey
     }
 }
 

@@ -9,17 +9,18 @@ describe('serverless offline registerFor test', function () {
     it('registerFor user with new asset', async () => {
 
         //pre-prepare -------------------------------------------------------------------------------------------------------
-        //in real life, the signed-in user creates an API key via AWS amplify and thus links the created api key to his 2b2 user account
+        
+        //in real life, the signed-in user calls this endpoint AWS amplify
         //Serverless Offline does not support the AWS_IAM authorization type
-        //we get an api key created by the framework on startup, but still have to link this api key to our 2b2 user account
-        //thous we have to call "/apiKeys" once in our serverless offline test.
-        await fetch(url + "/apiKeys", { method: 'POST', headers: { 'x-api-key': secrets.apiKey, 'content-type': 'application/json' } })
+        const apiKeyResponse = await fetch(url + "/apiKeys", { method: 'POST', headers: { 'content-type': 'application/json' } })
+        const keyResult = await apiKeyResponse.json();
+        const apiKey = keyResult.apiKey.apiKey;
 
         //prepare -------------------------------------------------------------------------------------------------------
+        
         const uniqueAssetId = makeRandomString();
         const userId = makeRandomString();
         const assetType = "bicycle";
-
         
         const registrationData = {
             uniqueAssetId: uniqueAssetId,
@@ -31,7 +32,7 @@ describe('serverless offline registerFor test', function () {
             body: JSON.stringify(registrationData),
             method: 'POST',
             headers: {
-                'x-api-key': secrets.apiKey,
+                'x-api-key': apiKey,
                 'content-type': 'application/json'
             }
         };
@@ -46,13 +47,13 @@ describe('serverless offline registerFor test', function () {
         //check -------------------------------------------------------------------------------------------------------
         expect(registerResult.error, "there was an error").to.be.undefined;
 
-        const getUsersResponse = await fetch(url + "/users", { method: 'GET', headers: { 'x-api-key': secrets.apiKey, 'content-type': 'application/json' } });
+        const getUsersResponse = await fetch(url + "/users", { method: 'GET', headers: { 'x-api-key': apiKey, 'content-type': 'application/json' } });
         const users = await getUsersResponse.json();
         const createdUser = users.find(x => x === userId);
 
         expect(createdUser).not.to.be.undefined;
 
-        const getAssetsResponse = await fetch(url + "/assetsFor/" + userId, { method: 'GET', headers: { 'x-api-key': secrets.apiKey, 'content-type': 'application/json' } });
+        const getAssetsResponse = await fetch(url + "/assetsFor/" + userId, { method: 'GET', headers: { 'x-api-key': apiKey, 'content-type': 'application/json' } });
         const assets = await getAssetsResponse.json();
         const createdAsset = assets.find(x => x.uniqueAssetId === uniqueAssetId);
 

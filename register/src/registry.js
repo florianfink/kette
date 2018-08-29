@@ -10,32 +10,18 @@ exports.makeRegister = function (deps) {
     assert(deps.cryptoFunctions, "cryptofunctions not set");
     assert(deps.createBlockchainRecord, "createBlockchainRecord not set");
 
-    const register = async function (input, creatorId) {
-        assert(creatorId, "creatorId missing")
+    const register = async function (input) {
 
         try {
             const registrationData = exports.convertInput(input);
             if (registrationData.hasError) return { hasError: true, message: "input error: " + registrationData.message };
 
-            let privateKeyBuffer;
-            let ethAddress;
-
             const userRecord = await deps.userRecordRepository.get(registrationData.userId);
-            if (userRecord) {
-                const privateKeyString = await deps.encryptionService.decrypt(userRecord.encryptedPrivateKey);
-                privateKeyBuffer = deps.cryptoFunctions.toPrivateKeyBuffer(privateKeyString);
-                ethAddress = userRecord.ethAddress;
-            }
-            else {
-                const key = deps.cryptoFunctions.generateNewKey();
-                privateKeyBuffer = key.privateKey;
-                ethAddress = key.ethAddress;
+            if (!userRecord) return { hasError: true, message: "no key created for user: " + registrationData.userId };
 
-                const privateKeyString = key.privateKeyString;
-                const encryptedPrivateKey = await deps.encryptionService.encrypt(privateKeyString);
-                const userRecord = createUserRecord(registrationData.userId, key.ethAddress, encryptedPrivateKey, creatorId);
-                await deps.userRecordRepository.save(userRecord);
-            }
+            const privateKeyString = await deps.encryptionService.decrypt(userRecord.encryptedPrivateKey);
+            const privateKeyBuffer = deps.cryptoFunctions.toPrivateKeyBuffer(privateKeyString);
+            const ethAddress = userRecord.ethAddress;
 
             // sign message
             const messageToSign = {
@@ -69,21 +55,6 @@ exports.makeRegister = function (deps) {
     return register;
 }
 
-function createUserRecord(userId, ethAddress, encryptedPrivateKey, creatorId) {
-    assert(userId, "[create user record] -> userId missing")
-    assert(ethAddress, "[create user record] -> ethAddress missing")
-    assert(encryptedPrivateKey, "[create user record] -> encryptedPrivateKey missing")
-    assert(creatorId, "[create user record] -> creatorId missing")
-
-    const userRecord = {
-        userId: userId,
-        ethAddress: ethAddress,
-        encryptedPrivateKey: encryptedPrivateKey,
-        creatorId: creatorId,
-    };
-
-    return userRecord;
-}
 
 exports.createTransaction = (id, registrationData, blockchainRecord, action, ethAddress, signedMessage) => {
     assert(id, "id missing")

@@ -6,7 +6,7 @@ const createTransaction = require('../src/registry').createTransaction;
 
 const expect = require('chai').expect;
 
-describe("registryNew", () => {
+describe("registry", () => {
 
     describe("register", () => {
 
@@ -27,69 +27,27 @@ describe("registryNew", () => {
             expect(register).to.be.not.null;
         })
 
-        it('should use existing user', async () => {
-
-            let saveCalled = false;
-            let encryptCalled = false;
-
-            const expectedDateAsString = "2018-05-10T17:06:00.270Z"
-            const expectedPrivateKey = "my private key";
-            const expectedEncryptedPrivateKey = "my encrypted private key";
+        it('should return error because key pair not found', async () => {
             const input = createInput();
-            const expectedEthAddress = "my eth address";
-            const expectedSignedMessage = "my signed Message";
-            const expectedCreatorId = "my expected creator id";
             
             const deps =
             {
-                encryptionService: {
-                    encrypt: (dataToEncrypt) => {
-                        expect(dataToEncrypt).to.equal(expectedPrivateKey);
-                        encryptCalled = true;
-                        return expectedEncryptedPrivateKey;
-                    }
-                },
-                cryptoFunctions: {
-                    generateNewKey: () => {
-                        return { privateKeyString: expectedPrivateKey, ethAddress: expectedEthAddress }
-                    },
-                    sign: () => {
-                        return expectedSignedMessage
-                    }
-                },
-                transactionRepository: {
-                    save: (transaction) => {
-                        expect(transaction.signedMessage).to.equal(expectedSignedMessage);
-                        expect(transaction.date).to.equal(expectedDateAsString);
-                        expect(transaction.ethAddress).to.equal(expectedEthAddress);
-                    },
-                    findByUniqueAssetId: (uniqueAssetId) => { return [] }
-                },
+                encryptionService: {},
+                cryptoFunctions: {},
+                transactionRepository: {},
                 userRecordRepository: {
                     get: (userId) => { },
-                    save: (recordToSave) => {
-                        expect(recordToSave.userId).to.equal(input.userId);
-                        expect(recordToSave.encryptedPrivateKey).to.equal(expectedEncryptedPrivateKey);
-                        expect(recordToSave.creatorId).to.equal(expectedCreatorId);
-                        expect(recordToSave.ethAddress).to.equal(expectedEthAddress);
-                        saveCalled = true;
-                    }
                 },
-                apiKeyRepository: {
-                    get: (apiKey) => { return { userId: expectedCreatorId } }
-                },
-                createBlockchainRecord: () => { return { status: "pending", date: new Date(expectedDateAsString) } }
+                apiKeyRepository: {},
+                createBlockchainRecord: () => { }
             }
 
             const register = makeRegister(deps);
-
-            var result = await register(input, expectedCreatorId);
-            expect(result.hasError, "ERROR: " + result.message).to.be.undefined;
-            expect(saveCalled, "privateRepository.save() was not called").to.be.true;
-            expect(encryptCalled, "encryptionSerivce.encyrpt() was not called").to.be.true;
+            var result = await register(input);
+            expect(result, "error expected but did not occur").not.to.be.undefined;
         })
 
-        it('should create new user record', async () => {
+        it('should complete the registration without error', async () => {
 
             let saveCalled = false;
             let encryptCalled = false;
@@ -103,8 +61,6 @@ describe("registryNew", () => {
             const privateKeyBuffer = Buffer("this is not a buffer lol");
             const ethAddress = "my eth address";
             const expectedSignedMessage = "my signed Message";
-            const expectedCreatorId = "my expected creator id";
-
             const deps =
             {
                 encryptionService: {
@@ -143,15 +99,12 @@ describe("registryNew", () => {
                         }
                     }
                 },
-                apiKeyRepository: {
-                    get: (apiKey) => { return { userId: expectedCreatorId } }
-                },
                 createBlockchainRecord: () => { return { status: "pending", date: new Date(expectedDateAsString) } }
             }
 
             const register = makeRegister(deps);
 
-            var result = await register(input, expectedCreatorId);
+            var result = await register(input);
             expect(result.hasError, result.message).to.be.undefined;
             expect(saveCalled, "user record is not supposed to be saved").to.be.false;
             expect(encryptCalled, "encrypt is not supposed to be called").to.be.false;

@@ -11,10 +11,11 @@ const makeUserRecordRepository = require("./modules/src/privateRepository");
 const makeGetUsers = require("./users/src/usersGetter").makeGetUsers;
 
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
+const extractApiKey = require("./modules/src/awsHelper").extractApiKey; 
 
 module.exports.getUsers = async (event) => {
 
-    const apiKey = event.requestContext.identity.apiKey;
+    const apiKey = extractApiKey(event);
 
     const dependencies = makeDependencies();
     const getUsers = makeGetUsers(dependencies);
