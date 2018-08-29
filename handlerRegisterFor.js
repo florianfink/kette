@@ -17,14 +17,12 @@ module.exports.registerFor = async (event) => {
   const input = JSON.parse(event.body);
   const apiKey = event.requestContext.identity.apiKey;
 
-  const dependencies = makeDependencies();
-
   const apiKeyRepository = createApiKeyRepository();
-  
   //TODO: Errorhandling: what if is apiKeyMapping does not exist. 
   const apiKeyMapping = await apiKeyRepository.get(apiKey);
   const creatorId = apiKeyMapping.userId;
 
+  const dependencies = makeDependencies();
   const register = makeRegister(dependencies);
   const result = await register(input, creatorId);
   const response = createAwsResponse(result);

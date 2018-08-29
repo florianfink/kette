@@ -89,7 +89,7 @@ describe("registryNew", () => {
             expect(encryptCalled, "encryptionSerivce.encyrpt() was not called").to.be.true;
         })
 
-        it('should create new user', async () => {
+        it('should create new user record', async () => {
 
             let saveCalled = false;
             let encryptCalled = false;

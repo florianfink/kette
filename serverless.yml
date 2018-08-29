@@ -1,13 +1,18 @@
 service: kette
 
 custom:
-  apiKeysTableName: 'apiKeys2-table-${self:provider.stage}'
+  apiKeysTableName: 'apiKeys-table-${self:provider.stage}'
   userIdIndex : 'apiKeys-table-userId-index-${self:provider.stage}'
   usersTableName: 'users-table-${self:provider.stage}'
   creatorIdIndex: 'users-table-creatorId-index-${self:provider.stage}'
   assetTransactionsTableName: 'assetTransactions-table-${self:provider.stage}'
   ethAddressIndex : 'assetTransactions-table-ethAddress-index-${self:provider.stage}'
   uniqueAssetIdIndex : 'assetTransactions-table-uniqueAssetId-index-${self:provider.stage}'
+
+  metaDataBicycleTableName : "metaDataBicycle-table-${self:provider.stage}"
+  metadataBicycleVendorIndex : 'metaDataBicycle-table-vendor-index-${self:provider.stage}'
+  metadataBicycleSerialNumberIndex : 'metaDataBicycle-table-serialNumber-index-${self:provider.stage}'
+  metadataBicycleFrameNumberIndex : 'metaDataBicycle-table-frameNumber-index-${self:provider.stage}'
 
   encryptionKeyId : ${env:ENCRYPTION_KEYID_${self:provider.stage}} 
   usagePlanId : ${env:USAGEPLANID_${self:provider.stage}} 
@@ -66,6 +71,11 @@ provider:
     ASSETTRANSACTIONS_TABLE_ETHADDRESS_INDEX : ${self:custom.ethAddressIndex}
     ASSETTRANSACTIONS_TABLE_UNIQUEASSETID_INDEX : ${self:custom.uniqueAssetIdIndex}
     
+    METADATABICYCLES_TABLE_VENDOR_INDEX : ${self:custom.metadataBicycleVendorIndex}
+    METADATABICYCLES_TABLE_SERIALNUMBER_INDEX : ${self:custom.metadataBicycleSerialNumberIndex}
+    METADATABICYCLES_TABLE_FRAMENUMBER_INDEX : ${self:custom.metadataBicycleFrameNumberIndex}
+    METADATABICYCLE_TABLE: ${self:custom.metaDataBicycleTableName}
+
     STAGE: ${self:provider.stage}
     
     ENCRYPTION_KEYID: ${self:custom.encryptionKeyId}
@@ -260,3 +270,61 @@ resources:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
         TableName: ${self:custom.apiKeysTableName}
+    MetaDataBicycleTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: uniqueAssetId
+            AttributeType: S
+          -
+            AttributeName: vendor
+            AttributeType: S
+          -
+            AttributeName: serialNumber
+            AttributeType: S
+          -
+            AttributeName: frameNumber
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: uniqueAssetId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          -
+            IndexName: ${self:provider.environment.METADATABICYCLES_TABLE_FRAMENUMBER_INDEX}
+            KeySchema:
+              -
+                AttributeName: frameNumber
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+          -
+            IndexName: ${self:provider.environment.METADATABICYCLES_TABLE_VENDOR_INDEX}
+            KeySchema:
+              -
+                AttributeName: vendor
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+          -
+            IndexName: ${self:provider.environment.METADATABICYCLES_TABLE_SERIALNUMBER_INDEX}
+            KeySchema:
+              -
+                AttributeName: serialNumber
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+        TableName: ${self:custom.metaDataBicycleTableName}
