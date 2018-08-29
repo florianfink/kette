@@ -1,5 +1,4 @@
 "use strict";
-const createUniqueId = require("uuid").v1;
 const assert = require("assert");
 
 exports.makeRegister = function (deps) {
@@ -36,10 +35,9 @@ exports.makeRegister = function (deps) {
             const exisitingRegistrations = await deps.transactionRepository.findByUniqueAssetId(registrationData.uniqueAssetId);
             if (exisitingRegistrations.length > 0) return { hasError: true, message: "asset already registered: " + registrationData.uniqueAssetId };
 
-            const id = createUniqueId();
-            const blockchainRecord = await deps.createBlockchainRecord(signedMessage, id);
+            const blockchainRecord = await deps.createBlockchainRecord(signedMessage, registrationData.uniqueAssetId);
 
-            const transaction = exports.createTransaction(id, registrationData, blockchainRecord, messageToSign.action, ethAddress, signedMessage);
+            const transaction = exports.createTransaction(registrationData.uniqueAssetId, registrationData.assetType, blockchainRecord, messageToSign.action, ethAddress, signedMessage);
             await deps.transactionRepository.save(transaction);
             return transaction;
             //end create transaction
@@ -56,22 +54,20 @@ exports.makeRegister = function (deps) {
 }
 
 
-exports.createTransaction = (id, registrationData, blockchainRecord, action, ethAddress, signedMessage) => {
-    assert(id, "id missing")
-    assert(registrationData.assetType, "asset type missing")
-    assert(registrationData.uniqueAssetId, "uniqueAssetId missing")
+exports.createTransaction = (uniqueAssetId, assetType, blockchainRecord, action, ethAddress, signedMessage) => {
+    assert(uniqueAssetId, "asset type missing")
+    assert(assetType, "uniqueAssetId missing")
     assert(action === "register", "only action register allowed")
     assert(blockchainRecord.status, "status missing")
     assert(blockchainRecord.date, "date missing")
     assert(signedMessage, "signedMessage missing")
 
     return {
-        id: id,
-        assetType: registrationData.assetType,
-        uniqueAssetId: registrationData.uniqueAssetId,
+        uniqueAssetId: uniqueAssetId,
+        blockchainRecordId: blockchainRecord.id,
+        assetType: assetType,
         action: action,
         ethAddress: ethAddress,
-        blockchainRecordId: blockchainRecord.id,
         status: blockchainRecord.status,
         date: blockchainRecord.date.toISOString(),
         signedMessage: signedMessage

@@ -135,7 +135,6 @@ describe("registry", () => {
 
 
     it('[createTransaction] -> create proper transaction with correct date', async () => {
-        const expectedId = "my id that i expecte";
         const date = new Date();
         const registrationData = {
             assetType: "Unicorn",
@@ -152,9 +151,9 @@ describe("registry", () => {
         const ethAddress = "lol bitcoin"
         const signedMessage = "hjihi";
 
-        const transaction = createTransaction(expectedId, registrationData, blockchainRecord, action, ethAddress, signedMessage);
+        const transaction = createTransaction(registrationData.uniqueAssetId, registrationData.assetType, blockchainRecord, action, ethAddress, signedMessage);
 
-        expect(transaction.id).to.be.equal(expectedId);
+        expect(transaction.uniqueAssetId).to.be.equal(registrationData.uniqueAssetId);
         expect(transaction.blockchainRecordId).to.be.equal(blockchainRecord.id);
         expect(transaction.date).to.be.equal(date.toISOString());
     })

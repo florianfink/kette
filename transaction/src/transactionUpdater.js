@@ -1,22 +1,24 @@
+const assert = require("assert");
 
 module.exports.makeUpdateTransaction = (transactionRepository, secrets) => {
-
-    const updateTransaction = async (secretInRequest, transactionId, blockchainReceipt) => {
+    assert(transactionRepository, "transactionRepository is missing");
+    assert(secrets, "secrets is missing");
+    
+    const updateTransaction = async (secretInRequest, uniqueAssetId, blockchainRecord) => {
 
         if (secretInRequest !== secrets.ketteSecret) return { hasError: true, message: "secret does not match: " + secretInRequest };
 
-        const transaction = await transactionRepository.get(transactionId);
+        const transaction = await transactionRepository.get(uniqueAssetId, blockchainRecord.id);
 
-        if (!transaction) return { hasError: true, message: "secret does not match. " + "Transaction not found. Id: " + transactionId };
-        if (transaction.blockchainRecordId !== blockchainReceipt.id) return { hasError: true, message: "transaction blockchainRecordId: " + transaction.blockchainId + " and blockchainreceipt id: " + blockchainReceipt.id + "not not match " }
+        if (!transaction) return { hasError: true, message: "secret does not match. " + "Transaction not found. UniqueAssetId: " + uniqueAssetId };
 
         if (!transaction.receipts) {
             transaction.receipts = [];
         }
-        transaction.receipts.push(blockchainReceipt.receipt)
+        transaction.receipts.push(blockchainRecord.receipt)
         transaction.status = "confirmed";
 
-        await transactionRepository.save(transaction)
+        await transactionRepository.save(transaction);
 
         return { transaction: transaction };
     }

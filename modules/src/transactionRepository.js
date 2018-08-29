@@ -13,11 +13,12 @@ module.exports = function (dynamoDb) {
             };
             await dynamoDb.put(params).promise();
         },
-        get: async (id) => {
+        get: async (uniqueAssetId, blockchainRecordId) => {
             var params = {
                 TableName: process.env.ASSETTRANSACTIONS_TABLE,
                 Key: {
-                    'id': id
+                    "uniqueAssetId": uniqueAssetId,
+                    "blockchainRecordId" : blockchainRecordId
                 },
             };
             const result = await dynamoDb.get(params).promise();
@@ -26,11 +27,9 @@ module.exports = function (dynamoDb) {
         findByUniqueAssetId: async (uniqueAssetId) => {
             var params = {
                 TableName: process.env.ASSETTRANSACTIONS_TABLE,
-                IndexName: process.env.ASSETTRANSACTIONS_TABLE_UNIQUEASSETID_INDEX,
                 KeyConditionExpression: "uniqueAssetId=:uniqueAssetId",
                 ExpressionAttributeValues: { ":uniqueAssetId": uniqueAssetId }
             };
-
             const result = await dynamoDb.query(params).promise();
             return result.Items;
         },
