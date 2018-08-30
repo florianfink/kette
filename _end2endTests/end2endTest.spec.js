@@ -34,7 +34,7 @@ const AWS = require('aws-sdk');
 const finalPassword = "D!iesDa1232139";
 
 describe('...', function () {
-    this.timeout(300000);
+    this.timeout(100000);
     it('[create new B2B user and register an asset]', async () => {
         
         const b2bId = makeRandomString();
@@ -68,24 +68,17 @@ describe('...', function () {
         const createdApiKey = await Amplify.API.post("apiKeys", "/apiKeys");
         console.log("ApiKey created");
         const apiKey = createdApiKey.apiKey.apiKey;
-
-        console.log("Waiting 45 seconds for api key to be recognized in AWS system");
-        await new Promise(resolve => setTimeout(resolve, 45000));
+        console.log(apiKey)
+        console.log("Waiting 25 seconds for api key to be recognized in AWS system");
+        await new Promise(resolve => setTimeout(resolve, 25000));
         console.log("Waiting over");
         
-        const b2cEmail = makeRandomString() + "@kette2.io";
         const uniqueAssetId = makeRandomString();
 
         const registrationData = {
-            firstName: "Peter",
-            lastName: "Lustig",
             uniqueAssetId: uniqueAssetId,
             assetType: "bicycle",
-            street: "Kingstreet",
-            zipcode: "12345",
-            city: "Boss City",
-            country: "Germany",
-            email: b2cEmail
+            userId : "hanswurst"
         }
 
         const init = {
@@ -97,13 +90,14 @@ describe('...', function () {
             }
         };
 
-        const url = "https://api.kette.io/dev";
-        const registerResponse = await fetch(url + "/register", init)
+        const url = "https://api.kette.io/dev";//"https://8anb1036e9.execute-api.eu-central-1.amazonaws.com/dev";
+        const registerResponse = await fetch(url + "/registerFor", init)
         const registerResult = await registerResponse.json();
         console.log("registration complete");
         
         console.log(registerResult);
 
+        expect(registerResult.uniqueAssetId).to.be.equal(uniqueAssetId);
     })
 })
 

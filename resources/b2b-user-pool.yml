@@ -1,0 +1,32 @@
+Resources:
+  B2BCognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      # Generate a name based on the stage
+      UserPoolName: ${self:provider.stage}-b2b-user-pool
+      # Set email as an alias
+      UsernameAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+
+  B2BCognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      # Generate an app client name based on the stage
+      ClientName: ${self:provider.stage}-b2b-user-pool-client
+      UserPoolId:
+        Ref: B2BCognitoUserPool
+      ExplicitAuthFlows:
+        - ADMIN_NO_SRP_AUTH
+      GenerateSecret: false
+
+# Print out the Id of the User Pool that is created
+Outputs:
+  B2BUserPoolId:
+    Value:
+      Ref: B2BCognitoUserPool
+
+  B2BUserPoolClientId:
+    Value:
+      Ref: B2BCognitoUserPoolClient
