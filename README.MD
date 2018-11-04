@@ -1,19 +1,37 @@
-# Development
+# KETTE Asset registry backend
 
-- npm install
-- sls dynamodb install
-- npm run start-local-env
+This repository contains the backend for the KETTE registry. The backend is responsible for providing an API for charging a credit card and registrering assets on behalf of a user by minting a ERC721 compliant token in the [KETTE registry smart contract](https://github.com/kette-io/nft-asset-registry-dapp).
 
-# Deployment
+## Requirements
+
+##### Firebase
+The backend is using Amazon web services [Firebase cloud functions](https://aws.amazon.com/) and requires a AWS account as well as the [AWS CLI](https://aws.amazon.com/cli/)
+
+##### Stripe
+For charging credit cards we use [Stripe](https://stripe.com/). A Stripe account is necessary to interact with the stripe API.
+
+## Run
+        npm install
+        sls dynamodb install
+        npm run start-local-env
+
+## Architecture Overview
+
+The project comprises of four modules. Each module with its individual repository:
+
+- [fiat frontend](https://github.com/kette-io/nft-asset-registry-fiat-frontend)
+- [dApp](https://github.com/kette-io/nft-asset-registry-dapp)
+- backend (this repository)
+- [smart contracts](https://github.com/kette-io/nft-asset-registry-smart-contracts)
+
+![Architecture Overview](https://github.com/kette-io/nft-asset-registry-fiat-frontend/raw/master/readMeImages/architectureOverview.jpg)
+
+## Deployment
 
 Serverless deploy needs to be run twice for the very first deploy. Not ALL creation of resources is automated yet. That´s why the first run creates the initial resource. Then we have to manually create additinal resources and add references in config/secret files. Afterwards we have to run deploy again to deploy the finished serverless.yml with all the correct settings. Additionally creation of identity pools requires the API gateway ID, which is created when deploying for the first time.
 
 - [local] run "serverless deploy"
 - [AWS Console - IAM] create encryption key id
-- [AWS Console - Cognito] [create user pools for B2C users](https://serverless-stack.com/chapters/create-a-cognito-user-pool.html). Use Gateway Id created on first serverless deploy
-- [AWS Console - Cognito] [create identity pools for B2C users](https://serverless-stack.com/chapters/create-a-cognito-identity-pool.html). Use Gateway Id created on first serverless deploy
-- [AWS Console - Cognito] [create user pools for B2B users](https://serverless-stack.com/chapters/create-a-cognito-user-pool.html). Use Gateway Id created on first serverless deploy
-- [AWS Console - Cognito] [create identity pools for B2B users](https://serverless-stack.com/chapters/create-a-cognito-identity-pool.html). Use Gateway Id created on first serverless deploy
 - [AWS Console - Cognito] create user with admin access for backend APIs (backend-admin) for end2end-tests
 - [local] run "npm run prepare" to copy template files to the correct folders
 - [local] update .env
@@ -22,7 +40,7 @@ Serverless deploy needs to be run twice for the very first deploy. Not ALL creat
 
 - [local] run "serverless deploy" again with updates in config files
 
-# Misc
+## Misc
 
 #### Setting different stages
 - https://github.com/dherault/serverless-offline/issues/338
@@ -30,3 +48,8 @@ Serverless deploy needs to be run twice for the very first deploy. Not ALL creat
       provider:
         stage: ${opt:stage, 'dev'}
 this will set the self:provider.stage variable either to given --stage parameter value or defaults to dev
+
+## Todo
+- automated tests
+- error handling
+- data validation
