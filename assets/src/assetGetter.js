@@ -4,14 +4,14 @@ const convertTransactions = require("./transactionConverter").convert;
 
 module.exports.makeGetAssets = (deps) => {
     assert(deps, "deps not set");
-    assert(deps.privateRepository, "privateRepository not set");
+    assert(deps.userRepository, "userRepository not set");
     assert(deps.transactionRepository, "transactionRepository not set");
-    assert(deps.privateRepository, "privateRepository not set");
+    assert(deps.userRepository, "userRepository not set");
 
     const getAssets = async (userId) => {
 
         try {
-            const userRecord = await deps.privateRepository.get(userId);
+            const userRecord = await deps.userRepository.get(userId);
             const assetTransactions = await deps.transactionRepository.findByEthAddress(userRecord.ethAddress);
             const assets = convertTransactions(assetTransactions);
             return assets;

@@ -30,7 +30,9 @@ module.exports.registerFor = async (event) => {
   //TODO: move to outer scope. don´t do while registering
   const createUserRecordDependencies = makeDependenciesForCreateUserRecord();
   const createUserRecord = makeCreateUserRecord(createUserRecordDependencies);
-  await createUserRecord(input.userId, creatorId);
+  const userRecord = await createUserRecord(input.userId, creatorId);
+  
+  const ethAddress = userRecord.ethAddress;
 
   const dependencies = makeDependencies();
   const register = makeRegister(dependencies);

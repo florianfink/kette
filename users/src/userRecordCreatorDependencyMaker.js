@@ -1,4 +1,4 @@
-const makeUserRecordRepository = require("../../modules/src/privateRepository");
+const makeUserRecordRepository = require("../../modules/src/userRepository");
 const makeEncryptionService = require("../../modules/src/encryptionService");
 const cryptoFunctions = require("../../modules/src/cryptoFunctions");
 

@@ -5,17 +5,9 @@ custom:
   userIdIndex : 'apiKeys-table-userId-index-${self:provider.stage}'
   usersTableName: 'users-table-${self:provider.stage}'
   creatorIdIndex: 'users-table-creatorId-index-${self:provider.stage}'
-  assetTransactionsTableName: 'assetTransactions-table-${self:provider.stage}'
-  ethAddressIndex : 'assetTransactions-table-ethAddress-index-${self:provider.stage}'
-
-  metaDataBicycleTableName : "metaDataBicycle-table-${self:provider.stage}"
-  metadataBicycleVendorIndex : 'metaDataBicycle-table-vendor-index-${self:provider.stage}'
-  metadataBicycleSerialNumberIndex : 'metaDataBicycle-table-serialNumber-index-${self:provider.stage}'
-  metadataBicycleFrameNumberIndex : 'metaDataBicycle-table-frameNumber-index-${self:provider.stage}'
 
   encryptionKeyId : ${env:ENCRYPTION_KEYID_${self:provider.stage}} 
   usagePlanId : ${env:USAGEPLANID_${self:provider.stage}} 
-  webHookBaseUrl: ${env:WEBHOOKBASEURL_${self:provider.stage}} 
   
   dynamodb:
     start:
@@ -66,19 +58,11 @@ provider:
     APIKEYS_TABLE_USERID_INDEX : ${self:custom.userIdIndex}
     USERS_TABLE: ${self:custom.usersTableName}
     USERS_TABLE_CREATORID_INDEX: ${self:custom.creatorIdIndex}
-    ASSETTRANSACTIONS_TABLE: ${self:custom.assetTransactionsTableName}
-    ASSETTRANSACTIONS_TABLE_ETHADDRESS_INDEX : ${self:custom.ethAddressIndex}
-    
-    METADATABICYCLES_TABLE_VENDOR_INDEX : ${self:custom.metadataBicycleVendorIndex}
-    METADATABICYCLES_TABLE_SERIALNUMBER_INDEX : ${self:custom.metadataBicycleSerialNumberIndex}
-    METADATABICYCLES_TABLE_FRAMENUMBER_INDEX : ${self:custom.metadataBicycleFrameNumberIndex}
-    METADATABICYCLE_TABLE: ${self:custom.metaDataBicycleTableName}
 
     STAGE: ${self:provider.stage}
     
     ENCRYPTION_KEYID: ${self:custom.encryptionKeyId}
     USAGEPLAN_ID: ${self:custom.usagePlanId}
-    WEBHOOK_BASE_URL : ${self:custom.webHookBaseUrl}
     
 plugins:
   - serverless-dynamodb-local
@@ -115,13 +99,6 @@ functions:
               method: post
               path: register
               cors: true
-              authorizer: aws_iam
-  updateTransaction:
-    handler: handlerUpdateTransaction.updateTransaction
-    events:
-      - http:
-              method: post
-              path: transactions/{id}
   createApiKey:
     handler: handlerCreateApiKey.createApiKey
     events:

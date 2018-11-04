@@ -7,7 +7,7 @@
 const assert = require("assert");
 
 const makeTransactionRepository = require("./modules/src/transactionRepository");
-const makePrivateRepository = require("./modules/src/privateRepository");
+const makeuserRepository = require("./modules/src/userRepository");
 const extractUserId = require("./modules/src/awsHelper").extractUserId;
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
 
@@ -40,7 +40,7 @@ function makeDependencies() {
 function makeRealDependencies() {
     return {
         transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient()),
-        privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient()),
+        userRepository: makeuserRepository(new AWS.DynamoDB.DocumentClient()),
     }
 }
 
@@ -48,6 +48,6 @@ function makeMockDependencies() {
 
     return {
         transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
-        privateRepository: makePrivateRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
+        userRepository: makeuserRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
     }
 }

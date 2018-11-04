@@ -2,8 +2,8 @@ const assert = require("assert");
 
 module.exports.makeGetUsers = (deps) => {
     assert(deps, "deps not set");
-    assert(deps.apiKeyRepository, "privateRepository not set");
-    assert(deps.userRecordRepository, "privateRepository not set");
+    assert(deps.apiKeyRepository, "userRepository not set");
+    assert(deps.userRecordRepository, "userRepository not set");
 
     const getUsers = async (apiKey) => {
 

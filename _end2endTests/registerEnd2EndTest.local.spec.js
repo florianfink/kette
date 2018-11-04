@@ -1,6 +1,5 @@
 const fetch = require("node-fetch");
 const expect = require('chai').expect;
-const secrets = require("../secrets");
 
 const url = "http://localhost:3000";
 
@@ -10,11 +9,12 @@ describe('serverless offline register test', function () {
 
         //prepare -------------------------------------------------------------------------------------------------------
         const uniqueAssetId = makeRandomString();
-        const assetType = "bicycle";
 
         const registrationData = {
             uniqueAssetId: uniqueAssetId,
-            assetType: assetType
+            description: "myCoolBike",
+            ipfsImageHash: "willBreakLater",
+            bikeOwnerAccount: "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38"
         }
 
         const init = {
@@ -35,32 +35,6 @@ describe('serverless offline register test', function () {
         //check -------------------------------------------------------------------------------------------------------
         expect(registerResult.error, "there was an error").to.be.undefined;
 
-
-        
-        const blockchainRecordId = registerResult.blockchainRecordId;
-
-        const blockchainRecordReceipt = { id: blockchainRecordId, receipt: { random: "data" } }
-        const updateInit = {
-            body: JSON.stringify(blockchainRecordReceipt),
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            }
-        };
-
-        const updateTransactionResponse = await fetch(url + "/transactions/" + uniqueAssetId + "?ketteSecret=" + secrets.ketteSecret, updateInit);
-        expect(updateTransactionResponse.status).to.equal(200, "update transaction not succesful");
-
-        const getAssetsResponse = await fetch(url + "/assets", { method: 'GET', headers: { 'content-type': 'application/json' } });
-        const assets = await getAssetsResponse.json();
-        const createdAsset = assets.find(x => x.uniqueAssetId === uniqueAssetId);
-
-        expect(createdAsset).not.to.be.undefined;
-        expect(createdAsset.assetType).to.equal(assetType);
-        
-        const assetTransaction = createdAsset.assetTransactions.find(x => x.blockchainRecordId === blockchainRecordId);
-        expect(assetTransaction).not.to.be.undefined;
-        expect(assetTransaction.status).to.be.equal("confirmed");
     })
 })
 

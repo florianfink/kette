@@ -1,33 +1,27 @@
-/*
-*  B2C endpoint register an asset
-*/
-
 "use strict";
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
-const extractUserId = require("./modules/src/awsHelper").extractUserId;
-
-const makeDependencies = require("./register/src/registryDependencyMaker").makeDependencies;
-const makeRegister = require("./register/src/registry").makeRegister;
-
-const makeDependenciesForCreateUserRecord = require("./users/src/userRecordCreatorDependencyMaker").makeDependencies;
-const makeCreateUserRecord = require("./users/src/userRecordCreator").makeCreateUserRecord;
+const register = require("./register/registry").register;
+const chargeCreditCard = require("./register/creditCardCharge").charge;
 
 module.exports.register = async (event) => {
 
-  const input = JSON.parse(event.body);
+  const { stripeToken, ipfsHash, description, uniqueId, bikeOwnerAccount, ketteSecret } = event.body;
+  console.log(process.env.IS_OFFLINE)
 
-  const cognitoAuthenticationProvider = event.requestContext.identity.cognitoAuthenticationProvider;
-  //TODO: better wrapping of argumetns / input
-  const userId = extractUserId(cognitoAuthenticationProvider);
-  input.userId = userId;
+  try {
+    await chargeCreditCard(1000, stripeToken);
+  } catch (e) {
+    console.error(e);
+    const response = createAwsResponse({ hasError: true, message: "charging the credit card failed" });
+    return response;
+  }
 
-  //TODO: move to outer scope. don´t do while registering
-  const createUserRecordDependencies = makeDependenciesForCreateUserRecord();
-  const createUserRecord = makeCreateUserRecord(createUserRecordDependencies);
-  await createUserRecord(userId, userId);
-
-  const dependencies = makeDependencies();
-  const register = makeRegister(dependencies);
+  input = {
+    uniqueAssetId: uniqueId,
+    ipfsImageHash: ipfsHash,
+    description: description,
+    ownerEthAddress: bikeOwnerAccount
+  };
 
   const result = await register(input);
 

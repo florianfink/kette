@@ -6,7 +6,7 @@
 
 const AWS = require('aws-sdk');
 const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
-const makeUserRecordRepository = require("./modules/src/privateRepository");
+const makeUserRecordRepository = require("./modules/src/userRepository");
 
 const makeGetUsers = require("./users/src/usersGetter").makeGetUsers;
 
