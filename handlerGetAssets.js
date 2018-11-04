@@ -4,26 +4,20 @@
 
 "use strict";
 
-const assert = require("assert");
-
-const makeTransactionRepository = require("./modules/src/transactionRepository");
 const makeuserRepository = require("./modules/src/userRepository");
-const extractUserId = require("./modules/src/awsHelper").extractUserId;
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
-
 const makeGetAssets = require("./assets/src/assetGetter").makeGetAssets;
 
 const AWS = require('aws-sdk');
 
 module.exports.getAssets = async (event) => {
 
-    const cognitoAuthenticationProvider = event.requestContext.identity.cognitoAuthenticationProvider;
+    const ethAddress = event.pathParameters.ethAddress;
 
     const dependencies = makeDependencies();
     const getAssets = makeGetAssets(dependencies);
-    
-    const userId = extractUserId(cognitoAuthenticationProvider);
-    const result = await getAssets(userId);
+
+    const result = await getAssets(ethAddress);
 
     const response = createAwsResponse(result);
     return response;
@@ -39,15 +33,13 @@ function makeDependencies() {
 
 function makeRealDependencies() {
     return {
-        transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient()),
-        userRepository: makeuserRepository(new AWS.DynamoDB.DocumentClient()),
+        blockchainService: {},//todo
     }
 }
 
 function makeMockDependencies() {
 
     return {
-        transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
-        userRepository: makeuserRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
+        blockchainService: {},//todo
     }
 }

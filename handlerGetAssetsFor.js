@@ -4,7 +4,7 @@
 
 "use strict";
 
-const makeTransactionRepository = require("./modules/src/transactionRepository");
+const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
 const makeuserRepository = require("./modules/src/userRepository");
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
 
@@ -19,7 +19,10 @@ module.exports.getAssets = async (event) => {
     const dependencies = makeDependencies();
     const getAssets = makeGetAssets(dependencies);
 
-    const result = await getAssets(userId);
+    const userRecord = await dependencies.userRepository.get(userId);
+    //TODO: check if user records was created by api key that is calling the service
+    //get apiKeyMapping, get userId from mapping, check if creator.id === userId
+    const result = await getAssets(userRecord.ethAddress);
 
     const response = createAwsResponse(result);
     return response;
@@ -35,15 +38,17 @@ function makeDependencies() {
 
 function makeRealDependencies() {
     return {
-        transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient()),
+        blockchainService: {},//todo
         userRepository: makeuserRepository(new AWS.DynamoDB.DocumentClient()),
+        apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient()),
     }
 }
 
 function makeMockDependencies() {
 
     return {
-        transactionRepository: makeTransactionRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
+        blockchainService: {},//todo
+        apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
         userRepository: makeuserRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
     }
 }

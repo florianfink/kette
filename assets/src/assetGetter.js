@@ -1,20 +1,15 @@
 const assert = require("assert");
 
-const convertTransactions = require("./transactionConverter").convert;
-
 module.exports.makeGetAssets = (deps) => {
     assert(deps, "deps not set");
-    assert(deps.userRepository, "userRepository not set");
-    assert(deps.transactionRepository, "transactionRepository not set");
+    assert(deps.blockchainService, "transactionRepository not set");
     assert(deps.userRepository, "userRepository not set");
 
-    const getAssets = async (userId) => {
+    const getAssets = async (ethAddress) => {
 
         try {
-            const userRecord = await deps.userRepository.get(userId);
-            const assetTransactions = await deps.transactionRepository.findByEthAddress(userRecord.ethAddress);
-            const assets = convertTransactions(assetTransactions);
-            return assets;
+            const bicycles = await deps.blockchainService.findByEthAddress(ethAddress);
+            return bicycles;
 
         } catch (error) {
             return {
