@@ -1,12 +1,12 @@
 require('dotenv').config()
 
 const dev = {
-    stamperySecret : process.env.STAMPERY_SECRET_dev,
+    stripeSecretKey : process.env.STRIPESECRETKEY_dev,
     ketteSecret : process.env.KETTE_SECRET_dev
 };
 
 const prod = {
-    stamperySecret : process.env.STAMPERY_SECRET_prod,
+    stripeSecretKey : process.env.STRIPESECRETKEY_prod,
     ketteSecret : process.env.KETTE_SECRET_prod
 };
 

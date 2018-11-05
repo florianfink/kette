@@ -6,37 +6,34 @@
 
 const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
 
-const makeDependencies = require("./register/src/registryDependencyMaker").makeDependencies;
-const makeRegister = require("./register/src/registry").makeRegister;
+const register = require("./register/registry").register;
 
 const makeDependenciesForCreateUserRecord = require("./users/src/userRecordCreatorDependencyMaker").makeDependencies;
-const makeCreateUserRecord = require("./users/src/userRecordCreator").makeCreateUserRecord;
+const makeGetOrCreateUserRecord = require("./users/src/userRecordCreator").makeGetOrCreateUserRecord;
 
-const extractApiKey = require("./modules/src/awsHelper").extractApiKey; 
+const extractApiKey = require("./modules/src/awsHelper").extractApiKey;
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
 
 const AWS = require('aws-sdk');
 
 module.exports.registerFor = async (event) => {
 
-  const input = JSON.parse(event.body);
+  const { ipfsHash, description, uniqueId, userId } = event.body;
 
   const apiKey = extractApiKey(event);
   const apiKeyRepository = createApiKeyRepository();
+  
   //TODO: Errorhandling: what if is apiKeyMapping does not exist. 
   const apiKeyMapping = await apiKeyRepository.get(apiKey);
   const creatorId = apiKeyMapping.userId;
 
-  //TODO: move to outer scope. don´t do while registering
   const createUserRecordDependencies = makeDependenciesForCreateUserRecord();
-  const createUserRecord = makeCreateUserRecord(createUserRecordDependencies);
-  const userRecord = await createUserRecord(input.userId, creatorId);
-  
+  const getOrCreateUserRecord = makeGetOrCreateUserRecord(createUserRecordDependencies);
+  const userRecord = await getOrCreateUserRecord(userId, creatorId);
+
   const ethAddress = userRecord.ethAddress;
 
-  const dependencies = makeDependencies();
-  const register = makeRegister(dependencies);
-  const result = await register(input);
+  const result = await register(uniqueId, description, ipfsHash, ethAddress);
   const response = createAwsResponse(result);
 
   return response;

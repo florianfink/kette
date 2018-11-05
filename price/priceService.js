@@ -17,8 +17,9 @@ exports.getPrice = async function () {
         const stripePercentageFee = basePriceInEuro * 0.03;
 
         const priceInEuro = basePriceInEuro + stripeFee + stripePercentageFee;
+        const priceInCents = Math.round(priceInEuro * 100);
 
-        return priceInEuro;
+        return { priceInEuro, priceInCents };
 
     } catch (error) {
         console.log("error: " + error);
