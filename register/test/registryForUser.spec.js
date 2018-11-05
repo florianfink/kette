@@ -18,7 +18,7 @@ describe('integration test for registryForUser', function () {
         const ipfsImageHash = "ipfsHash";
         const description = "description";
         const userId = "PeterLustig";
-        const apiKey = "tok_visa";
+        const apiKey = "myApiKey123";
 
         const txHash = await register(uniqueAssetId, description, ipfsImageHash, apiKey, userId);
 

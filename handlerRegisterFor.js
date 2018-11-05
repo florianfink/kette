@@ -5,7 +5,7 @@ const extractApiKey = require("./modules/src/awsHelper").extractApiKey;
 
 module.exports.registerFor = async (event) => {
 
-  const { ipfsHash, description, uniqueId, userId } = event.body;
+  const { ipfsHash, description, uniqueId, userId } = JSON.parse(event.body);
 
   const apiKey = extractApiKey(event);
 

@@ -4,17 +4,19 @@ const expect = require('chai').expect;
 const url = "http://localhost:3000";
 
 describe('serverless offline register test', function () {
+    this.timeout(4000);
 
-    it('register user with new asset and update transaction', async () => {
+    it('register user', async () => {
 
         //prepare -------------------------------------------------------------------------------------------------------
         const uniqueAssetId = makeRandomString();
 
         const registrationData = {
-            uniqueAssetId: uniqueAssetId,
+            uniqueId: uniqueAssetId,
             description: "myCoolBike",
-            ipfsImageHash: "willBreakLater",
-            bikeOwnerAccount: "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38"
+            ipfsHash: "willBreakLater",
+            bikeOwnerAccount: "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38",
+            stripeToken: "tok_visa"
         }
 
         const init = {
@@ -27,7 +29,7 @@ describe('serverless offline register test', function () {
 
         //act -------------------------------------------------------------------------------------------------------
 
-        const registerResponse = await fetch(url + "/register", init)
+        const registerResponse = await fetch(url + "/register", init);
         expect(registerResponse.status).to.equal(200, "request not succesful");
 
         const registerResult = await registerResponse.json();
