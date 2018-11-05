@@ -1,29 +1,31 @@
 "use strict";
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
 const register = require("./register/registry").register;
-const chargeCreditCard = require("./register/creditCardCharge").charge;
+const creditCardService = require("./register/creditCardService");
+const priceService = require("./price/priceService")
 
 module.exports.register = async (event) => {
 
   const { stripeToken, ipfsHash, description, uniqueId, bikeOwnerAccount, ketteSecret } = event.body;
-  console.log(process.env.IS_OFFLINE)
 
   try {
-    await chargeCreditCard(1000, stripeToken);
+
+    const { priceInEuro } = await priceService.getPrice();
+    const priceInCents = Math.round(priceInEuro * 100);
+    await creditCardService.charge(priceInCents, stripeToken);
+
   } catch (e) {
     console.error(e);
     const response = createAwsResponse({ hasError: true, message: "charging the credit card failed" });
     return response;
   }
 
-  input = {
-    uniqueAssetId: uniqueId,
-    ipfsImageHash: ipfsHash,
-    description: description,
-    ownerEthAddress: bikeOwnerAccount
-  };
-
-  const result = await register(input);
+  const result = await register(
+    uniqueId,
+    ipfsHash,
+    description,
+    bikeOwnerAccount
+  );
 
   const response = createAwsResponse(result);
   return response

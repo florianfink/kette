@@ -4,11 +4,8 @@
 
 "use strict";
 
-const makeuserRepository = require("./modules/src/userRepository");
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
 const makeGetAssets = require("./assets/src/assetGetter").makeGetAssets;
-
-const AWS = require('aws-sdk');
 
 module.exports.getAssets = async (event) => {
 

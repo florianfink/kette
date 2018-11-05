@@ -5,19 +5,17 @@ describe('integration test for registry', function () {
     process.env.IS_OFFLINE = "true";
 
     it('returns valid transaction', async () => {
-        input = {
-            uniqueAssetId: makeRandomString(),
-            ipfsImageHash: "ipfsHash",
-            description: "description",
-            ownerEthAddress: "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38"
-        };
-        const txHash = await register(input);
+        
+        uniqueAssetId = makeRandomString();
+        ipfsImageHash = "ipfsHash";
+        description = "description";
+        ownerEthAddress = "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38";
 
-        expect(txHash).to.contain("0x");
+        const txHash = await register(uniqueAssetId, description, ipfsImageHash, ownerEthAddress);
+
+        expect(txHash, JSON.stringify(txHash)).to.contain("0x");
     })
 })
-
-
 
 function makeRandomString() {
     var text = "";
