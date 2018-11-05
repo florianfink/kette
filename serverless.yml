@@ -40,10 +40,6 @@ provider:
       Resource:
         - "arn:aws:dynamodb:eu-central-1:*:*"
     - Effect: Allow
-      Action: 'ssm:GetParameter'
-      Resource:
-        - "arn:aws:ssm:eu-central-1:*:parameter/*"
-    - Effect: Allow
       Action: 'apigateway:POST'
       Resource:
         - "arn:aws:apigateway:eu-central-1::/*"
@@ -123,7 +119,6 @@ functions:
               method: get
               path: assets
               cors: true
-              authorizer: aws_iam
   getUsers:
     handler: handlerGetUsers.getUsers
     events:
@@ -132,13 +127,6 @@ functions:
               path: users
               cors: true
               private : true
-  getParameters:
-    handler: handlerGetParameters.getParameters
-    events:
-      - http:
-              method: get
-              path: parameters
-              cors: true
 resources:
   - ${file(resources/tables.yml)}
   - ${file(resources/b2b-user-pool.yml)}
