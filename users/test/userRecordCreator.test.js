@@ -1,4 +1,4 @@
-const makeCreateUserRecord = require('../src/userRecordCreator').makeCreateUserRecord;
+const makeCreateUserRecord = require('../src/userRecordCreator').makeGetOrCreateUserRecord;
 
 const expect = require('chai').expect;
 

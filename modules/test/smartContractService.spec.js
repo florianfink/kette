@@ -1,7 +1,7 @@
-const register = require("../registry").register;
+const register = require("../src/smartContractService").register;
 const expect = require('chai').expect;
 
-describe('integration test for registry', function () {
+describe('integration test for smart contract service', function () {
     process.env.IS_OFFLINE = "true";
 
     it('returns valid transaction', async () => {

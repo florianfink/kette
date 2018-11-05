@@ -1,6 +1,6 @@
 "use strict";
 
-const registry = require("./registry");
+const smartContractService = require("../modules/src/smartContractService");
 const creditCardService = require("./creditCardService");
 const priceService = require("../price/priceService")
 
@@ -13,7 +13,7 @@ exports.register = async function (uniqueAssetId, description, ipfsImageHash, ow
         const { priceInCents } = await priceService.getPrice();
         await creditCardService.charge(priceInCents, stripeToken);
 
-        const transactionHash = await registry.register(uniqueAssetId, description, ipfsImageHash, ownerEthAddress);
+        const transactionHash = await smartContractService.register(uniqueAssetId, description, ipfsImageHash, ownerEthAddress);
 
         return transactionHash;
 
