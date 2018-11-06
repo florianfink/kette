@@ -37,3 +37,19 @@ exports.register = async function (uniqueAssetId, description, ipfsImageHash, ow
 
     return transactionHash;
 }
+
+exports.getBike = async function (uniqueId) {
+
+    const { mnemonic, connectionString, contractAddress, contractAbi } = getConfig();
+    const web3Instance = new web3(new HDWalletProvider(mnemonic, connectionString));
+    const contract = new web3Instance.eth.Contract(contractAbi, contractAddress);
+    const { ipfsImageHash_, description_ } = await contract.methods.getToken(uniqueId).call();
+
+    if (ipfsImageHash_ && description_) {
+        const bike = {
+            description: description_,
+            ipfsImageHash: ipfsImageHash_
+        }
+        return bike;
+    }
+}
