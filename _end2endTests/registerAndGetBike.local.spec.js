@@ -6,13 +6,13 @@ const url = "http://localhost:3000";
 describe('serverless offline register test', function () {
     this.timeout(4000);
 
-    it('register user', async () => {
+    it('get Bike', async () => {
 
         //prepare -------------------------------------------------------------------------------------------------------
-        const uniqueAssetId = makeRandomString();
+        const uniqueId = makeRandomString();
 
         const registrationData = {
-            uniqueId: uniqueAssetId,
+            uniqueId: uniqueId,
             description: "myCoolBike",
             ipfsHash: "willBreakLater",
             bikeOwnerAccount: "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38",
@@ -36,6 +36,14 @@ describe('serverless offline register test', function () {
 
         //check -------------------------------------------------------------------------------------------------------
         expect(registerResult.error, "there was an error").to.be.undefined;
+
+        //act -------------------------------------------------------------------------------------------------------
+        const getBikeResponse = await fetch(url + "/bike?uniqueId="+uniqueId);
+        
+        const getBikeResult = await getBikeResponse.json();
+        
+        expect(getBikeResult.description, JSON.stringify(getBikeResult)).to.be.equal(registrationData.description)
+        expect(getBikeResult.ipfsHash).to.be.equal(registrationData.ipfsHash)
 
     })
 })

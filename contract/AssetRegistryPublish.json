@@ -577,8 +577,13 @@
         },
         {
             "constant": true,
-            "inputs": [],
-            "name": "myTokens",
+            "inputs": [
+                {
+                    "name": "_tokenOwner",
+                    "type": "address"
+                }
+            ],
+            "name": "getTokenIds",
             "outputs": [
                 {
                     "name": "",
@@ -588,7 +593,7 @@
             "payable": false,
             "stateMutability": "view",
             "type": "function",
-            "signature": "0x949e8acd"
+            "signature": "0xd004b036"
         },
         {
             "constant": true,
@@ -691,7 +696,7 @@
             "events": {},
             "links": {},
             "address": "0x44fBe07a93C01D5fa9F77677bE5EfF5720c819fC",
-            "transactionHash": "0x4f4e068f10132c6d253c661118476c4afaf48c08c05bba2fcf4365e78d7e3b8b"
+            "transactionHash": "0x3305f752657d696bde19cb463bff49a5f582fce1f0e1421a16b6796bd2dd4357"
         }
     }
 }

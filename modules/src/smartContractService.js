@@ -48,7 +48,7 @@ exports.getBike = async function (uniqueId) {
     if (ipfsImageHash_ && description_) {
         const bike = {
             description: description_,
-            ipfsImageHash: ipfsImageHash_
+            ipfsHash: ipfsImageHash_
         }
         return bike;
     }
