@@ -2,6 +2,7 @@
 .DS_Store
 
 /.serverless
+/.dynamodb
 
 .env
 test-secrets.js
