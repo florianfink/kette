@@ -3,19 +3,20 @@ const expect = require('chai').expect;
 
 const url = "http://localhost:3000";
 
-describe('register', function () {
-    this.timeout(5000);
+describe('register and get bikes', function () {
 
-    it('returns valid transaction hash', async () => {
+    it('by ethAddress returns registerd bike', async () => {
 
         //prepare -------------------------------------------------------------------------------------------------------
-        const uniqueAssetId = makeRandomString();
+        const uniqueId = makeRandomString();
+
+        const ethAddress = "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38";
 
         const registrationData = {
-            uniqueId: uniqueAssetId,
+            uniqueId: uniqueId,
             description: "myCoolBike",
             ipfsHash: "willBreakLater",
-            bikeOwnerAccount: "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38",
+            bikeOwnerAccount: ethAddress,
             stripeToken: "tok_visa"
         }
 
@@ -32,12 +33,21 @@ describe('register', function () {
         const registerResponse = await fetch(url + "/register", init);
         expect(registerResponse.status).to.equal(200, "request not succesful");
 
-        const txHash = await registerResponse.json();
+        const registerResult = await registerResponse.json();
 
         //check -------------------------------------------------------------------------------------------------------
-        expect(txHash.error, "there was an error").to.be.undefined;
-        expect(txHash, JSON.stringify(txHash)).to.contain("0x");
-    })
+        expect(registerResult.error, "there was an error").to.be.undefined;
+
+        //act -------------------------------------------------------------------------------------------------------
+        const getBikesResponse = await fetch(url + "/bikes/" + ethAddress);
+        const bikes = await getBikesResponse.json();
+        
+        const registerdBike = bikes.find(x => x.uniqueId === uniqueId);
+
+        expect(registerdBike).not.to.be.undefined;
+        expect(registerdBike.ipfsHash).to.equal(registrationData.ipfsHash);
+
+    }).timeout(5500)
 })
 
 function makeRandomString() {

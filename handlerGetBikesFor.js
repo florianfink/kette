@@ -8,17 +8,15 @@ const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
 const makeuserRepository = require("./modules/src/userRepository");
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
 
-const makeGetBikes = require("./bikes/bikeGetter").makeGetBikes;
+const getBikes = require("./bikes/bikeGetter").makeGetBikes();
 
 const AWS = require('aws-sdk');
 
-module.exports.getAssets = async (event) => {
+module.exports.getBikes = async (event) => {
 
     const userId = event.pathParameters.id;
 
     const dependencies = makeDependencies();
-    const getBikes = makeGetBikes(dependencies);
-
     const userRecord = await dependencies.userRepository.get(userId);
     //TODO: check if user records was created by api key that is calling the service
     //get apiKeyMapping, get userId from mapping, check if creator.id === userId

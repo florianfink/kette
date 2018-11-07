@@ -88,13 +88,20 @@ functions:
               cors: true
               private : true
   getBikesFor:
-    handler: handlerGetBikesFor.getAssets
+    handler: handlerGetBikesFor.getBikes
     events:
       - http:
               method: get
               path: bikesFor/{id}
               cors: true
               private : true
+  getBikes:
+    handler: handlerGetBikes.getBikes
+    events:
+      - http:
+              method: get
+              path: bikes/{ethAddress}
+              cors: true
   register:
     handler: handlerRegister.register
     events:
@@ -118,14 +125,6 @@ functions:
               path: apiKeys
               cors: true
               authorizer: aws_iam
-
-  getAssets:
-    handler: handlerGetAssets.getAssets
-    events:
-      - http:
-              method: get
-              path: assets
-              cors: true
   getUsers:
     handler: handlerGetUsers.getUsers
     events:

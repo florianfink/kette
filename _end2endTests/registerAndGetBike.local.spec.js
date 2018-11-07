@@ -3,10 +3,10 @@ const expect = require('chai').expect;
 
 const url = "http://localhost:3000";
 
-describe('serverless offline register test', function () {
+describe('register and get bike', function () {
     this.timeout(4000);
 
-    it('get Bike', async () => {
+    it('by unique id returns bike', async () => {
 
         //prepare -------------------------------------------------------------------------------------------------------
         const uniqueId = makeRandomString();

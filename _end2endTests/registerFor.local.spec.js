@@ -3,8 +3,8 @@ const expect = require('chai').expect;
 
 const url = "http://localhost:3000";
 
-describe('serverless offline registerFor test', function () {
-    it('registerFor user', async () => {
+describe('registerFor', function () {
+    it('registerFor returns transaction hash', async () => {
 
         //pre-prepare -------------------------------------------------------------------------------------------------------
 

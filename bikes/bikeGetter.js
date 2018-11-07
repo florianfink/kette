@@ -5,9 +5,7 @@ module.exports.makeGetBikes = () => {
     const getAssets = async (ethAddress) => {
 
         try {
-            const bicycles = await smartContractService.getBikes(ethAddress);
-            return bicycles;
-
+            return await smartContractService.getBikes(ethAddress);
         } catch (error) {
             return {
                 hasError: true,
