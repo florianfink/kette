@@ -87,12 +87,12 @@ functions:
               path: registerFor
               cors: true
               private : true
-  getAssetsFor:
-    handler: handlerGetAssetsFor.getAssets
+  getBikesFor:
+    handler: handlerGetBikesFor.getAssets
     events:
       - http:
               method: get
-              path: assetsFor/{id}
+              path: bikesFor/{id}
               cors: true
               private : true
   register:

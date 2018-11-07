@@ -8,7 +8,7 @@ const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
 const makeuserRepository = require("./modules/src/userRepository");
 const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
 
-const makeGetAssets = require("./assets/src/assetGetter").makeGetAssets;
+const makeGetBikes = require("./bikes/bikeGetter").makeGetBikes;
 
 const AWS = require('aws-sdk');
 
@@ -17,12 +17,12 @@ module.exports.getAssets = async (event) => {
     const userId = event.pathParameters.id;
 
     const dependencies = makeDependencies();
-    const getAssets = makeGetAssets(dependencies);
+    const getBikes = makeGetBikes(dependencies);
 
     const userRecord = await dependencies.userRepository.get(userId);
     //TODO: check if user records was created by api key that is calling the service
     //get apiKeyMapping, get userId from mapping, check if creator.id === userId
-    const result = await getAssets(userRecord.ethAddress);
+    const result = await getBikes(userRecord.ethAddress);
 
     const response = createAwsResponse(result);
     return response;
@@ -38,7 +38,6 @@ function makeDependencies() {
 
 function makeRealDependencies() {
     return {
-        blockchainService: {},//todo
         userRepository: makeuserRepository(new AWS.DynamoDB.DocumentClient()),
         apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient()),
     }
@@ -47,7 +46,6 @@ function makeRealDependencies() {
 function makeMockDependencies() {
 
     return {
-        blockchainService: {},//todo
         apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
         userRepository: makeuserRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
     }

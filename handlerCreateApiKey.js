@@ -36,13 +36,9 @@ function makeDependencies() {
 function makeMockDependencies() {
     const apiGatewayMock = {
         createApiKey: (params) => {
-            console.log("apiGateWay.createApiKey -> params");
-            console.log(params);
             return { promise: () => { return { value: process.env.OFFLINE_APIKEY, id: "offline_no_id" } } }
         },
         createUsagePlanKey: (params) => {
-            console.log("apiGateWay.createUsagePlanKey -> params");
-            console.log(params);
             return { promise: () => { return { id: "usagePlanKeyId for test" } } }
         }
     };
