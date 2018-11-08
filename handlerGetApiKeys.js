@@ -5,7 +5,7 @@
 "use strict";
 
 const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
-const awsHelper = require("./modules/src/awsHelper");
+const { createAwsResponse, extractUserId } = require("./modules/src/awsHelper");
 const makeGetApiKeys = require("./apiKeys/src/apiKeysGetter").makeGetApiKeys;
 
 const AWS = require('aws-sdk');
@@ -13,13 +13,13 @@ const AWS = require('aws-sdk');
 module.exports.getApiKeys = async (event, context, callback) => {
 
     const cognitoAuthenticationProvider = event.requestContext.identity.cognitoAuthenticationProvider;
-    
+
     const dependencies = makeDependencies();
     const getApiKeys = makeGetApiKeys(dependencies);
 
     const result = await getApiKeys(cognitoAuthenticationProvider);
 
-    const response = awsHelper.createAwsResponse(result);
+    const response = createAwsResponse(result);
     callback(null, response);
 }
 
@@ -34,7 +34,7 @@ function makeDependencies() {
 function makeRealDependencies() {
     return {
         apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient()),
-        extractUserId: awsHelper.extractUserId
+        extractUserId: extractUserId
     }
 }
 
@@ -42,6 +42,6 @@ function makeMockDependencies() {
 
     return {
         apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
-        extractUserId: awsHelper.extractUserId
+        extractUserId: extractUserId
     }
 }

@@ -1,6 +1,6 @@
 "use strict";
 
-const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
+const { createAwsResponse } = require("./modules/src/awsHelper");
 const smartContractService = require("./modules/src/smartContractService");
 
 module.exports.getBike = async (event) => {
@@ -9,5 +9,5 @@ module.exports.getBike = async (event) => {
     const result = await smartContractService.getBike(uniqueId);
     const response = createAwsResponse(result);
     return response;
-    
+
 }

@@ -4,47 +4,17 @@
 
 "use strict";
 
-const makeApiKeyRepository = require("./modules/src/apiKeyRepository");
-const makeuserRepository = require("./modules/src/userRepository");
-const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
-
-const getBikes = require("./bikes/bikeGetter").makeGetBikes();
-
-const AWS = require('aws-sdk');
+const getBikesFor = require("./bikes/bikeServiceFor").makeGetBikesFor();
+const { createAwsResponse, extractApiKey } = require("./modules/src/awsHelper");
 
 module.exports.getBikes = async (event) => {
 
     const userId = event.pathParameters.id;
+    const apiKey = extractApiKey(event);
 
-    const dependencies = makeDependencies();
-    const userRecord = await dependencies.userRepository.get(userId);
-    //TODO: check if user records was created by api key that is calling the service
-    //get apiKeyMapping, get userId from mapping, check if creator.id === userId
-    const result = await getBikes(userRecord.ethAddress);
+    const result = await getBikesFor(userId, apiKey);
 
     const response = createAwsResponse(result);
     return response;
 }
 
-function makeDependencies() {
-    if (process.env.IS_OFFLINE === 'true') {
-        return makeMockDependencies();
-    } else {
-        return makeRealDependencies();
-    }
-}
-
-function makeRealDependencies() {
-    return {
-        userRepository: makeuserRepository(new AWS.DynamoDB.DocumentClient()),
-        apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient()),
-    }
-}
-
-function makeMockDependencies() {
-
-    return {
-        apiKeyRepository: makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
-        userRepository: makeuserRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' })),
-    }
-}

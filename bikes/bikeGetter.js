@@ -2,7 +2,7 @@ const smartContractService = require("../modules/src/smartContractService");
 
 module.exports.makeGetBikes = () => {
 
-    const getAssets = async (ethAddress) => {
+    const getBikes = async (ethAddress) => {
 
         try {
             return await smartContractService.getBikes(ethAddress);
@@ -14,5 +14,5 @@ module.exports.makeGetBikes = () => {
         }
 
     }
-    return getAssets;
+    return getBikes;
 }
