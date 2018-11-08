@@ -1,7 +1,6 @@
 "use strict";
 const register = require("./register/registryForUser").makeRegister();
-const createAwsResponse = require("./modules/src/awsHelper").createAwsResponse;
-const extractApiKey = require("./modules/src/awsHelper").extractApiKey;
+const {createAwsResponse, extractApiKey} = require("./modules/src/awsHelper")
 
 module.exports.registerFor = async (event) => {
 
