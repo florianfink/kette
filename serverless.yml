@@ -125,14 +125,6 @@ functions:
               path: apiKeys
               cors: true
               authorizer: aws_iam
-  getUsers:
-    handler: handlerGetUsers.getUsers
-    events:
-      - http:
-              method: get
-              path: users
-              cors: true
-              private : true
 resources:
   - ${file(resources/tables.yml)}
   - ${file(resources/b2b-user-pool.yml)}

@@ -1,10 +1,9 @@
 const assert = require("assert");
+const makeDependencies = require("./userRecordCreatorDependencyMaker");
 
 module.exports.makeGetOrCreateUserRecord = (deps) => {
-    assert(deps, "dependencies not defined");
-    assert(deps.encryptionService, "encryptionService not defined");
-    assert(deps.cryptoFunctions, "dependencies not defined");
-    assert(deps.userRecordRepository, "dependencies not defined");
+
+    if (!deps) { deps = makeDependencies(); }
 
     const getOrCreateUserRecord = async (userId, creatorId) => {
 

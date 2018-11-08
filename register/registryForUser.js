@@ -1,7 +1,6 @@
 "use strict";
 
 const makeApiKeyRepository = require("../modules/src/apiKeyRepository");
-const makeDependenciesForCreateUserRecord = require("../users/src/userRecordCreatorDependencyMaker").makeDependencies;
 const makeGetOrCreateUserRecord = require("../users/src/userRecordCreator").makeGetOrCreateUserRecord;
 const AWS = require('aws-sdk');
 
@@ -11,7 +10,7 @@ const smartContractService = require("../modules/src/smartContractService");
 exports.makeRegister = (apiKeyRepository, getOrCreateUserRecord) => {
 
     if (!apiKeyRepository) apiKeyRepository = createApiKeyRepository();
-    if (!getOrCreateUserRecord) getOrCreateUserRecord = makeGetOrCreateUserRecord(makeDependenciesForCreateUserRecord());
+    if (!getOrCreateUserRecord) getOrCreateUserRecord = makeGetOrCreateUserRecord();
 
     const register = async function (uniqueAssetId, description, ipfsImageHash, apiKey, userId) {
 

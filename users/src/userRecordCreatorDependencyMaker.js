@@ -4,7 +4,7 @@ const cryptoFunctions = require("../../modules/src/cryptoFunctions");
 
 const AWS = require('aws-sdk');
 
-exports.makeDependencies = () => {
+module.exports = () => {
     if (process.env.IS_OFFLINE === 'true') {
         return makeMockDependencies();
     } else {
