@@ -8,7 +8,7 @@ module.exports.makeGetOrCreateUserRecord = (deps) => {
     const getOrCreateUserRecord = async (userId, creatorId) => {
 
         try {
-            let userRecord = await deps.userRecordRepository.get(userId);
+            let userRecord = await deps.userRecordRepository.get(userId, creatorId);
             if (!userRecord) {
                 const key = deps.cryptoFunctions.generateNewKey();
                 const privateKeyString = key.privateKeyString;

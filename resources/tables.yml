@@ -10,21 +10,12 @@
             AttributeName: creatorId
             AttributeType: S
         KeySchema:
-          -
+          - 
             AttributeName: userId
             KeyType: HASH
-        GlobalSecondaryIndexes:
-          -
-            IndexName: ${self:provider.environment.USERS_TABLE_CREATORID_INDEX}
-            KeySchema:
-              -
-                AttributeName: creatorId
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
-            ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
+          - 
+            AttributeName: creatorId
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

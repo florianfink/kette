@@ -4,7 +4,7 @@
 
 "use strict";
 
-module.exports.check = async (event) => {
+module.exports.check = async () => {
 
   let status = 403;
   if(process.env.IS_OFFLINE === 'true'){

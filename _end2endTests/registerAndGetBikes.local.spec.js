@@ -47,7 +47,7 @@ describe('register and get bikes', function () {
         expect(registerdBike).not.to.be.undefined;
         expect(registerdBike.ipfsHash).to.equal(registrationData.ipfsHash);
 
-    }).timeout(5500)
+    }).timeout(7500)
 })
 
 function makeRandomString() {

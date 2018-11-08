@@ -8,12 +8,13 @@ exports.makeGetBikesFor = (deps) => {
         try {
 
             const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
-            const userRecord = await deps.userRepository.get(userId);
+            const creatorId = apiKeyMapping.userId;
+            const userRecord = await deps.userRepository.get(userId, creatorId);
 
-            if (userRecord.creatorId !== apiKeyMapping.userId) {
+            if (!userRecord) {
                 return {
                     hasError: true,
-                    message: "not allowed to read user"
+                    message: "not found or allowed to read user"
                 }
             }
 
