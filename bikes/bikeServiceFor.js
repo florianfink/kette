@@ -1,4 +1,3 @@
-const smartContractService = require("../modules/src/smartContractService");
 const makeDependencies = require("./bikeServiceForDependencyMaker");
 
 exports.makeGetBikesFor = (deps) => {
@@ -14,7 +13,7 @@ exports.makeGetBikesFor = (deps) => {
             if (userRecord.creatorId !== apiKeyMapping.userId) {
                 return {
                     hasError: true,
-                    message: "no allowed to read user"
+                    message: "not allowed to read user"
                 }
             }
 

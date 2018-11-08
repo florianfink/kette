@@ -7,12 +7,12 @@ describe('integration test for registryForUser', function () {
 
     it('returns valid transaction', async () => {
 
-        const register = makeRegister(
-            {
-                get: (apiKey) => { return { userId: "bloeb" } }
-            },
-            (userId) => { return { ethAddress: "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38" } }
-        )
+        const testDependencies = {
+            apiKeyRepository: { get: (apiKey) => { return { userId: "bloeb" } } },
+            getOrCreateUserRecord: (userId) => { return { ethAddress: "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38" } }
+        };
+        
+        const register = makeRegister(testDependencies);
 
         const uniqueAssetId = makeRandomString();
         const ipfsImageHash = "ipfsHash";
