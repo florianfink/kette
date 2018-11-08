@@ -17,7 +17,7 @@ exports.makeGetBikesFor = (deps) => {
                 }
             }
 
-            return await smartContractService.getBikes(userRecord.ethAddress);
+            return await deps.smartContractService.getBikes(userRecord.ethAddress);
 
         } catch (error) {
             return {

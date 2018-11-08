@@ -1,10 +1,9 @@
 const expect = require('chai').expect;
-const assert = require('chai').assert;
 
-var makeInternalCreateApiKey = require('../src/apiKeyManagement').makeInternalCreateApiKey;
+var { makeInternalCreateApiKey } = require('../apiKeyManagement');
 
 describe("apiKeyManagement", () => {
-    
+
     it('[internalCreateApiKey] -> create an apikey and call createUsagePlanKey', async () => {
         const expectedApiKey = "lol cool apiKey";
         const expectedApiKeyId = "lol cool Id";

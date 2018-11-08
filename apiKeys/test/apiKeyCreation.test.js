@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 
-var makeCreateApiKey = require('../src/apiKeyCreation').makeCreateApiKey;
+var { makeCreateApiKey } = require('../apiKeyCreation');
 
 describe("apiKeyCreation", () => {
     it('create an apikey and create an apiKey user mapping', async () => {
@@ -19,9 +19,6 @@ describe("apiKeyCreation", () => {
 
         let saveCalled = false;
         const deps = {
-            extractUserId: (bla) => {
-                return expectedUserId;
-            },
             internalCreateApiKey: () => {
                 return {
                     apiKey: expectedApiKey,
@@ -39,7 +36,7 @@ describe("apiKeyCreation", () => {
 
         const createApiKey = makeCreateApiKey(deps);
 
-        const apiKeyCreationResult = await createApiKey();
+        const apiKeyCreationResult = await createApiKey(expectedUserId);
 
         expect(apiKeyCreationResult.hasError, apiKeyCreationResult.message).to.be.undefined;
         expect(apiKeyCreationResult.apiKey.apiKey).to.be.equal(expectedApiKey);

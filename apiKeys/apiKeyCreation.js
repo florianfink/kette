@@ -1,14 +1,14 @@
+const makeDependencies = require("./apiKeyCreationDependencyMaker");
 const assert = require("assert");
 
 exports.makeCreateApiKey = (deps) => {
-    assert(deps.extractUserId, "extractUserId missing");
-    assert(deps.internalCreateApiKey, "internalCreateApiKey missing");
-    assert(deps.apiKeyRepository, "apiKeyRepository is missing");
+    
+    if(!deps) deps = makeDependencies();
 
-    const createApiKey = async function createApiKey(cognitoAuthenticationProvider) {
+    const createApiKey = async function createApiKey(userId) {
+        assert(userId, "userId not set")
 
         try {
-            const userId = deps.extractUserId(cognitoAuthenticationProvider);
             const apiKey = await deps.internalCreateApiKey();
             const apiKeyUserIdMapping = {
                 apiKey: apiKey.apiKey,

@@ -1,10 +1,10 @@
 module.exports.makeGetApiKeys = (deps) => {
-
-    const getApiKeys = async (cognitoAuthenticationProvider) => {
+    
+    if(!deps) deps = makeDependencies();
+    
+    const getApiKeys = async (userId) => {
 
         try {
-            
-            const userId = deps.extractUserId(cognitoAuthenticationProvider);
             const apiKeys = await deps.apiKeyRepository.findByUserId(userId);
             return apiKeys;
 
