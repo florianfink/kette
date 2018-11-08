@@ -1,16 +1,11 @@
 "use strict";
 
-const makeApiKeyRepository = require("../modules/src/apiKeyRepository");
-const makeGetOrCreateUserRecord = require("../users/src/userRecordCreator").makeGetOrCreateUserRecord;
-const AWS = require('aws-sdk');
-
 const smartContractService = require("../modules/src/smartContractService");
+const makeDepdenencies = require("./registryForUserDependencyMaker");
 
+exports.makeRegister = (deps) => {
 
-exports.makeRegister = (apiKeyRepository, getOrCreateUserRecord) => {
-
-    if (!apiKeyRepository) apiKeyRepository = createApiKeyRepository();
-    if (!getOrCreateUserRecord) getOrCreateUserRecord = makeGetOrCreateUserRecord();
+    if (!deps) deps = makeDepdenencies();
 
     const register = async function (uniqueAssetId, description, ipfsImageHash, apiKey, userId) {
 
@@ -18,10 +13,10 @@ exports.makeRegister = (apiKeyRepository, getOrCreateUserRecord) => {
             const { hasError, message } = checkInput(uniqueAssetId, description, ipfsImageHash, userId);
             if (hasError) return { hasError: true, message: "input error: " + message };
 
-            const apiKeyMapping = await apiKeyRepository.get(apiKey);
+            const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
             const creatorId = apiKeyMapping.userId;
 
-            const userRecord = await getOrCreateUserRecord(userId, creatorId);
+            const userRecord = await deps.getOrCreateUserRecord(userId, creatorId);
 
             const ownerEthAddress = userRecord.ethAddress;
 
@@ -48,13 +43,4 @@ function checkInput(uniqueAssetId, description, ipfsImageHash, userId) {
     if (!userId) return { hasError: true, message: "userId missing" }
 
     return { hasError: false }
-}
-
-
-function createApiKeyRepository() {
-    if (process.env.IS_OFFLINE === 'true') {
-        return makeApiKeyRepository(new AWS.DynamoDB.DocumentClient({ region: 'localhost', endpoint: 'http://localhost:8000' }))
-    } else {
-        return makeApiKeyRepository(new AWS.DynamoDB.DocumentClient())
-    }
 }
