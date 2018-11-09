@@ -1,3 +1,5 @@
+const makeDependencies = require("./apiKeysGetterDependecyMaker");
+
 module.exports.makeGetApiKeys = (deps) => {
     
     if(!deps) deps = makeDependencies();

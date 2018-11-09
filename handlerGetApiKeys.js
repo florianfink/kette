@@ -1,7 +1,7 @@
 "use strict";
 
 const { createAwsResponse, extractUserId } = require("./modules/src/awsHelper");
-const getApiKeys = require("./apiKeys/src/apiKeysGetter").makeGetApiKeys();
+const getApiKeys = require("./apiKeys/apiKeysGetter").makeGetApiKeys();
 
 module.exports.getApiKeys = async (event) => {
 
