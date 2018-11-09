@@ -63,13 +63,6 @@ plugins:
   - serverless-offline
   - serverless-dotenv-plugin
 functions:
-  getBike:
-    handler: handlerGetBike.getBike
-    events:
-      - http:
-              method: get
-              path: bike
-              cors: true
   check:
     handler: handlerCheck.check
     events:
@@ -77,28 +70,26 @@ functions:
               method: get
               path: check
               cors: true
-  registerFor:
-    handler: handlerRegisterFor.registerFor
-    events:
-      - http:
-              method: post
-              path: registerFor
-              cors: true
-              private : true
-  getBikesFor:
-    handler: handlerGetBikesFor.getBikes
+  getBike:
+    handler: handlerGetBike.getBike
     events:
       - http:
               method: get
-              path: bikesFor/{id}
+              path: bike
               cors: true
-              private : true
   getBikes:
     handler: handlerGetBikes.getBikes
     events:
       - http:
               method: get
               path: bikes/{ethAddress}
+              cors: true
+  getPrice:
+    handler: handlerGetPrice.getPrice
+    events:
+      - http:
+              method: get
+              path: price
               cors: true
   register:
     handler: handlerRegister.register
@@ -123,6 +114,22 @@ functions:
               path: apiKeys
               cors: true
               authorizer: aws_iam
+  registerFor:
+    handler: handlerRegisterFor.registerFor
+    events:
+      - http:
+              method: post
+              path: registerFor
+              cors: true
+              private : true
+  getBikesFor:
+    handler: handlerGetBikesFor.getBikes
+    events:
+      - http:
+              method: get
+              path: bikesFor/{id}
+              cors: true
+              private : true
 resources:
   - ${file(resources/tables.yml)}
   - ${file(resources/b2b-user-pool.yml)}
