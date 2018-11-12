@@ -1,5 +1,5 @@
 # KETTE API
-Description of a RESTful API for registering bicycles on the blockchain via KETTE.
+Description of a RESTful API for registering bicycles on the ethereum blockchain via KETTE.
 
 ## General
 KETTE uses REST methodology for its API. All data included in requests to API methods must be JSON formatted. Additionally, you will have to provide your private API key with every request.
@@ -15,7 +15,7 @@ Every Data API request must contain the following headers:
 ------
 ### Register
 
-Creates a record of the bicycle in the KETTE smart contract by miniting a ERC-721 compliant token on the blockchain. Additionally, an ethereum account for the given user id is created. Returns the transaction hash.
+Creates a record of the bicycle in the KETTE smart contract by miniting a ERC-721 compliant token on the ethereum blockchain. Additionally, an ethereum account for the given user id is created. Returns the transaction hash.
 
 [POST] https://api.kette.io/v1/registerFor
 
