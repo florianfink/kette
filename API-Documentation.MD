@@ -1,5 +1,5 @@
 # KETTE API
-Description of a RESTful API for registering assets on the blockchain via KETTE.
+Description of a RESTful API for registering bicycles on the blockchain via KETTE.
 
 ## General
 KETTE uses REST methodology for its API. All data included in requests to API methods must be JSON formatted. Additionally, you will have to provide your private API key with every request.
