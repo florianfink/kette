@@ -14,13 +14,15 @@ describe('integration test for registryForUser', function () {
         
         const register = makeRegister(testDependencies);
 
-        const uniqueAssetId = makeRandomString();
+        const vendor = makeRandomString();
+        const serialNumber = makeRandomString();
+        const frameNumber = makeRandomString();
+        
         const ipfsImageHash = "ipfsHash";
-        const description = "description";
         const userId = "PeterLustig";
         const apiKey = "myApiKey123";
 
-        const txHash = await register(uniqueAssetId, description, ipfsImageHash, apiKey, userId);
+        const txHash = await register(vendor, serialNumber, frameNumber, ipfsImageHash, apiKey, userId);
 
         expect(txHash, JSON.stringify(txHash)).to.contain("0x");
     })

@@ -16,13 +16,16 @@ describe('registerFor and get bikes', function () {
         const apiKey = keyResult.apiKey.apiKey;
 
         //prepare -------------------------------------------------------------------------------------------------------
-        const uniqueId = makeRandomString();
+        const vendor = makeRandomString();
+        const serialNumber = makeRandomString();
+        const frameNumber = makeRandomString();
         const userId = makeRandomString();
 
         const registrationData = {
-            uniqueId: uniqueId,
-            ipfsHash: "ipfsHash",
-            description: "description",
+            vendor: vendor,
+            serialNumber : serialNumber,
+            frameNumber : frameNumber,
+            ipfsHash: "willBreakLaterForSure",
             userId: userId
         }
 
@@ -48,10 +51,10 @@ describe('registerFor and get bikes', function () {
         const getBikesResponse = await fetch(url + "/bikesFor/" + userId, { method: 'GET', headers: { 'x-api-key': apiKey, 'content-type': 'application/json' } });
 
         const bikes = await getBikesResponse.json();
-        const registerdBike = bikes.find(x => x.uniqueId === uniqueId);
+        const registerdBike = bikes.find(x => x.vendor === vendor);
 
         expect(registerdBike).not.to.be.undefined;
-        expect(registerdBike.ipfsHash).to.equal(registrationData.ipfsHash);
+        expect(registerdBike.ipfsImageHash).to.equal(registrationData.ipfsHash);
         
     })
 })

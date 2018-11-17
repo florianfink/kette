@@ -1,11 +1,11 @@
 "use strict";
 const { createAwsResponse } = require("./modules/src/awsHelper");
 const { register } = require("./register/registryWithCreditCard");
-const secrets = register("./secrets");
+const secrets = require("./secrets");
 
 module.exports.register = async (event) => {
 
-  const { stripeToken, ipfsHash, description, uniqueId, bikeOwnerAccount, ketteSecret } = JSON.parse(event.body);
+  const { stripeToken, ipfsHash, vendor, serialNumber, frameNumber, bikeOwnerAccount, ketteSecret } = JSON.parse(event.body);
 
   if (ketteSecret !== secrets.ketteSecret) {
     const response = createAwsResponse({ hasError: true, message: "not allowed" });
@@ -13,12 +13,15 @@ module.exports.register = async (event) => {
   }
 
   const result = await register(
-    uniqueId,
-    description,
-    ipfsHash,
-    bikeOwnerAccount,
-    stripeToken
-  );
+    vendor, 
+    serialNumber, 
+    frameNumber, 
+    ipfsHash, 
+    bikeOwnerAccount, 
+    stripeToken);
+  
+    console.log(result);
+
   const response = createAwsResponse(result);
   return response;
 

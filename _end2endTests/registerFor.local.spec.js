@@ -15,13 +15,16 @@ describe('registerFor', function () {
         const apiKey = keyResult.apiKey.apiKey;
 
         //prepare -------------------------------------------------------------------------------------------------------
-        const uniqueId = makeRandomString();
+        const vendor = makeRandomString();
+        const serialNumber = makeRandomString();
+        const frameNumber = makeRandomString();
         const userId = makeRandomString();
 
         const registrationData = {
-            uniqueId: uniqueId,
-            ipfsHash: "ipfsHash",
-            description: "description",
+            vendor: vendor,
+            serialNumber : serialNumber,
+            frameNumber : frameNumber,
+            ipfsHash: "willBreakLaterForSure",
             userId: userId
         }
 
@@ -43,21 +46,6 @@ describe('registerFor', function () {
 
         //check -------------------------------------------------------------------------------------------------------
         expect(registerResult.error, "there was an error").to.be.undefined;
-
-        /*
-        const getUsersResponse = await fetch(url + "/users", { method: 'GET', headers: { 'x-api-key': apiKey, 'content-type': 'application/json' } });
-        const users = await getUsersResponse.json();
-        const createdUser = users.find(x => x === userId);
-
-        expect(createdUser).not.to.be.undefined;
-
-        const getAssetsResponse = await fetch(url + "/assetsFor/" + userId, { method: 'GET', headers: { 'x-api-key': apiKey, 'content-type': 'application/json' } });
-        const assets = await getAssetsResponse.json();
-        const createdAsset = assets.find(x => x.uniqueAssetId === uniqueAssetId);
-
-        expect(createdAsset).not.to.be.undefined;
-        expect(createdAsset.assetType).to.equal(assetType);
-        */
     })
 })
 

@@ -1,24 +1,28 @@
 const fetch = require("node-fetch");
 const expect = require('chai').expect;
-
+const secrets = require("../secrets");
 const url = "http://localhost:3000";
 
-describe('register and get bike', function () {
+describe('register and lookUp bike', function () {
     this.timeout(4000);
 
-    it('by unique id returns bike', async () => {
+    it('by vendor, serialnumber and framenumber returns bicycle', async () => {
 
         //prepare -------------------------------------------------------------------------------------------------------
-        const uniqueId = makeRandomString();
+        const vendor = makeRandomString();
+        const serialNumber = makeRandomString();
+        const frameNumber = makeRandomString();
 
         const registrationData = {
-            uniqueId: uniqueId,
-            description: "myCoolBike",
+            vendor: vendor,
+            serialNumber: serialNumber,
+            frameNumber : frameNumber,
             ipfsHash: "willBreakLater",
             bikeOwnerAccount: "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38",
-            stripeToken: "tok_visa"
+            stripeToken: "tok_visa",
+            ketteSecret : secrets.ketteSecret
         }
-
+        
         const init = {
             body: JSON.stringify(registrationData),
             method: 'POST',
@@ -38,12 +42,12 @@ describe('register and get bike', function () {
         expect(registerResult.error, "there was an error").to.be.undefined;
 
         //act -------------------------------------------------------------------------------------------------------
-        const getBikeResponse = await fetch(url + "/bike?uniqueId="+uniqueId);
+        const getBikeResponse = await fetch(url + "/bike?vendor="+vendor+"&serialNumber="+serialNumber+"&frameNumber="+ frameNumber);
         
         const getBikeResult = await getBikeResponse.json();
         
-        expect(getBikeResult.description, JSON.stringify(getBikeResult)).to.be.equal(registrationData.description)
-        expect(getBikeResult.ipfsHash).to.be.equal(registrationData.ipfsHash)
+        expect(getBikeResult.frameNumber, JSON.stringify(getBikeResult)).to.be.equal(registrationData.frameNumber)
+        expect(getBikeResult.ipfsImageHash).to.be.equal(registrationData.ipfsHash)
 
     })
 })

@@ -1,23 +1,27 @@
 const fetch = require("node-fetch");
 const expect = require('chai').expect;
-
+const secrets = require("../secrets");
 const url = "http://localhost:3000";
 
 describe('register and get bikes', function () {
 
     it('by ethAddress returns registerd bike', async () => {
 
+        
         //prepare -------------------------------------------------------------------------------------------------------
-        const uniqueId = makeRandomString();
-
+        const vendor = makeRandomString();
+        const serialNumber = makeRandomString();
+        const frameNumber = makeRandomString();
         const ethAddress = "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38";
 
         const registrationData = {
-            uniqueId: uniqueId,
-            description: "myCoolBike",
+            vendor: vendor,
+            serialNumber: serialNumber,
+            frameNumber : frameNumber,
             ipfsHash: "willBreakLater",
             bikeOwnerAccount: ethAddress,
-            stripeToken: "tok_visa"
+            stripeToken: "tok_visa",
+            ketteSecret : secrets.ketteSecret
         }
 
         const init = {
@@ -42,10 +46,10 @@ describe('register and get bikes', function () {
         const getBikesResponse = await fetch(url + "/bikes/" + ethAddress);
         const bikes = await getBikesResponse.json();
         
-        const registerdBike = bikes.find(x => x.uniqueId === uniqueId);
+        const registerdBike = bikes.find(x => x.vendor === vendor);
 
         expect(registerdBike).not.to.be.undefined;
-        expect(registerdBike.ipfsHash).to.equal(registrationData.ipfsHash);
+        expect(registerdBike.ipfsImageHash).to.equal(registrationData.ipfsHash);
 
     }).timeout(7500)
 })

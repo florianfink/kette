@@ -7,10 +7,10 @@ exports.makeRegister = (deps) => {
 
     if (!deps) deps = makeDepdenencies();
 
-    const register = async function (uniqueAssetId, description, ipfsImageHash, apiKey, userId) {
+    const register = async function (vendor, serialNumber, frameNumber, ipfsImageHash, apiKey, userId) {
 
         try {
-            const { hasError, message } = checkInput(uniqueAssetId, description, ipfsImageHash, userId);
+            const { hasError, message } = checkInput(vendor, serialNumber, frameNumber, ipfsImageHash, apiKey, userId);
             if (hasError) return { hasError: true, message: "input error: " + message };
 
             const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
@@ -20,7 +20,7 @@ exports.makeRegister = (deps) => {
 
             const ownerEthAddress = userRecord.ethAddress;
 
-            const transactionHash = smartContractService.register(uniqueAssetId, description, ipfsImageHash, ownerEthAddress);
+            const transactionHash = smartContractService.register(vendor, serialNumber, frameNumber, ipfsImageHash, ownerEthAddress);
 
             return transactionHash;
 
@@ -36,10 +36,13 @@ exports.makeRegister = (deps) => {
     return register;
 }
 
-function checkInput(uniqueAssetId, description, ipfsImageHash, userId) {
+function checkInput(vendor, serialNumber, frameNumber, ipfsImageHash, apiKey, userId) {
+
+    if (!vendor) return { hasError: true, message: "vendor missing" }
+    if (!serialNumber) return { hasError: true, message: "serialNumber missing" }
+    if (!frameNumber) return { hasError: true, message: "frameNumber missing" }
     if (!ipfsImageHash) return { hasError: true, message: "ipfsImageHash missing" }
-    if (!description) return { hasError: true, message: "description missing" }
-    if (!uniqueAssetId) return { hasError: true, message: "uniqueAssetId missing" }
+    if (!apiKey) return { hasError: true, message: "apiKey missing" }
     if (!userId) return { hasError: true, message: "userId missing" }
 
     return { hasError: false }

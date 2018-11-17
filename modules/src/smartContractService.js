@@ -5,16 +5,16 @@ const promisifyEvent = require('p-event');
 
 exports.getRegistrationPrice = async function () {
 
-    const {contract} = getContract();
+    const { contract } = getContract();
     const priceInWei = await contract.methods.getCurrentRegistrationPrice().call();
     const priceInEth = web3.utils.fromWei(priceInWei, "ether");
 
     return { priceInWei, priceInEth };
 }
 
-exports.register = async function (uniqueAssetId, description, ipfsImageHash, ownerEthAddress) {
+exports.register = async function (vendor, serialNumber, frameNumber, ipfsImageHash, ownerEthAddress) {
 
-    const {contract, web3Instance} = getContract();
+    const { contract, web3Instance } = getContract();
 
     const accounts = await web3Instance.eth.getAccounts();
     const contractOwnerAccount = accounts[0].toLowerCase();
@@ -22,10 +22,11 @@ exports.register = async function (uniqueAssetId, description, ipfsImageHash, ow
     const priceInWei = await contract.methods.getCurrentRegistrationPrice().call();
 
     const transactionHash = await promisifyEvent(
-        contract.methods.registerAssetFor(
+        contract.methods.registerBicycleFor(
+            vendor,
+            serialNumber,
+            frameNumber,
             ipfsImageHash,
-            description,
-            uniqueAssetId,
             ownerEthAddress)
             .send({ from: contractOwnerAccount, gas: 3000000, value: priceInWei }),
         'transactionHash')
@@ -33,10 +34,10 @@ exports.register = async function (uniqueAssetId, description, ipfsImageHash, ow
     return transactionHash;
 }
 
-exports.getBike = async function (uniqueId) {
+exports.lookUpBicycle = async function (vendor, serialNumber, frameNumber) {
 
-    const {contract} = getContract();
-    const bike = createGetBike(contract)(uniqueId);
+    const { contract } = getContract();
+    const bike = createLookUpBike(contract)(vendor, serialNumber, frameNumber);
     return bike;
 }
 
@@ -44,13 +45,7 @@ exports.getBikes = async function (ethAddress) {
 
     const { contract } = getContract();
 
-    const ids = await contract.methods.getTokenIds(ethAddress).call();
-
-    const uniqueIdPromises = ids.map((id) => {
-        return contract.methods.getUniqueIdForIndex(id).call();
-    })
-
-    const uniqueIds = await Promise.all(uniqueIdPromises);
+    const uniqueIds = await contract.methods.getTokenIds(ethAddress).call();
 
     const bikePromises = uniqueIds.map((uniqueId) => {
         return createGetBike(contract)(uniqueId);
@@ -71,15 +66,47 @@ function getContract() {
 function createGetBike(contract) {
 
     return async (uniqueId) => {
-        const { ipfsImageHash_, description_ } = await contract.methods.getToken(uniqueId).call();
 
-        if (ipfsImageHash_ && description_) {
+        const {vendor_, serialNumber_, frameNumber_, ipfsImageHash_, state_, uniqueId_} = await contract.methods.getBicycle(uniqueId).call();
+
+        if (vendor_ && serialNumber_ && frameNumber_ && ipfsImageHash_ && state_ && uniqueId_) {
             const bike = {
-                description: description_,
-                ipfsHash: ipfsImageHash_,
-                uniqueId : uniqueId
+                vendor : vendor_,
+                serialNumber : serialNumber_,
+                frameNumber : frameNumber_,
+                ipfsImageHash: ipfsImageHash_,
+                state: mapState(state_),
+                uniqueId : uniqueId_
             }
             return bike;
         }
+    }
+}
+
+function createLookUpBike(contract) {
+
+    return async (vendor, serialNumber, frameNumber) => {
+
+        const {vendor_, serialNumber_, frameNumber_, ipfsImageHash_, state_, uniqueId_} = await contract.methods.lookUpBicycle(vendor, serialNumber, frameNumber).call();
+
+        if (vendor_ && serialNumber_ && frameNumber_ && ipfsImageHash_ && state_ && uniqueId_) {
+            const bike = {
+                vendor : vendor_,
+                serialNumber : serialNumber_,
+                frameNumber : frameNumber_,
+                ipfsImageHash: ipfsImageHash_,
+                state: mapState(state_),
+                uniqueId : uniqueId_
+            }
+            return bike;
+        }
+    }
+}
+
+function mapState(state){
+    switch(state){
+        case '0' : return "ok";
+        case '1' : return "stolen";
+        case '2' : return "lost";
     }
 }

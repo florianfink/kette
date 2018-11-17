@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const expect = require('chai').expect;
+const secrets = require("../secrets");
 
 const url = "http://localhost:3000";
 
@@ -9,14 +10,18 @@ describe('register', function () {
     it('returns valid transaction hash', async () => {
 
         //prepare -------------------------------------------------------------------------------------------------------
-        const uniqueAssetId = makeRandomString();
+        const vendor = makeRandomString();
+        const serialNumber = makeRandomString();
+        const frameNumber = makeRandomString();
 
         const registrationData = {
-            uniqueId: uniqueAssetId,
-            description: "myCoolBike",
+            vendor: vendor,
+            serialNumber: serialNumber,
+            frameNumber : frameNumber,
             ipfsHash: "willBreakLater",
             bikeOwnerAccount: "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38",
-            stripeToken: "tok_visa"
+            stripeToken: "tok_visa",
+            ketteSecret : secrets.ketteSecret
         }
 
         const init = {

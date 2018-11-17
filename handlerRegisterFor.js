@@ -4,13 +4,14 @@ const {createAwsResponse, extractApiKey} = require("./modules/src/awsHelper")
 
 module.exports.registerFor = async (event) => {
 
-  const { ipfsHash, description, uniqueId, userId } = JSON.parse(event.body);
+  const { vendor, serialNumber, frameNumber, ipfsHash, userId } = JSON.parse(event.body);
 
   const apiKey = extractApiKey(event);
 
   const result = await register(
-    uniqueId,
-    description,
+    vendor,
+    serialNumber,
+    frameNumber,
     ipfsHash,
     apiKey,
     userId

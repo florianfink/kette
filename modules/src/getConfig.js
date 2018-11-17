@@ -1,6 +1,6 @@
 "use strict";
 
-const registryContractInfo = require("../../contract/AssetRegistryPublish.json");
+const registryContractInfo = require("../../contract/BicycleRegistryPublish.json");
 const secrets = require("../../secrets");
 
 module.exports = () => {

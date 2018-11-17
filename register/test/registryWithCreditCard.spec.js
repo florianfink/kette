@@ -7,13 +7,14 @@ describe('integration test for registryWithCreditCard', function () {
     
     it('returns valid transaction', async () => {
         
-        const uniqueAssetId = makeRandomString();
+        const vendor = makeRandomString();
+        const serialNumber = makeRandomString();
+        const frameNumber = makeRandomString();
         const ipfsImageHash = "ipfsHash";
-        const description = "description";
         const ownerEthAddress = "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38";
         const stripeToken = "tok_visa";
 
-        const txHash = await register(uniqueAssetId, description, ipfsImageHash, ownerEthAddress, stripeToken);
+        const txHash = await register(vendor, serialNumber, frameNumber,ipfsImageHash, ownerEthAddress, stripeToken);
 
         expect(txHash, JSON.stringify(txHash)).to.contain("0x");
     })
