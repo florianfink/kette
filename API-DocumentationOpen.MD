@@ -23,11 +23,11 @@ Content-Type: “application/json”
 #### Parameters
 
 | Name                    | Description      
-| -------------           |-------------   |
-| vendor                  | vendor of the bicycle. e.g. Babboe or Hercules |
-| serialNumber            | serialnumber of the bicycle |
-| frameNumber             | frameNumber of the bicycle |
-| ipfsImageHash           | the multihash of the image that was uploaded to [ipfs](https://ipfs.io/)|
+| -------------           |-------------   
+| vendor                  | vendor of the bicycle. e.g. Babboe or Hercules 
+| serialNumber            | serialnumber of the bicycle 
+| frameNumber             | frameNumber of the bicycle 
+| ipfsImageHash           | the multihash of the image that was uploaded to [ipfs](https://ipfs.io/)
 | bikeOwnerAccount        | ethereum address to which the bike should be registered
 | stripeToken             | a valid stripe token obtained from the [Stripe API](https://stripe.com/docs/api)
 | ketteSecret             | a temporary secret to prevent unrestricted access during beta-phase.
@@ -45,12 +45,18 @@ Content-Type: “application/json”
 
 #### Sample Response
       { 
-        hash: '0xff54aaf2dcf63ad4cd923491167dca03cc6064afbb183420d5776a729b812154',
+        hash: '0xff54aaf2dcf63ad4cd923491167dca03cc6064afbb183420d5776a729b812154'
       }
 ------
 ### Get-Bikes
 
 Returns all bicycles that are registered to a given ethereum address.
+
+#### Parameters
+
+| Name                    | Description      
+| -------------           |-------------   
+| ethAddress              | owner of the bicycles to get.
 
 [GET] https://{comingSoon}/v1/bikes/{ethAddress}
 
@@ -79,6 +85,14 @@ Sample response:
 
 Returns all bicycle information if a match is found. Note that this lookup only works for EXACT matches (case sensitive).
 
+#### Parameters
+
+| Name                    | Description      
+| -------------           |-------------  
+| vendor                  | vendor of the bicycle. e.g. Babboe or Hercules 
+| serialNumber            | serialnumber of the bicycle 
+| frameNumber             | frameNumber of the bicycle 
+
 [GET] https://{comingSoon}/v1/bike?vendor=Babboe&serialNumber=SN123456&frameNumber=98875FN
 
 Sample response:
@@ -94,7 +108,7 @@ Sample response:
 ------
 ### Get-Price
 
-Returns the current price in € (Euro) that is charged for a bicycle registration. [See register](#Register))
+Returns the current price in € (Euro) that is charged for a bicycle registration. [See register](#Register)
 
 [GET] https://{comingSoon}/v1/price
 
