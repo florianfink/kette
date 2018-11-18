@@ -27,9 +27,9 @@ Content-Type: “application/json”
 | vendor                  | vendor of the bicycle. e.g. Babboe or Hercules 
 | serialNumber            | serialnumber of the bicycle 
 | frameNumber             | frameNumber of the bicycle 
-| ipfsImageHash           | the multihash of the image that was uploaded to [ipfs](https://ipfs.io/)
+| ipfsImageHash           | the multihash of the image that was uploaded to [ipfs](https://docs.ipfs.io/reference/api/http/#api-v0-add)
 | bikeOwnerAccount        | ethereum address to which the bike should be registered
-| stripeToken             | a valid stripe token obtained from the [Stripe API](https://stripe.com/docs/api)
+| stripeToken             | a valid stripe token from the [Stripe API](https://stripe.com/docs/api/tokens/create_card) obtained with the [Publishable key](https://stripe.com/docs/keys) of KETTE
 | ketteSecret             | a temporary secret to prevent unrestricted access during beta-phase.
 
 #### Sample Request
