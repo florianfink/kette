@@ -25,12 +25,12 @@ Content-Type: “application/json”
 | Name                    | Description      
 | -------------           |-------------   
 | vendor                  | vendor of the bicycle. e.g. Babboe or Hercules 
-| serialNumber            | serialnumber of the bicycle 
-| frameNumber             | frameNumber of the bicycle 
+| serialNumber            | serial number of the bicycle 
+| frameNumber             | frame number of the bicycle 
 | ipfsImageHash           | the multihash of the image that was uploaded to [ipfs](https://docs.ipfs.io/reference/api/http/#api-v0-add)
 | bikeOwnerAccount        | ethereum address to which the bike should be registered
 | stripeToken             | a valid stripe token from the [Stripe API](https://stripe.com/docs/api/tokens/create_card) obtained with the [Publishable key](https://stripe.com/docs/keys) of KETTE
-| ketteSecret             | a temporary secret to prevent unrestricted access during beta-phase.
+| ketteSecret             | a temporary secret to prevent unrestricted access during beta phase.
 
 #### Sample Request
       {
@@ -90,8 +90,8 @@ Returns all bicycle information if a match is found. Note that this lookup only 
 | Name                    | Description      
 | -------------           |-------------  
 | vendor                  | vendor of the bicycle. e.g. Babboe or Hercules 
-| serialNumber            | serialnumber of the bicycle 
-| frameNumber             | frameNumber of the bicycle 
+| serialNumber            | serial number of the bicycle 
+| frameNumber             | frame number of the bicycle 
 
 [GET] https://{comingSoon}/v1/bike?vendor=Babboe&serialNumber=SN123456&frameNumber=98875FN
 
