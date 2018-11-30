@@ -12,6 +12,18 @@ custom:
     start:
       migrate: true
 
+package:
+  exclude:
+    - _end2endTests/**
+    - _templates/**
+    - resources/**
+    - .dynamodb/**
+    - API-Documentation.MD
+    - API-DocumentationOpen.MD
+    - LICENSE
+    - README.MD
+    - */test/**
+
 provider:
   name: aws
   apiKeys:	
