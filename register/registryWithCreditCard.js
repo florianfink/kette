@@ -1,6 +1,6 @@
 "use strict";
 
-const smartContractService = require("../modules/src/smartContractService");
+const smartContractService = require("../modules/smartContractService");
 const creditCardService = require("./creditCardService");
 const priceService = require("../price/priceService")
 

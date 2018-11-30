@@ -1,7 +1,7 @@
 "use strict";
 
-const { createAwsResponse } = require("./modules/src/awsHelper");
-const smartContractService = require("./modules/src/smartContractService");
+const { createAwsResponse } = require("./modules/awsHelper");
+const smartContractService = require("./modules/smartContractService");
 
 module.exports.getBike = async (event) => {
 

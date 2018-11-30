@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const cryptoFunctions = require('../src/cryptoFunctions');
+const cryptoFunctions = require('../cryptoFunctions');
 
 describe("cryptoFunctions", () => {
     it('[sign] -> should sign a message', () => {

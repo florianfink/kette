@@ -1,6 +1,6 @@
 "use strict";
 
-const {createAwsResponse } = require("./modules/src/awsHelper");
+const {createAwsResponse } = require("./modules/awsHelper");
 const getBikes = require("./bikes/bikeGetter").makeGetBikes();
 
 module.exports.getBikes = async (event) => {

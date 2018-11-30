@@ -1,5 +1,5 @@
 "use strict";
-const { createAwsResponse } = require("./modules/src/awsHelper");
+const { createAwsResponse } = require("./modules/awsHelper");
 const { register } = require("./register/registryWithCreditCard");
 const secrets = require("./secrets");
 

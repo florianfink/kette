@@ -22,7 +22,6 @@ package:
     - API-DocumentationOpen.MD
     - LICENSE
     - README.MD
-    - */test/**
 
 provider:
   name: aws

@@ -1,5 +1,5 @@
 const { makeInternalCreateApiKey } = require("./apiKeyManagement");
-const makeApiKeyRepository = require("../modules/src/apiKeyRepository");
+const makeApiKeyRepository = require("../modules/apiKeyRepository");
 const AWS = require('aws-sdk');
 
 module.exports = () => {

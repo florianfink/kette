@@ -1,6 +1,6 @@
 "use strict";
 
-const smartContractService = require("../modules/src/smartContractService");
+const smartContractService = require("../modules/smartContractService");
 const exchangePriceSerivce = require("./exchangePriceService");
 
 exports.getPrice = async function () {

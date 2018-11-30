@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const makeApiKeyRepository = require("../modules/src/apiKeyRepository");
+const makeApiKeyRepository = require("../modules/apiKeyRepository");
 
 module.exports = () => {
     if (process.env.IS_OFFLINE === 'true') {

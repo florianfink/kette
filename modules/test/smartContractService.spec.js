@@ -1,4 +1,4 @@
-const smartContractService = require("../src/smartContractService");
+const smartContractService = require("../smartContractService");
 const expect = require('chai').expect;
 
 describe('integration test for smart contract service', function () {

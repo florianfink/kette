@@ -1,7 +1,7 @@
 //"mocha -- */test/*.specX.js"
 
-const cryptoFunctions = require('../src/cryptoFunctions');
-const makeCrypto = require("../src/encryption");
+const cryptoFunctions = require('../modules/cryptoFunctions');
+const makeCrypto = require("../modules/encryption");
 const secrets = require("../../secrets");
 const config = require("../../config");
 

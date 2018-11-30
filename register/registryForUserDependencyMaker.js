@@ -1,7 +1,7 @@
 "use strict";
 
-const makeApiKeyRepository = require("../modules/src/apiKeyRepository");
-const { makeGetOrCreateUserRecord } = require("../users/src/userRecordCreator");
+const makeApiKeyRepository = require("../modules/apiKeyRepository");
+const { makeGetOrCreateUserRecord } = require("../users/userRecordCreator");
 const AWS = require('aws-sdk');
 
 module.exports = () => {

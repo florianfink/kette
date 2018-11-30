@@ -1,6 +1,6 @@
-const makeUserRecordRepository = require("../../modules/src/userRepository");
-const makeEncryptionService = require("../../modules/src/encryptionService");
-const cryptoFunctions = require("../../modules/src/cryptoFunctions");
+const makeUserRecordRepository = require("../modules/userRepository");
+const makeEncryptionService = require("../modules/encryptionService");
+const cryptoFunctions = require("../modules/cryptoFunctions");
 
 const AWS = require('aws-sdk');
 
