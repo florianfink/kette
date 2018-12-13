@@ -4,8 +4,8 @@ This repository contains the backend for the KETTE registry. The backend is resp
 
 ## Requirements
 
-##### Firebase
-The backend is using Amazon web services [Firebase cloud functions](https://aws.amazon.com/) and requires a AWS account as well as the [AWS CLI](https://aws.amazon.com/cli/)
+##### AWS Lambda
+The backend is using [AWS Lambda](https://aws.amazon.com/lambda/) and requires a AWS account as well as the [AWS CLI](https://aws.amazon.com/cli/)
 
 ##### Stripe
 For charging credit cards we use [Stripe](https://stripe.com/). A Stripe account is necessary to interact with the stripe API.
