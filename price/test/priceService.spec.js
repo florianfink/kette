@@ -7,7 +7,7 @@ describe('integration test for price service', function () {
     it('returns a valid price', async () => {
 
         const { priceInCents } = await priceService.getPrice();
-        assert(priceInCents > 0 && priceInCents < 100, JSON.stringify(priceInCents))
+        assert(priceInCents >= 50 && priceInCents < 200, JSON.stringify(priceInCents))
 
     })
 })

@@ -19,7 +19,13 @@ exports.getPrice = async function () {
         const priceInEuro = basePriceInEuro + stripeFee + stripePercentageFee;
         const priceInCents = Math.round(priceInEuro * 100);
 
-        return { priceInEuro, priceInCents };
+        //stripe API requires minimum of 50 cent 
+        if(priceInEuro < 0.5){
+            return { priceInEuro : 0.5, priceInCents : 50 };
+        }
+        else{
+            return { priceInEuro, priceInCents };
+        }
 
     } catch (error) {
         console.log("error: " + error);

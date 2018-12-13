@@ -2,7 +2,9 @@ require('dotenv').config()
 
 const dev = {
     stripeSecretKey : process.env.STRIPESECRETKEY_dev,
-    ketteSecret : process.env.KETTE_SECRET_dev
+    ketteSecret : process.env.KETTE_SECRET_dev,
+    mnemonic : process.env.MNEMONIC_dev,
+    infuraKey : process.env.INFURAKEY_dev
 };
 
 const prod = {
