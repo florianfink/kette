@@ -15,6 +15,10 @@ For charging credit cards we use [Stripe](https://stripe.com/). A Stripe account
         sls dynamodb install
         npm run start-local-env
 
+## API Documentation
+
+[Swagger description](https://kette-io.github.io/nft-asset-registry-backend-documentation/)
+
 ## Architecture Overview
 
 The project comprises of four modules. Each module with its individual repository:
