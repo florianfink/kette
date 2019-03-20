@@ -9,7 +9,7 @@ module.exports = () => {
     let connectionString;
     let contractAddress;
     if (process.env.IS_OFFLINE === "true") {
-        mnemonic = "kette";
+        mnemonic = "cluster work mimic model fish kite story rather bottom zone uncle lava";
         connectionString = "http://localhost:8545";
         contractAddress = registryContractInfo.networks["666"].address;
     } else {
