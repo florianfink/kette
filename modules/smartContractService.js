@@ -5,9 +5,9 @@ const promisifyEvent = require('p-event');
 
 exports.getRegistrationPrice = async function () {
 
-    const { contract } = getContract();
+    const { contract, web3Instance } = getContract();
     const priceInWei = await contract.methods.getCurrentRegistrationPrice().call();
-    const priceInEth = web3.utils.fromWei(priceInWei, "ether");
+    const priceInEth = web3Instance.utils.fromWei(priceInWei, "ether");
 
     return { priceInWei, priceInEth };
 }
@@ -67,16 +67,16 @@ function createGetBike(contract) {
 
     return async (uniqueId) => {
 
-        const {vendor_, serialNumber_, frameNumber_, ipfsImageHash_, state_, uniqueId_} = await contract.methods.getBicycle(uniqueId).call();
+        const { vendor_, serialNumber_, frameNumber_, ipfsImageHash_, state_, uniqueId_ } = await contract.methods.getBicycle(uniqueId).call();
 
         if (vendor_ && serialNumber_ && frameNumber_ && ipfsImageHash_ && state_ && uniqueId_) {
             const bike = {
-                vendor : vendor_,
-                serialNumber : serialNumber_,
-                frameNumber : frameNumber_,
+                vendor: vendor_,
+                serialNumber: serialNumber_,
+                frameNumber: frameNumber_,
                 ipfsImageHash: ipfsImageHash_,
                 state: mapState(state_),
-                uniqueId : uniqueId_
+                uniqueId: uniqueId_
             }
             return bike;
         }
@@ -87,26 +87,26 @@ function createLookUpBike(contract) {
 
     return async (vendor, serialNumber, frameNumber) => {
 
-        const {vendor_, serialNumber_, frameNumber_, ipfsImageHash_, state_, uniqueId_} = await contract.methods.lookUpBicycle(vendor, serialNumber, frameNumber).call();
+        const { vendor_, serialNumber_, frameNumber_, ipfsImageHash_, state_, uniqueId_ } = await contract.methods.lookUpBicycle(vendor, serialNumber, frameNumber).call();
 
         if (vendor_ && serialNumber_ && frameNumber_ && ipfsImageHash_ && state_ && uniqueId_) {
             const bike = {
-                vendor : vendor_,
-                serialNumber : serialNumber_,
-                frameNumber : frameNumber_,
+                vendor: vendor_,
+                serialNumber: serialNumber_,
+                frameNumber: frameNumber_,
                 ipfsImageHash: ipfsImageHash_,
                 state: mapState(state_),
-                uniqueId : uniqueId_
+                uniqueId: uniqueId_
             }
             return bike;
         }
     }
 }
 
-function mapState(state){
-    switch(state){
-        case '0' : return "ok";
-        case '1' : return "stolen";
-        case '2' : return "lost";
+function mapState(state) {
+    switch (state) {
+        case '0': return "ok";
+        case '1': return "stolen";
+        case '2': return "lost";
     }
 }

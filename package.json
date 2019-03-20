@@ -21,7 +21,7 @@
     "p-event": "^2.1.0",
     "stripe": "^6.13.0",
     "truffle-hdwallet-provider": "0.0.6",
-    "web3": "^1.0.0-beta.36"
+    "web3": "^1.0.0-beta.50"
   },
   "devDependencies": {
     "aws-amplify": "^0.4.8",
