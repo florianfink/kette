@@ -12,6 +12,7 @@
     "local-auth": "start-server-and-test start-local-env http://localhost:3000/check auth-end2EndTest-local-env",
     "spec": "mocha --exit \"test/**/*.spec.js\"",
     "test": "mocha \"./test/**/*.test.js\"",
+    "all-test" : "npm run test && npm run spec && npm run local && npm run clearlocal-auth",
     "prepare": "cp ./_templates/template-test-secrets.js ./_end2endTests/config && mv ./_end2endTests/config/template-test-secrets.js ./_end2endTests/config/test-secrets.js && cp ./_templates/template.env ./template.env && mv template.env .env"
   },
   "author": "Hannes Rang",
@@ -30,8 +31,8 @@
     "chai": "^4.2.0",
     "node-fetch": "^2.2.1",
     "serverless-dotenv-plugin": "^1.2.1",
-    "serverless-dynamodb-local": "^0.2.35",
+    "serverless-dynamodb-local": "^0.2.37",
     "serverless-offline": "^3.31.1",
-    "start-server-and-test": "^1.7.9"
+    "start-server-and-test": "^1.9.0"
   }
 }

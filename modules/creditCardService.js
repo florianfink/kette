@@ -1,7 +1,7 @@
 const stripePackage = require("stripe");
-const secrets = require("../../secrets")
-exports.charge = async (amount, stripeToken) => {
+const secrets = require("../secrets");
 
+exports.charge = async (amount, stripeToken) => {
     const stripe = stripePackage(secrets.stripeSecretKey);
     await stripe.charges.create({
         source: stripeToken,
@@ -9,4 +9,4 @@ exports.charge = async (amount, stripeToken) => {
         description: "KETTE registration charge",
         currency: "eur"
     });
-}
+};

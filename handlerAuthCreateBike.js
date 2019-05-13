@@ -1,5 +1,5 @@
 "use strict";
-const register = require("./bikes/create/registryForUser").makeRegister();
+const createBike = require("./bikes/create/authCreateBike").makeCreateBike();
 const {createAwsResponse, extractApiKey} = require("./modules/awsHelper")
 
 module.exports.createBike = async (event) => {
@@ -8,7 +8,7 @@ module.exports.createBike = async (event) => {
 
   const apiKey = extractApiKey(event);
 
-  const result = await register(
+  const result = await createBike(
     vendor,
     serialNumber,
     frameNumber,

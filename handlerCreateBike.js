@@ -1,6 +1,6 @@
 "use strict";
 const { createAwsResponse } = require("./modules/awsHelper");
-const { register } = require("./bikes/create/registryWithCreditCard");
+const { createBike } = require("./bikes/create/createBikeWithCreditCard");
 const secrets = require("./secrets");
 
 module.exports.createBike = async (event) => {
@@ -12,7 +12,7 @@ module.exports.createBike = async (event) => {
     return response;
   }
 
-  const result = await register(
+  const result = await createBike(
     vendor, 
     serialNumber, 
     frameNumber, 
