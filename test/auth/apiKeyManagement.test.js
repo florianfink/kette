@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 
-var { makeInternalCreateApiKey } = require('../apiKeyManagement');
+var { makeInternalCreateApiKey } = require('../../apiKeys/apiKeyManagement');
 
 describe("apiKeyManagement", () => {
 

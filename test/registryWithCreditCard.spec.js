@@ -1,4 +1,4 @@
-const register = require("../registryWithCreditCard").register;
+const register = require("../bikes/create/registryWithCreditCard").register;
 const expect = require('chai').expect;
 
 describe('integration test for registryWithCreditCard', function () {

@@ -2,7 +2,7 @@
 
 const cryptoFunctions = require('../modules/cryptoFunctions');
 const makeCrypto = require("../modules/encryption");
-const secrets = require("../../secrets");
+const secrets = require("../secrets");
 const config = require("../../config");
 
 const expect = require('chai').expect;

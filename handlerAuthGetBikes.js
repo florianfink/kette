@@ -4,7 +4,7 @@
 
 "use strict";
 
-const getBikesFor = require("./bikes/get/bikeServiceFor").makeGetBikesFor();
+const getBikes = require("./bikes/get/authBikeSerivce").makeGetBikes();
 const { createAwsResponse, extractApiKey } = require("./modules/awsHelper");
 
 module.exports.getBikes = async (event) => {
@@ -12,7 +12,7 @@ module.exports.getBikes = async (event) => {
     const userId = event.pathParameters.id;
     const apiKey = extractApiKey(event);
 
-    const result = await getBikesFor(userId, apiKey);
+    const result = await getBikes(userId, apiKey);
 
     const response = createAwsResponse(result);
     return response;

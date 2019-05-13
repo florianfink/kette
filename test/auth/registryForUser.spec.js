@@ -1,4 +1,4 @@
-const makeRegister = require("../registryForUser").makeRegister;
+const makeRegister = require("../../bikes/create/registryForUser").makeRegister;
 const expect = require('chai').expect;
 
 describe('integration test for registryForUser', function () {

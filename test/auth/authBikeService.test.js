@@ -1,7 +1,7 @@
-const { makeGetBikesFor } = require("../bikeServiceFor");
+const { makeGetBikes } = require("../../bikes/get/authBikeSerivce");
 const expect = require('chai').expect;
 
-describe('bikeServiceFor', function () {
+describe('authBikeSerivce', function () {
     process.env.IS_OFFLINE = "true";
     this.timeout(3500);
 
@@ -17,9 +17,9 @@ describe('bikeServiceFor', function () {
                 } },
         };
 
-        const getBikesFor = makeGetBikesFor(testDependencies)
+        const getBikes = makeGetBikes(testDependencies)
 
-        const result = await getBikesFor("random", "any");
+        const result = await getBikes("random", "any");
         expect(result.hasError).to.be.true;
         expect(result.message).to.contain("not found or allowed to read user");
     })

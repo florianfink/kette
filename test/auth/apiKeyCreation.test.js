@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 
-var { makeCreateApiKey } = require('../apiKeyCreation');
+var { makeCreateApiKey } = require('../../apiKeys/apiKeyCreation');
 
 describe("apiKeyCreation", () => {
     it('create an apikey and create an apiKey user mapping', async () => {

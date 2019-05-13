@@ -1,10 +1,10 @@
-const makeDependencies = require("./bikeServiceForDependencyMaker");
+const makeDependencies = require("./authBikeServiceDependencyMaker");
 
-exports.makeGetBikesFor = (deps) => {
+exports.makeGetBikes = (deps) => {
 
     if(!deps) deps = makeDependencies();
 
-    const getBikeFors = async (userId, apiKey) => {
+    const getBikes = async (userId, apiKey) => {
         try {
 
             const apiKeyMapping = await deps.apiKeyRepository.get(apiKey);
@@ -27,5 +27,5 @@ exports.makeGetBikesFor = (deps) => {
             }
         }
     }
-    return getBikeFors;
+    return getBikes;
 }

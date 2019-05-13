@@ -125,7 +125,7 @@ functions:
               cors: true
               authorizer: aws_iam
   authCreateBike:
-    handler: handlerAuthCreateBike.registerFor
+    handler: handlerAuthCreateBike.createBike
     events:
       - http:
               method: post
