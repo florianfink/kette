@@ -11,12 +11,12 @@ describe('create API-Key and get API-Key', function () {
 
         //in real life, the signed-in user calls this endpoint AWS amplify
         //Serverless Offline does not support the AWS_IAM authorization type
-        const apiKeyResponse = await fetch(url + "/apiKeys", { method: 'POST', headers: { 'content-type': 'application/json' } })
+        const apiKeyResponse = await fetch(url + "/auth/apiKeys", { method: 'POST', headers: { 'content-type': 'application/json' } })
         const keyResult = await apiKeyResponse.json();
         const apiKeyFromCreate = keyResult.apiKey.apiKey;
 
         //act -------------------------------------------------------------------------------------------------------
-        const getApiKeysResponse = await fetch(url + "/apiKeys", { method: 'GET', headers: { 'content-type': 'application/json' } });
+        const getApiKeysResponse = await fetch(url + "/auth/apiKeys", { method: 'GET', headers: { 'content-type': 'application/json' } });
 
         const apiKeys = await getApiKeysResponse.json();
         const apiKeyFromGetApiyKey = apiKeys.find(x => x.apiKey === apiKeyFromCreate);

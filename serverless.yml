@@ -19,7 +19,6 @@ package:
     - resources/**
     - .dynamodb/**
     - API-Documentation.MD
-    - API-DocumentationOpen.MD
     - LICENSE
     - README.MD
 
@@ -109,36 +108,36 @@ functions:
               method: get
               path: price
               cors: true
-  createApiKey:
-    handler: handlerCreateApiKey.createApiKey
+  authCreateApiKey:
+    handler: handlerAuthCreateApiKey.createApiKey
     events:
       - http:
               method: post
-              path: apiKeys
+              path: auth/apiKeys
               cors: true
               authorizer: aws_iam
-  getApiKeys:
-    handler: handlerGetApiKeys.getApiKeys
+  authGetApiKeys:
+    handler: handlerAuthGetApiKeys.getApiKeys
     events:
       - http:
               method: get
-              path: apiKeys
+              path: auth/apiKeys
               cors: true
               authorizer: aws_iam
-  registerFor:
-    handler: handlerRegisterFor.registerFor
+  authCreateBike:
+    handler: handlerAuthCreateBike.registerFor
     events:
       - http:
               method: post
-              path: registerFor
+              path: auth/bikes
               cors: true
               private : true
-  getBikesFor:
-    handler: handlerGetBikesFor.getBikes
+  authGetBike:
+    handler: handlerAuthGetBikes.getBikes
     events:
       - http:
               method: get
-              path: bikesFor/{id}
+              path: auth/bikes/{id}
               cors: true
               private : true
 resources:
