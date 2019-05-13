@@ -3,7 +3,7 @@ const { createAwsResponse } = require("./modules/awsHelper");
 const { register } = require("./register/registryWithCreditCard");
 const secrets = require("./secrets");
 
-module.exports.register = async (event) => {
+module.exports.createBike = async (event) => {
 
   const { stripeToken, ipfsHash, vendor, serialNumber, frameNumber, bikeOwnerAccount, ketteSecret } = JSON.parse(event.body);
 

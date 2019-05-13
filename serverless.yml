@@ -86,7 +86,7 @@ functions:
     events:
       - http:
               method: get
-              path: bike
+              path: bikes
               cors: true
   getBikes:
     handler: handlerGetBikes.getBikes
@@ -95,19 +95,19 @@ functions:
               method: get
               path: bikes/{ethAddress}
               cors: true
+  createBike:
+    handler: handlerCreateBike.createBike
+    events:
+      - http:
+              method: post
+              path: bikes
+              cors: true
   getPrice:
     handler: handlerGetPrice.getPrice
     events:
       - http:
               method: get
               path: price
-              cors: true
-  register:
-    handler: handlerRegister.register
-    events:
-      - http:
-              method: post
-              path: register
               cors: true
   createApiKey:
     handler: handlerCreateApiKey.createApiKey

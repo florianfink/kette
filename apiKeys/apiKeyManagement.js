@@ -11,7 +11,7 @@ exports.makeInternalCreateApiKey = function (apiGateway) {
         };
 
         const createApiKeyResult = await apiGateway.createApiKey(apiKeyParams).promise();
-        
+
         var usagePlanParams = {
             keyId: createApiKeyResult.id,
             keyType: 'API_KEY',

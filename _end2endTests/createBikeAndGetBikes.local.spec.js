@@ -3,26 +3,27 @@ const expect = require('chai').expect;
 const secrets = require("../secrets");
 const url = "http://localhost:3000";
 
-describe('register and lookUp bike', function () {
-    this.timeout(4000);
+describe('register and get bikes', function () {
 
-    it('by vendor, serialnumber and framenumber returns bicycle', async () => {
+    it('by ethAddress returns registerd bike', async () => {
 
+        
         //prepare -------------------------------------------------------------------------------------------------------
         const vendor = makeRandomString();
         const serialNumber = makeRandomString();
         const frameNumber = makeRandomString();
+        const ethAddress = "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38";
 
         const registrationData = {
             vendor: vendor,
             serialNumber: serialNumber,
             frameNumber : frameNumber,
             ipfsHash: "willBreakLater",
-            bikeOwnerAccount: "0x5ae6A13cF333d7747DC2f8224E4ED700429fEe38",
+            bikeOwnerAccount: ethAddress,
             stripeToken: "tok_visa",
             ketteSecret : secrets.ketteSecret
         }
-        
+
         const init = {
             body: JSON.stringify(registrationData),
             method: 'POST',
@@ -33,23 +34,24 @@ describe('register and lookUp bike', function () {
 
         //act -------------------------------------------------------------------------------------------------------
 
-        const registerResponse = await fetch(url + "/register", init);
-        expect(registerResponse.status).to.equal(200, "request not succesful");
+        const createBikeResponse = await fetch(url + "/bikes", init);
+        expect(createBikeResponse.status).to.equal(200, "request not succesful");
 
-        const registerResult = await registerResponse.json();
+        const createBikeResult = await createBikeResponse.json();
 
         //check -------------------------------------------------------------------------------------------------------
-        expect(registerResult.error, "there was an error").to.be.undefined;
+        expect(createBikeResult.error, "there was an error").to.be.undefined;
 
         //act -------------------------------------------------------------------------------------------------------
-        const getBikeResponse = await fetch(url + "/bike?vendor="+vendor+"&serialNumber="+serialNumber+"&frameNumber="+ frameNumber);
+        const getBikesResponse = await fetch(url + "/bikes/" + ethAddress);
+        const bikes = await getBikesResponse.json();
         
-        const getBikeResult = await getBikeResponse.json();
-        
-        expect(getBikeResult.frameNumber, JSON.stringify(getBikeResult)).to.be.equal(registrationData.frameNumber)
-        expect(getBikeResult.ipfsImageHash).to.be.equal(registrationData.ipfsHash)
+        const registerdBike = bikes.find(x => x.vendor === vendor);
 
-    })
+        expect(registerdBike).not.to.be.undefined;
+        expect(registerdBike.ipfsImageHash).to.equal(registrationData.ipfsHash);
+
+    }).timeout(7500)
 })
 
 function makeRandomString() {

@@ -6,8 +6,10 @@
   "scripts": {
     "start-local-env": "serverless offline start",
     "end2EndTest-local-env": "mocha ./_end2endtests/*.local.spec.js",
+    "end2EndTest-local-for-env": "mocha ./_end2endtests/*.local.for.spec.js",
     "ci-dev": "mocha ./_end2endtests/end2endTest.spec.js",
     "local": "start-server-and-test start-local-env http://localhost:3000/check end2EndTest-local-env",
+    "local-for": "start-server-and-test start-local-env http://localhost:3000/check end2EndTest-local-for-env",
     "spec": "mocha --exit */test/*.spec.js",
     "test": "mocha */test/*.test.js",
     "prepare": "cp ./_templates/template-test-secrets.js ./_end2endTests/config && mv ./_end2endTests/config/template-test-secrets.js ./_end2endTests/config/test-secrets.js && cp ./_templates/template.env ./template.env && mv template.env .env"

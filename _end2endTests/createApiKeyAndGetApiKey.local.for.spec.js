@@ -4,7 +4,7 @@ const expect = require('chai').expect;
 const url = "http://localhost:3000";
 
 describe('create API-Key and get API-Key', function () {
-
+    this.timeout(40000)
     it('by unique Id returns registerd bikes', async () => {
 
         //pre-prepare -------------------------------------------------------------------------------------------------------

@@ -17,4 +17,3 @@ module.exports.getBikes = async (event) => {
     const response = createAwsResponse(result);
     return response;
 }
-

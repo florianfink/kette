@@ -4,7 +4,7 @@ const secrets = require("../secrets");
 
 const url = "http://localhost:3000";
 
-describe('register', function () {
+describe('create bike', function () {
     this.timeout(5000);
 
     it('returns valid transaction hash', async () => {
@@ -34,10 +34,10 @@ describe('register', function () {
 
         //act -------------------------------------------------------------------------------------------------------
 
-        const registerResponse = await fetch(url + "/register", init);
-        expect(registerResponse.status).to.equal(200, "request not succesful");
+        const createBikeResponse = await fetch(url + "/bikes", init);
+        expect(createBikeResponse.status).to.equal(200, "request not succesful");
 
-        const txHash = await registerResponse.json();
+        const txHash = await createBikeResponse.json();
 
         //check -------------------------------------------------------------------------------------------------------
         expect(txHash.error, "there was an error").to.be.undefined;
