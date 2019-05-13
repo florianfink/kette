@@ -1,5 +1,5 @@
 const stripePackage = require("stripe");
-const secrets = require("../secrets")
+const secrets = require("../../secrets")
 exports.charge = async (amount, stripeToken) => {
 
     const stripe = stripePackage(secrets.stripeSecretKey);

@@ -1,6 +1,6 @@
 "use strict";
 
-const smartContractService = require("../modules/smartContractService");
+const smartContractService = require("../../modules/smartContractService");
 const makeDepdenencies = require("./registryForUserDependencyMaker");
 
 exports.makeRegister = (deps) => {

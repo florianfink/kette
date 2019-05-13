@@ -1,8 +1,8 @@
 "use strict";
 
-const smartContractService = require("../modules/smartContractService");
+const smartContractService = require("../../modules/smartContractService");
 const creditCardService = require("./creditCardService");
-const priceService = require("../price/priceService")
+const priceService = require("../../price/priceService")
 
 exports.register = async function (vendor, serialNumber, frameNumber, ipfsImageHash, ownerEthAddress, stripeToken) {
 

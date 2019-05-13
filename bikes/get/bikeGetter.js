@@ -1,4 +1,4 @@
-const smartContractService = require("../modules/smartContractService");
+const smartContractService = require("../../modules/smartContractService");
 
 module.exports.makeGetBikes = () => {
 

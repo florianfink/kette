@@ -1,8 +1,8 @@
 const AWS = require('aws-sdk');
 
-const makeApiKeyRepository = require("../modules/apiKeyRepository");
-const makeuserRepository = require("../modules/userRepository");
-const smartContractService = require("../modules/smartContractService");
+const makeApiKeyRepository = require("../../modules/apiKeyRepository");
+const makeuserRepository = require("../../modules/userRepository");
+const smartContractService = require("../../modules/smartContractService");
 module.exports = () => {
     if (process.env.IS_OFFLINE === 'true') {
         return makeMockDependencies();
