@@ -31,7 +31,6 @@ describe('integration test for smart contract service', function () {
         expect(txHash, JSON.stringify(txHash)).to.contain("0x");
 
         const bike = await smartContractService.lookUpBicycle(vendor, serialNumber, frameNumber);
-
         expect(bike.ipfsImageHash).to.be.equal(ipfsImageHash);
         expect(bike.state).to.be.equal("ok");
 

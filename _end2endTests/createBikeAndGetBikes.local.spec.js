@@ -45,8 +45,7 @@ describe('register and get bikes', function () {
         //act -------------------------------------------------------------------------------------------------------
         const getBikesResponse = await fetch(url + "/bikes/" + ethAddress);
         const bikes = await getBikesResponse.json();
-        console.log("----------------bikes ----------------------")
-        console.log(bikes)
+    
         const registerdBike = bikes.find(x => x.vendor === vendor);
 
         expect(registerdBike).not.to.be.undefined;
